@@ -1,0 +1,11 @@
+{
+  "name": "astral-crown-prototype",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "start": "node server.mjs",
+    "test": "node --test"
+  }
+}
