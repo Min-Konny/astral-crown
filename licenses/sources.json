@@ -1,0 +1,17 @@
+[
+  {
+    "file": "line-circle-collision.txt",
+    "url": "https://raw.githubusercontent.com/mattdesl/line-circle-collision/master/LICENSE.md",
+    "sha256": "91515553fda3d86e82454bab0eb876a2cb9a31c0dcb8be640870fed624e53697"
+  },
+  {
+    "file": "gavin-kistner.txt",
+    "url": "https://phrogz.net/js/_ReuseLicense.txt",
+    "sha256": "2780763620ba166329350376b0d5b1de260ded502459bfb95a25ef1c5c7f5065"
+  },
+  {
+    "file": "javascript-algorithms.txt",
+    "url": "https://raw.githubusercontent.com/mgechev/javascript-algorithms/master/LICENSE",
+    "sha256": "26b602a389f47f25f6657a78a945952b632ffd48742245dd727ea379065bfb8f"
+  }
+]

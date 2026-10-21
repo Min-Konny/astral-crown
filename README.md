@@ -38,7 +38,7 @@ npm test
 
 ## 静的サイトのビルド
 
-`npm run build` で公開用の13ファイルを `dist/` にまとめます。HTMLの参照は相対パスなので、GitHub Pagesのプロジェクト配下でも動作します。セーブは公開先のブラウザ保存領域に分かれるため、ローカル版から移す場合は設定の書き出し・読み込みを利用してください。
+`npm run build` で公開用の14ファイルを `dist/` にまとめます。HTMLの参照は相対パスなので、GitHub Pagesのプロジェクト配下でも動作します。セーブは公開先のブラウザ保存領域に分かれるため、ローカル版から移す場合は設定の書き出し・読み込みを利用してください。
 
 GitHub Actionsはテストとビルドの成功後に `dist/` のみをPagesに配信します。検証画像、ローカルサーバー、テストファイルはサイトの配信対象に含めません。
 
@@ -54,3 +54,5 @@ Home, summon and auto battle use Phaser 3.90.0. Accessible HTML handles navigati
 - [Verification and asset provenance](docs/phaser-verification.md)
 
 For disposable browser QA, use `?preview=1`. It uses tab-scoped sessionStorage and never touches the normal localStorage save. Do not use this mode for permanent progress.
+
+Third-party software notices: [sources and build checks](licenses/README.md), [published notices](https://min-konny.github.io/astral-crown/vendor/THIRD-PARTY-NOTICES.txt).
