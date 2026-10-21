@@ -11,7 +11,7 @@ Original illustrated home, summon charge/cut-in/results, and event-driven auto b
 - Brave desktop 1920x951: illustrated home and summon, automatic battle completion to victory (95th place), persisted result on reload. Original localStorage key remains astral-crown-save-v1.
 - Brave viewport 390x844: home navigation, 10-pull result grid, result restored unchanged after reload, battle attack/HP display, victory, defeat, and skip. Materials 380 -> 560 after victory and remain 560 after reload.
 - Mobile battle labels overlapped; fixed with separate vertical lanes. Rechecked screenshot shows distinct labels and HP bars.
-- Sound checkbox enabled then disabled; reduced-motion checkbox enabled. Settings now redraw the idle stage immediately. Actual audio output has not been listened to.
+- Sound checkbox enabled then disabled; reduced-motion checkbox enabled and battle completed in that mode. Settings now redraw the idle stage immediately. Actual audio output has not been listened to.
 - QA uses ?preview=1 and sessionStorage, leaving live localStorage untouched. This is a disposable tab session, not a migration of the player's save.
 
 ## Remaining limits
@@ -26,6 +26,7 @@ Original illustrated home, summon charge/cut-in/results, and event-driven auto b
 - artifacts/phaser-mobile-home.jpg
 - artifacts/phaser-mobile-gacha.jpg
 - artifacts/phaser-mobile-battle.jpg
+- artifacts/phaser-battle.jpg
 
 ## Asset provenance
 
