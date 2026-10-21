@@ -2,6 +2,15 @@
 import {byId} from './game.js';
 const frameFor=id=>({luna:0,sol:1,flora:3,noel:1,iris:2,ash:1,mira:3,sage:0,ranger:2,smith:1,guard:1,scholar:0,herbalist:3}[id]??0);
 export function createStage(parent, onError) {
+  try { return createPhaserStage(parent,onError); }
+  catch {
+    // A missing engine or unavailable canvas must not abort app initialization.
+    queueMicrotask(()=>onError('描画を開始できません。演出を省略して結果を表示します。再読み込みで復旧をお試しください。'));
+    return {show(){},summon(result,characters,reduced,done){done();},
+      battle(result,reduced,onFrame,done){done();},skip(){},destroy(){}};
+  }
+}
+function createPhaserStage(parent, onError) {
   let current,queued,sequence=0,finish=null;
   class AstralStage extends Phaser.Scene {
     constructor(){super('astral');}
@@ -21,7 +30,7 @@ export function createStage(parent, onError) {
       if(queued)draw(...queued);
     }
   }
-  const game=new Phaser.Game({type:Phaser.AUTO,parent,backgroundColor:'#dbeeff',antialias:true,
+  const game=new Phaser.Game({type:Phaser.AUTO,parent,backgroundColor:'#10224b',antialias:true,
     scale:{mode:Phaser.Scale.RESIZE,width:parent.clientWidth,height:parent.clientHeight},
     scene:AstralStage,render:{powerPreference:'low-power'},fps:{target:30,forceSetTimeOut:true},audio:{noAudio:true}});
   function clear(){
@@ -51,7 +60,7 @@ export function createStage(parent, onError) {
       placeUnits(state.team.map(id=>({id,name:byId(id).name,hp:1,max:1})), 'a',w,h);
       placeUnits(['noel','ash','iris','mira'].map(id=>({id,name:byId(id).name,hp:1,max:1})),'b',w,h);
     }
-    if(!reduced)s.cameras.main.fadeIn(260,235,247,255);
+    // Draw into the existing canvas without a full-screen transition overlay.
   }
   function placeUnits(units,side,w,h){
     const s=current,map={};
@@ -83,7 +92,7 @@ export function createStage(parent, onError) {
       art.setScale(Math.min(h*.63/art.height,w*.8/art.width));
       s.add.text(w/2,h*.82,`${best.rarity}  ${best.name}`,{fontFamily:'sans-serif',fontSize:w<650?'28px':'42px',fontStyle:'bold',color:'#fff5cc',stroke:'#173a66',strokeThickness:5}).setOrigin(.5);
       s.add.text(w/2,h*.9,best.title,{fontFamily:'sans-serif',fontSize:'18px',color:'#ffffff',stroke:'#173a66',strokeThickness:3}).setOrigin(.5);
-      if(!reduced){s.cameras.main.flash(350,210,232,255,false);s.tweens.add({targets:art,alpha:{from:0,to:1},x:{from:w*.65,to:w/2},duration:550,ease:'Cubic.easeOut'});}
+      if(!reduced){s.tweens.add({targets:art,alpha:{from:0,to:1},x:{from:w*.65,to:w/2},duration:550,ease:'Cubic.easeOut'});}
       s.time.delayedCall(reduced?50:1900,complete);
     };
     if(reduced){reveal();return;}
