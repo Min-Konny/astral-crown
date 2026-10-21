@@ -7,10 +7,11 @@
 Node.jsが入った環境で、このフォルダから実行します。
 
 ```powershell
+npm ci --ignore-scripts
 npm start
 ```
 
-ブラウザで http://127.0.0.1:4173 を開きます。依存パッケージのインストールは不要です。終了はターミナルでCtrl+C。ポートが使用中なら `$env:PORT=4174` を設定して起動してください。
+ブラウザで http://127.0.0.1:4173 を開きます。初回は上記の npm ci で Phaser 3.90.0 をインストールしてください。終了はターミナルでCtrl+C。ポートが使用中なら `$env:PORT=4174` を設定して起動してください。
 
 ## 最初の遊び方
 
@@ -37,8 +38,19 @@ npm test
 
 ## 静的サイトのビルド
 
-`npm run build` で公開用の5ファイルを `dist/` にまとめます。HTMLの参照は相対パスなので、GitHub Pagesのプロジェクト配下でも動作します。セーブは公開先のブラウザ保存領域に分かれるため、ローカル版から移す場合は設定の書き出し・読み込みを利用してください。
+`npm run build` で公開用の13ファイルを `dist/` にまとめます。HTMLの参照は相対パスなので、GitHub Pagesのプロジェクト配下でも動作します。セーブは公開先のブラウザ保存領域に分かれるため、ローカル版から移す場合は設定の書き出し・読み込みを利用してください。
 
 GitHub Actionsはテストとビルドの成功後に `dist/` のみをPagesに配信します。検証画像、ローカルサーバー、テストファイルはサイトの配信対象に含めません。
 
 キャラクター絵は試作の紋章です。立ち絵・BGM・声・商用アプリ化・Steam連携はまだ含みません。経済は試作用の仮バランスで、販売版の長期進行は別途調整します。
+
+## Phaser presentation
+
+Home, summon and auto battle use Phaser 3.90.0. Accessible HTML handles navigation and results. The original v1 save key is preserved. Summons and battle rewards are saved before animation; reload restores their receipt without rerolling or granting rewards again.
+
+- `src/scenes.js`: illustrated scenes and battle event playback
+- `src/session.js`: atomic state persistence and presentation receipts
+- `src/game-ui.css`: game HUD and mobile layout
+- [Verification and asset provenance](docs/phaser-verification.md)
+
+For disposable browser QA, use `?preview=1`. It uses tab-scoped sessionStorage and never touches the normal localStorage save. Do not use this mode for permanent progress.

@@ -195,3 +195,7 @@ Steam連携、スマホストア課金、リアルマネー、対人通信、ア
 純粋なゲームロジックはNodeの自動テストで検証する。経済の残高不変条件、天井、低レア上限、凸上限、編成検証、戦闘決着、転生、保存検証を対象にする。ブラウザで課金→ガチャ→育成→対戦、設定、狭い画面、再読み込みを操作する。
 
 初回試作後はプレイ感の確認を優先する。10連から100連へ移るまでの時間、初回SSR、初回転生、10,000連解放の時期、戦闘の編成依存度、演出の長さを調整する。その後、キャラの設定と立ち絵、長期コンテンツ、販売版エンジンを決定する。
+
+## Presentation update (2026-10-21)
+
+Home, 10-pull summon, and auto battle now use Phaser 3.90.0 with original generated character/background artwork. Existing economic rules and v1 saves remain compatible. Four chibi archetypes are shared across the roster; full portraits for every character are not yet included. See phaser-verification.md in the repository for evidence and remaining browser/device verification limits.

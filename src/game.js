@@ -130,7 +130,7 @@ export function battle(s) {
   const enemy=rival(s), allies=s.team.map(id=>({...byId(id),...stats(s,byId(id))}));
   const a=allies.map(c=>({...c,max:c.hp})), b=enemy.units.map(c=>({...c,max:c.hp}));
   const frames=[];
-  const snap=(text,turn)=>frames.push({text,turn,a:a.map(c=>({name:c.name,hp:c.hp,max:c.max})),b:b.map(c=>({name:c.name,hp:c.hp,max:c.max}))});
+  const snap=(text,turn,event)=>frames.push({text,turn,...event,a:a.map(c=>({id:c.id,name:c.name,hp:c.hp,max:c.max})),b:b.map(c=>({id:c.id,name:c.name,hp:c.hp,max:c.max}))});
   for(let turn=1;turn<=30;turn++) {
     for(const [own,other] of [[a,b],[b,a]]) {
       for(const u of own.filter(x=>x.hp>0)) {
@@ -138,13 +138,13 @@ export function battle(s) {
         if(u.role==='支援'&&turn%3===0){
           const target=own.filter(x=>x.hp>0).sort((x,y)=>x.hp/x.max-y.hp/y.max)[0];
           const heal=Math.min(target.max-target.hp,Math.round(u.atk*1.8));
-          target.hp+=heal;snap(`${u.name}の祈り → ${target.name}を${heal}回復`,turn);
+          target.hp+=heal;snap(`${u.name}の祈り → ${target.name}を${heal}回復`,turn,{kind:'heal',actor:u.id,target:target.id,side:own===a?'a':'b',targetSide:own===a?'a':'b',amount:heal,skill:true});
         }else{
           const target=other.find(x=>x.hp>0), adv=advantage(u.element,target.element);
           const skill=u.role==='攻撃'&&turn%3===0;
           const damage=Math.max(1,Math.round(u.atk*adv*(skill?1.8:1)*(target.role==='防御'?.75:1)));
           target.hp=Math.max(0,target.hp-damage);
-          snap(`${u.name}${skill?'の奥義':'の攻撃'} → ${target.name} ${damage}${adv>1?' 属性有利':''}`,turn);
+          snap(`${u.name}${skill?'の奥義':'の攻撃'} → ${target.name} ${damage}${adv>1?' 属性有利':''}`,turn,{kind:'attack',actor:u.id,target:target.id,side:own===a?'a':'b',targetSide:own===a?'b':'a',amount:damage,skill,advantage:adv});
         }
       }
     }

@@ -6,6 +6,7 @@
   <meta name="theme-color" content="#0b0d19">
   <title>ASTRAL CROWN — 星冠の継承者</title>
   <link rel="stylesheet" href="./src/style.css">
+  <link rel="stylesheet" href="./src/game-ui.css">
 </head>
 <body>
   <div class="shell">
@@ -27,13 +28,16 @@
         <div class="wallet"><div><small>おこづかい <em>ゲーム内</em></small><strong id="cash"></strong></div><div><small>✧ 星晶石</small><strong id="gems"></strong></div><div><small>◈ 育成素材</small><strong id="dust"></strong></div></div>
         <button class="icon-button" id="settings" aria-label="設定">⚙</button>
       </header>
+      <div id="game-stage" aria-hidden="true"></div>
       <main id="main"></main>
+      <div id="playback" hidden><p id="playback-text" role="status" aria-live="polite"></p><button id="skip-playback">演出をスキップ</button></div>
       <footer><span>ASTRAL CROWN · PLAYABLE PROTOTYPE 0.1</span><span id="save-status">自動保存</span></footer>
     </div>
   </div>
   <dialog id="modal"><div id="modal-content"></div></dialog>
   <div id="toast" role="status" aria-live="polite"></div>
   <input id="import-file" type="file" accept=".json,application/json" hidden>
+  <script src="./vendor/phaser.min.js"></script>
   <script type="module" src="./src/app.js"></script>
 </body>
 </html>

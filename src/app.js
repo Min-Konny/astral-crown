@@ -1,17 +1,22 @@
 import * as G from './game.js';
-const $=q=>document.querySelector(q), key='astral-crown-save-v1';
+import {createStage} from './scenes.js';
+import {SAVE_KEY,transact,receipt} from './session.js';
+const $=q=>document.querySelector(q), key=SAVE_KEY;
+// Preview tabs use tab-scoped storage so QA never touches a player's local save.
+const preview=new URLSearchParams(location.search).get('preview')==='1';
+const storage={getItem:k=>(preview?sessionStorage:localStorage).getItem(k),setItem:(k,v)=>(preview?sessionStorage:localStorage).setItem(k,v)};
 const fmt=n=>Math.floor(n).toLocaleString('ja-JP'), pct=n=>(n*100).toFixed(2);
 let state=G.initialState(), page='home', banner='pickup', count=10, filter='all', packQuantity=1, timer, audio, saveFailed=false, restored=0, recovered=false;
 try{
-  const raw=localStorage.getItem(key);
+  const raw=storage.getItem(key);
   if(raw){
-    try{const r=G.restore(JSON.parse(raw));state=r.state;restored=r.offline;}
-    catch{localStorage.setItem(key+'-damaged-'+Date.now(),raw);recovered=true;}
+    try{const parsed=JSON.parse(raw),r=G.restore(parsed);state=r.state;state.presentation=receipt(parsed);restored=r.offline;}
+    catch{storage.setItem(key+'-damaged-'+Date.now(),raw);recovered=true;}
   }
 }catch{saveFailed=true;}
 function save(){
   state.lastSeen=Date.now();
-  try{localStorage.setItem(key,JSON.stringify(state));$('#save-status').textContent='✓ このブラウザに保存済み';}
+  try{storage.setItem(key,JSON.stringify(state));$('#save-status').textContent='✓ このブラウザに保存済み';}
   catch{if(!saveFailed)toast('保存できません。設定からセーブを書き出してください');saveFailed=true;$('#save-status').textContent='保存不可 · 書き出してください';}
 }
 let toastTimer;
@@ -47,30 +52,13 @@ function wallet(){
   const income=$('#income-value');if(income)income.textContent='¥ '+fmt(G.income(state))+' / 秒';
 }
 function heading(eyebrow,title,description,extra=''){return `<div class="page-heading"><div><div class="eyebrow">${eyebrow}</div><h1>${title}</h1><p>${description}</p></div>${extra}</div>`;}
-function crest(c,extra=''){return `<div class="crest ${extra}" style="--rarity:${G.RARITIES[c.rarity].color}" aria-hidden="true"><span>${c.icon}</span><i></i></div>`;}
+function crest(c,extra=''){
+  const frame={luna:0,sol:1,flora:3,noel:1,iris:2,ash:1,mira:3,sage:0,ranger:2,smith:1,guard:1,scholar:0,herbalist:3}[c.id];
+  return '<div class="crest illustrated '+extra+'" aria-hidden="true"><div class="mini-portrait" style="background-position:'+frame*100/3+'% center"></div></div>';
+}
 function badge(c){return `<span class="rarity" style="color:${G.RARITIES[c.rarity].color}">${c.rarity}</span>`;}
 function party(){
   return `<div class="party">${state.team.map((id,i)=>{const c=G.byId(id),s=G.stats(state,c);return `<div class="party-card">${crest(c)}<div>${badge(c)} <span class="muted">Lv.${state.levels[id]}</span><h3>${c.name}</h3><small>${i<2?'前衛':'後衛'} · ${c.element} / ${c.role}</small><p>ATK ${fmt(s.atk)} <span class="muted"> · ${G.awakening(state,c)}凸</span></p></div></div>`;}).join('')}${state.team.length<4?'<button class="party-empty" data-page="collection">＋<small>仲間を編成</small></button>':''}</div>`;
-}
-function home(){
-  return heading('THE NEXT CHAPTER','星を集め、頂点へ。','何度生まれ変わっても、積み重ねた力は消えない。',`<span class="tag">SEASON ${String(state.season).padStart(2,'0')}</span>`)+`
-  <section class="home-hero panel">
-    <div class="hero-copy"><span class="eyebrow gold">PICK UP SUMMON</span><h2>月は、あなたを<br>選んだ。</h2><p>月冠の魔女 リュネ<br><span class="gold">SSR出現時 50%ピックアップ</span></p><button class="primary" data-page="summon">星の召喚へ <span>↗</span></button></div>
-    <div class="moon-art" aria-hidden="true"><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><div class="moon">☾</div><div class="star s1">✧</div><div class="star s2">✦</div><div class="star s3">✧</div><span class="art-caption">LUNE · THE MOONCROWN WITCH</span></div>
-    <div class="hero-note">あなたの物語は、まだ序章。</div>
-  </section>
-  <div class="metrics"><div class="panel metric"><small>チーム戦力</small><strong>${fmt(G.power(state))}</strong><span>継承による全体攻撃 +${pct(G.collectionBonus(state))}%</span></div><div class="panel metric"><small>サーバーランキング</small><strong>${state.rank}<em>位</em></strong><span>自己最高 ${state.bestRank}位 · NPCリーグ</span></div><div class="panel metric"><small>累計召喚数</small><strong>${fmt(state.pulls)}<em>連</em></strong><span>すべての出会いが、力になる</span></div></div>
-  <div class="section-title"><h2>あなたの継承者たち</h2><button class="text-button" data-page="collection">育成・編成 ↗</button></div>${party()}
-  <div class="two-col"><section class="panel income-panel"><div class="eyebrow">IDLE INCOME</div><h2>冒険を支える、おこづかい。</h2><strong id="income-value">¥ ${fmt(G.income(state))} / 秒</strong><p>収入設備 Lv.${state.facility} · 離れている間も最大8時間ぶん蓄積</p><div class="button-row"><button class="primary" data-action="work">仕事する +¥${fmt(300*(1+state.seals*.25))}</button><button data-action="facility" ${state.facility>=30?'disabled':''}>収入設備を強化 · ¥${fmt(G.facilityCost(state))}</button></div></section>
-  <section class="panel news"><div class="eyebrow">LETTER FROM THE OPERATORS</div><h2>長すぎたメンテのお詫び</h2><p>予定より3分延長してしまいました。<br>お詫びの星晶石3,000個をお受け取りください。</p><button data-action="mail" ${state.mail?'disabled':''}>${state.mail?'✓ 受取済み':'✉ 星晶石3,000個を受け取る'}</button><small>※ 架空の運営からのお知らせです</small></section></div>`;
-}
-function summonPage(){
-  const c=G.byId('luna');
-  return heading('CELESTIAL SUMMON','星の召喚','一度の奇跡も、一万の出会いも。すべてを、あなたの力に。',`<button class="text-button" data-action="rates">提供割合・天井 ↗</button>`)+`
-  <div class="tabs"><button data-banner="pickup" class="${banner==='pickup'?'selected':''}">月冠の契約 <small>PICK UP</small></button><button data-banner="standard" class="${banner==='standard'?'selected':''}">常設召喚 <small>STANDARD</small></button></div>
-  <section class="summon-banner panel"><div class="summon-copy"><span class="tag gold">${banner==='pickup'?'PICK UP · SSR 50%':'STANDARD · SSR 2%'}</span><p class="character-title">${banner==='pickup'?'月冠の魔女':'星々の継承者たち'}</p><h2>${banner==='pickup'?'リュネ':'運命を、召喚せよ。'}</h2><p class="quote">「${c.quote}」</p><div class="character-meta"><span>水属性</span><span>攻撃型</span><span>最大5凸</span></div></div><div class="summon-art">${crest(c,'giant')}<div class="art-label">SSR <span>THE MOONCROWN WITCH</span></div></div><span class="banner-footnote">キャラビジュアルは試作用の紋章表現です</span></section>
-  <section class="panel summon-controls"><div class="pity"><span>次のSSR確定まで <b>${100-state.pity}連</b></span><span>SSR 2% · バナー共通天井</span></div><div class="progress"><i style="width:${state.pity}%"></i></div><div class="pull-options">${[10,100,1000,10000].map(n=>`<button data-count="${n}" class="${count===n?'selected':''}">${fmt(n)}<small>連召喚</small></button>`).join('')}</div><button class="primary summon-button" data-action="summon">✧ ${fmt(count)}連召喚 <span>星晶石 ${fmt(count*300)}</span></button><p class="center muted">低レアは自動で継承。編成していなくても、全員の攻撃力が上がります。</p></section>
-  <div class="notice">石が足りないときは <button class="text-button" data-page="shop">星晶ショップへ →</button> <span>ゲーム内のおこづかいだけで購入できます。</span></div>`;
 }
 function collection(){
   const chars=G.CHARACTERS.filter(c=>filter==='all'||(filter==='legacy'?!G.isHero(c):G.isHero(c)));
@@ -84,13 +72,6 @@ function collection(){
       `<div class="legacy-value">全体攻撃 <strong>+${pct(G.bonusFor(state,c))}%</strong></div><div class="progress"><i style="width:${Math.min(100,n/r.cap*100)}%"></i></div><p class="muted">${fmt(n)} / ${fmt(r.cap)}体で完成</p><div class="passive-note">編成不要 · 自動で全員を強化<br>最大 +${r.bonus*100}%</div>`}</article>`;
   }).join('')}</div>`;
 }
-function arena(){
-  const enemy=G.rival(state),reward=G.ascensionReward(state),enemyPower=enemy.units.reduce((t,c)=>t+c.atk*5+c.hp,0);
-  return heading('CROWN ARENA','頂点に、名を刻め。','育てた力を試す場所。ここから次の伝説が始まる。',`<span class="tag">NPCリーグ · ${state.rank}位</span>`)+`
-  <section class="panel versus"><div><span class="eyebrow">YOUR TEAM</span><h2>星冠の継承者</h2><strong>${fmt(G.power(state))}</strong><p>現在 ${state.rank}位</p><div class="team-symbols">${state.team.map(id=>crest(G.byId(id))).join('')}</div></div><span class="vs">VS</span><div><span class="eyebrow">RIVAL · NPC</span><h2>${enemy.name}</h2><strong>${fmt(enemyPower)}</strong><p>挑戦順位 ${enemy.rank}位</p><div class="team-symbols">${enemy.units.map(c=>crest(c)).join('')}</div></div></section>
-  <button class="primary battle-button" data-action="battle">⚔ ランキング戦に挑む</button><p class="center muted">炎 → 森 → 水 → 炎の順で有利。前衛から攻撃を受けます。支援役は3ターンごとに回復。</p>
-  <section class="panel ascension"><div><span class="eyebrow gold">ASCENSION</span><h2>終わりではなく、次の始まり。</h2><p>50位以内で、新サーバーへ転生。<br>仲間も凸も継承して、より速く頂点を目指す。</p><div class="ascension-stats"><span>継承印 <b>${fmt(state.seals)}</b></span><span>収入 <b>+${state.seals*25}%</b></span><span>攻撃 <b>+${state.seals*8}%</b></span></div></div><div><div class="ascend-symbol">✵</div><button data-action="ascend" ${reward?'':'disabled'}>${reward?`転生する · 継承印 +${reward}`:'50位以内で転生解放'}</button></div></section>`;
-}
 function shop(){
   return heading('STAR CRYSTAL BOUTIQUE','星を買う。夢を回す。','財布の限界を超える体験を、ゲームの中だけで。',`<span class="tag">REAL MONEY FREE</span>`)+`
   <div class="simulation-label">◇ これはゲーム内の疑似課金です。実際のお支払い・決済情報の入力はありません。</div>
@@ -101,16 +82,21 @@ function shop(){
 }
 function render(){
   wallet();preferences();
-  $('#main').innerHTML=({home,summon:summonPage,collection,arena,shop}[page])();
+  const scenic=['home','summon','arena'].includes(page);
+  document.body.dataset.page=page;
+  $('#game-stage').hidden=!scenic;
+  $('#main').innerHTML=scenic?gameHUD():({collection,shop}[page])();
+  if(scenic)stage.show(page,state,shortMotion());
   document.querySelectorAll('nav [data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page===page));
 }
-function closeModal(){clearTimeout(timer);if($('#modal').open)$('#modal').close();}
+function dismissReceipt(){if(!playing&&state.presentation){delete state.presentation;save();}}
+function closeModal(){clearTimeout(timer);if($('#modal').open)$('#modal').close();dismissReceipt();}
 function modal(html,cls=''){
   clearTimeout(timer);$('#modal').className=cls;
   $('#modal-content').innerHTML=`<button class="modal-close" data-action="close" aria-label="閉じる">×</button>${html}`;
   if(!$('#modal').open)$('#modal').showModal();
 }
-$('#modal').addEventListener('cancel',()=>clearTimeout(timer));
+$('#modal').addEventListener('cancel',()=>{clearTimeout(timer);dismissReceipt();});
 function checkout(id){
   const base=G.PACKS.find(p=>p.id===id),p={...base,price:base.price*packQuantity,gems:base.gems*packQuantity,name:base.name+' ×'+fmt(packQuantity)};
   modal(`<div class="eyebrow">SIMULATED CHECKOUT</div><h2>お支払い方法を選択</h2><p>ゲーム内のおこづかいを使います。</p><div class="payment-methods">${[['carrier','▣','キャリア決済','ASTRA mobile'],['credit','▰','クレジット','CROWN CARD •••• 0000'],['prepaid','▤','プリペイド','STAR GIFT 残高連携']].map(([id,icon,label,note],i)=>`<label><input type="radio" name="payment" value="${id}" ${i===0?'checked':''}><span>${icon}</span><div>${label}<small>${note}</small></div></label>`).join('')}</div><div class="receipt"><div><span>${p.name}</span><b>✧ ${fmt(p.gems)}</b></div><div><span>ゲーム内のお支払い額</span><strong>¥ ${fmt(p.price)}</strong></div><div><span>購入後のおこづかい</span><span>¥ ${fmt(state.cash-p.price)}</span></div></div><p class="simulation-label">実際の請求は発生しません。決済情報は不要です。</p><button class="primary wide" data-confirm-pack="${p.id}" ${state.cash<p.price?'disabled':''}>${state.cash<p.price?'残高不足です':'購入を確定する'}</button>`);
@@ -123,37 +109,16 @@ function purchase(id){
   const animate=t=>{const el=$('#paid-counter');if(!el)return;const f=shortMotion()?1:Math.min(1,(t-start)/800);el.textContent=fmt(p.price*(1-(1-f)**3));if(f<1)requestAnimationFrame(animate);};
   requestAnimationFrame(animate);
 }
+function pullCards(r){
+  if(r.n!==10)return '';
+  return '<div class="ten-results">'+Object.entries(r.counts).flatMap(([id,n])=>Array.from({length:n},()=>{
+    const c=G.byId(id),frame={luna:0,sol:1,flora:3,noel:1,iris:2,ash:1,mira:3,sage:0,ranger:2,smith:1,guard:1,scholar:0,herbalist:3}[id];
+    return '<div class="pull-card" style="--rarity:'+G.RARITIES[c.rarity].color+'"><span>'+c.rarity+'</span><div class="mini-portrait" style="background-position:'+frame*100/3+'% center"></div><b>'+c.name+'</b></div>';
+  })).join('')+'</div>';
+}
 function summonResult(r){
   const ssrs=Object.entries(r.counts).filter(([id])=>G.byId(id).rarity==='SSR');
-  modal(`<div class="result"><div class="eyebrow">${ssrs.length?'A NEW LEGEND IS BORN':'EVERY ENCOUNTER MATTERS'}</div><h2>${ssrs.length?'星々が、あなたに応えた。':'出会いは、確かな力に。'}</h2><p>${fmt(r.n)}連召喚の結果</p>${ssrs.length?`<div class="ssr-results">${ssrs.map(([id,n])=>{const c=G.byId(id);return `<div>${crest(c)}<span class="gold">SSR</span><h3>${c.name}</h3><strong>×${fmt(n)}</strong></div>`;}).join('')}</div>`:''}<div class="rarity-totals">${Object.entries(r.rarities).map(([rarity,n])=>`<div><span style="color:${G.RARITIES[rarity].color}">${rarity}</span><strong>${fmt(n)}</strong></div>`).join('')}</div><div class="legacy-gain"><span>継承による全体攻撃ボーナス</span><strong>+${pct(r.before)}% <small>→</small> +${pct(r.after)}%</strong><p>低レアもすべて自動継承 · 育成素材 +${fmt(r.n*8)}</p></div><button class="primary wide" data-action="summon">もう一度 ${fmt(count)}連 · ✧ ${fmt(count*300)}</button><button class="text-button" data-action="close">結果を閉じる</button></div>`,'result-modal');
-}
-function reveal(r){
-  const ids=Object.keys(r.counts),c=ids.map(G.byId).find(c=>c.rarity==='SSR'),gold=!!c;
-  if(shortMotion()){sound(gold?'ssr':'tap');summonResult(r);return;}
-  modal(`<div class="summon-stage ${gold?'gold-stage':r.rarities.SR?'':'blue-stage'}"><span class="eyebrow">CONNECTING TO THE STARS</span><div class="summoning-ring"><span>✧</span></div><h2>星の記憶が、目を覚ます。</h2><p>${fmt(r.n)}の運命をつなぐ</p><button id="skip-reveal" class="text-button">演出をスキップ →</button></div>`,'effect-modal');
-  $('#skip-reveal').onclick=()=>{clearTimeout(timer);summonResult(r);};
-  timer=setTimeout(()=>{
-    if(!gold){sound();summonResult(r);return;}
-    sound('ssr');
-    modal(`<div class="spotlight"><span class="eyebrow gold">SUPER SUPER RARE</span>${crest(c,'giant')}<p>${c.title}</p><h2>${c.name}</h2><p class="quote">「${c.quote}」</p><button id="show-result" class="primary wide">召喚結果を見る →</button></div>`,'effect-modal');
-    $('#show-result').onclick=()=>summonResult(r);
-  },1600);
-}
-function startBattle(){
-  const result=G.battle(state);G.applyBattle(state,result);save();render();
-  let i=0;
-  const finish=()=>{
-    clearTimeout(timer);sound(result.win?'purchase':'tap');
-    modal(`<div class="battle-result"><span class="eyebrow">${result.win?'VICTORY':'DEFEAT'}</span><h2>${result.win?'王冠に、一歩近づいた。':'次の一手が、未来を変える。'}</h2><div class="rank-result">${state.rank}<small>位</small></div><p>${result.win?`おこづかい +¥${fmt(result.reward.cash)} · 素材 +${fmt(result.reward.dust)}`:'編成・レベル・図鑑ボーナスを育てて再挑戦しよう。'}</p><button class="primary wide" data-action="close">闘技場に戻る</button></div>`);
-  };
-  if(shortMotion()){finish();return;}
-  modal(`<span class="eyebrow">ARENA BATTLE</span><h2>星冠の継承者 vs ${result.enemy.name}</h2><div id="battle-live"></div><button id="skip-battle" class="text-button">結果へスキップ →</button>`,'battle-modal');
-  $('#skip-battle').onclick=finish;
-  const step=()=>{
-    const frame=result.frames[i];if(!frame){finish();return;}
-    $('#battle-live').innerHTML=`<p>TURN ${frame.turn}</p><div class="battle-hp">${['a','b'].map(side=>`<div>${frame[side].map(c=>`<div class="unit-hp ${c.hp===0?'fallen':''}"><span>${c.name}<small>${c.hp}/${c.max}</small></span><div class="progress"><i style="width:${c.hp/c.max*100}%"></i></div></div>`).join('')}</div>`).join('')}</div><p class="battle-log">${frame.text}</p>`;
-    i++;timer=setTimeout(step,110);
-  };step();
+  modal(`<div class="result"><div class="eyebrow">${ssrs.length?'A NEW LEGEND IS BORN':'EVERY ENCOUNTER MATTERS'}</div><h2>${ssrs.length?'星々が、あなたに応えた。':'出会いは、確かな力に。'}</h2><p>${fmt(r.n)}連召喚の結果</p>${pullCards(r)}${ssrs.length?`<div class="ssr-results">${ssrs.map(([id,n])=>{const c=G.byId(id);return `<div>${crest(c)}<span class="gold">SSR</span><h3>${c.name}</h3><strong>×${fmt(n)}</strong></div>`;}).join('')}</div>`:''}<div class="rarity-totals">${Object.entries(r.rarities).map(([rarity,n])=>`<div><span style="color:${G.RARITIES[rarity].color}">${rarity}</span><strong>${fmt(n)}</strong></div>`).join('')}</div><div class="legacy-gain"><span>継承による全体攻撃ボーナス</span><strong>+${pct(r.before)}% <small>→</small> +${pct(r.after)}%</strong><p>低レアもすべて自動継承 · 育成素材 +${fmt(r.n*8)}</p></div><button class="primary wide" data-action="summon">もう一度 ${fmt(count)}連 · ✧ ${fmt(count*300)}</button><button class="text-button" data-action="close">結果を閉じる</button></div>`,'result-modal');
 }
 function settings(){
   modal(`<span class="eyebrow">PREFERENCES</span><h2>設定とセーブ</h2><div class="settings-list">${[['sound','効果音','短い合成音で演出を彩ります'],['quick','演出を短縮','ガチャと戦闘の結果をすぐ表示'],['soft','発光・動きを抑える','光の演出とアニメーションを軽減']].map(([id,label,note])=>`<label><div>${label}<small>${note}</small></div><input type="checkbox" data-setting="${id}" ${state.settings[id]?'checked':''}></label>`).join('')}</div><p>このブラウザに自動保存します。別端末へ移す場合は書き出してください。同時に複数のタブで遊ぶと保存が競合するため、1つのタブでご利用ください。</p><div class="button-row"><button data-action="export">セーブを書き出す</button><button data-action="import">セーブを読み込む</button></div><button class="danger text-button" data-action="reset">セーブを初期化する</button><p class="muted">試作版 · 実際のお金を使う機能はありません</p>`);
@@ -169,6 +134,7 @@ function run(action){
 }
 document.addEventListener('click',e=>{
   const b=e.target.closest('button');if(!b||b.disabled)return;
+  if(playing)return;
   run(()=>{
     if(b.dataset.page){page=b.dataset.page;render();window.scrollTo({top:0});return;}
     if(b.dataset.banner){banner=b.dataset.banner;render();return;}
@@ -186,8 +152,8 @@ document.addEventListener('click',e=>{
       work:()=>{G.work(state);wallet();save();sound();},
       facility:()=>{G.upgradeFacility(state);save();render();sound('purchase');},
       mail:()=>{G.claimMail(state);save();render();toast('お詫びの星晶石 +3,000');sound('purchase');},
-      summon:()=>{const r=G.summon(state,count,banner);save();render();reveal(r);},
-      rates,battle:startBattle,ascend:confirmAscend,
+      summon:playSummon,
+      rates,battle:playBattle,ascend:confirmAscend,
       'confirm-ascend':()=>{const n=G.ascend(state);save();closeModal();render();toast(`シーズン${state.season}へようこそ。継承印 +${n}`);sound('ssr');},
       export:()=>{save();const url=URL.createObjectURL(new Blob([JSON.stringify(state,null,2)],{type:'application/json'}));const a=document.createElement('a');a.href=url;a.download='astral-crown-save.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);},
       import:()=>$('#import-file').click(),
@@ -197,7 +163,7 @@ document.addEventListener('click',e=>{
   });
 });
 document.addEventListener('change',e=>{
-  if(e.target.dataset.setting){state.settings[e.target.dataset.setting]=e.target.checked;preferences();save();if(e.target.dataset.setting==='sound')sound();}
+  if(e.target.dataset.setting){state.settings[e.target.dataset.setting]=e.target.checked;preferences();stage.show(page,state,shortMotion());save();if(e.target.dataset.setting==='sound')sound();}
 });
 let pendingImport;
 $('#import-file').addEventListener('change',async e=>{
@@ -209,14 +175,48 @@ $('#import-file').addEventListener('change',async e=>{
     $('#confirm-import').onclick=()=>{state=G.restore(pendingImport).state;save();closeModal();render();toast('セーブを読み込みました');};
   }catch(err){toast('読み込めません：'+err.message);}
 });
-$('#settings').onclick=settings;
+$('#settings').onclick=()=>{if(!playing)settings();};
 let last=Date.now(),saveTicks=0;
 setInterval(()=>{
   const now=Date.now();G.tick(state,(now-last)/1000);last=now;wallet();
   if(++saveTicks%5===0)save();
 },1000);
 window.addEventListener('pagehide',save);
+let playing=false;
+const stage=createStage($('#game-stage'),toast);
+$('#skip-playback').onclick=()=>stage.skip();
+function setPlaying(value){playing=value;document.body.classList.toggle('playing',value);$('#playback').hidden=!value;}
+function gameHUD(){
+  if(page==='home')return `<section class="home-ui"><div class="chapter"><span>ASTRAL CROWN / 星冠の継承者</span><h1>星見の庭園</h1><p>SEASON ${state.season} · あなたの物語が、動き出す。</p></div><div class="home-tools"><button data-action="mail" ${state.mail?'disabled':''}>${state.mail?'配布受取済み':'お詫びの星晶石 +3,000'}</button><button data-action="work">仕事する +¥${fmt(300*(1+state.seals*.25))}</button><button data-action="facility" ${state.facility>=30?'disabled':''}>収入強化 Lv.${state.facility}<small>¥${fmt(G.facilityCost(state))}</small></button></div><div class="character-line"><span>月冠の魔女</span><h2>リュネ</h2><p>「おかえりなさい。<br>今日は、どの星へ会いに行きましょう？」</p></div><div class="home-cta"><button data-page="summon"><small>PICK UP / 月冠の契約</small><b>星の召喚</b><span>リュネとの出会いを、あなたに →</span></button><button class="launch" data-page="arena"><small>CROWN ARENA / ${state.rank}位</small><b>出撃する →</b></button></div></section>`;
+  if(page==='summon')return `<section class="summon-ui"><div class="chapter"><span>CELESTIAL SUMMON</span><h1>月冠の契約</h1><p>星を越えて、あなたに出会う。</p></div><div class="summon-description"><span class="pickup-label">PICK UP SSR</span><h2>リュネ</h2><p>月冠の魔女 / 水属性・攻撃型</p><button data-action="rates">提供割合・天井</button></div><div class="summon-dock"><div class="tabs"><button data-banner="pickup" class="${banner==='pickup'?'selected':''}">ピックアップ</button><button data-banner="standard" class="${banner==='standard'?'selected':''}">常設</button></div><p>SSR 2% · 次の確定まで ${100-state.pity}連${banner==='pickup'?' · SSR時リュネ50%':''}</p><div class="pull-options">${[10,100,1000,10000].map(n=>`<button data-count="${n}" class="${count===n?'selected':''}">${fmt(n)}連</button>`).join('')}</div><button class="primary" data-action="summon">${fmt(count)}連召喚 <small>星晶石 ${fmt(count*300)}</small></button><button class="text-button" data-page="shop">星晶石を補充 →</button></div></section>`;
+  const enemy=G.rival(state),reward=G.ascensionReward(state);
+  return `<section class="arena-ui"><div class="chapter"><span>CROWN ARENA / NPCリーグ</span><h1>星冠闘技場</h1><p>${state.rank}位 → ${enemy.rank}位に挑戦</p></div><div class="opponent"><small>NEXT RIVAL</small><h2>${enemy.name}</h2><p>戦力 ${fmt(G.power(state))} / ${state.team.length}人編成</p></div><div class="arena-dock"><button data-page="collection">編成・育成</button><button class="primary" data-action="battle">ランキング戦に挑む →</button><button data-action="ascend" ${reward?'':'disabled'}>${reward?`転生する · 継承印 +${reward}`:'50位以内で転生解放'}</button></div></section>`;
+}
+function commit(kind,action){
+  if(playing)throw Error('演出が終わるまでお待ちください');
+  let committed;
+  try{committed=transact(storage,state,kind,action);}catch(e){throw Error('確定できませんでした：'+e.message);}
+  state=committed.state;return committed.result;
+}
+function playSummon(){
+  const result=commit('summon',s=>G.summon(s,count,banner));
+  if($('#modal').open)$('#modal').close();
+  render();setPlaying(true);$('#playback-text').textContent='召喚結果は保存済みです';sound('tap');
+  stage.summon(result,Object.keys(result.counts).map(G.byId),shortMotion(),()=>{setPlaying(false);render();sound(result.rarities.SSR?'ssr':'tap');summonResult(result);});
+}
+function battleResult(result){
+  modal(`<div class="battle-result"><span class="eyebrow">${result.win?'VICTORY':'DEFEAT'}</span><h2>${result.win?'勝利。新しい星へ。':'次は、きっと届く。'}</h2><div class="rank-result">${state.rank}<small>位</small></div><p>${result.win?`おこづかい +¥${fmt(result.reward.cash)} · 育成素材 +${fmt(result.reward.dust)}`:'編成と育成を見直して再挑戦しよう。'}</p><p>結果は保存済みです。</p><button class="primary" data-action="close">闘技場に戻る</button></div>`);
+}
+function playBattle(){
+  const result=commit('battle',s=>{const r=G.battle(s);G.applyBattle(s,r);return r;});
+  render();setPlaying(true);$('#playback-text').textContent='BATTLE START';sound('tap');
+  stage.battle(result,shortMotion(),f=>{$('#playback-text').textContent=`TURN ${f.turn} · ${f.text}`;},()=>{setPlaying(false);render();sound(result.win?'purchase':'tap');battleResult(result);});
+}
 render();
+if(state.presentation){
+  page=state.presentation.kind==='summon'?'summon':'arena';render();
+  if(state.presentation.kind==='summon')summonResult(state.presentation.result);else battleResult(state.presentation.result);
+}
 if(recovered)toast('破損したセーブを退避し、初期状態で開始しました');
 else if(saveFailed)toast('自動保存が利用できません。設定から書き出してください');
 else if(restored>1000)toast(`おかえりなさい。放置収入 +¥${fmt(restored)}`);

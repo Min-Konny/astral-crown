@@ -1,5 +1,6 @@
 import { mkdir, copyFile, readFile } from 'node:fs/promises';
-const files = ['index.html', 'src/app.js', 'src/game.js', 'src/style.css', 'docs/requirements.md'];
+import './prepare.mjs';
+const files = ['index.html', 'src/app.js', 'src/game.js', 'src/session.js', 'src/scenes.js', 'src/style.css', 'src/game-ui.css', 'docs/requirements.md', 'assets/luna.png', 'assets/garden.png', 'assets/party.png', 'vendor/phaser.min.js', 'vendor/PHASER-LICENSE.md'];
 for (const file of files) {
   const target = new URL(`../dist/${file}`, import.meta.url);
   await mkdir(new URL('.', target), { recursive: true });
