@@ -96,6 +96,9 @@ export function trainSkill(s,id){
   s.mastery??=Object.fromEntries(CHARACTERS.map(c=>[c.id,0]));
   s.dust-=info.cost;s.mastery[id]=info.rank+1;
 }
+export function collectionCandidates(s,filter='all'){
+  return CHARACTERS.filter(c=>filter==='promotion'?s.counts[c.id]>0&&promotion(s.counts[c.id]).stage>promotionStage(s,c.id):filter==='training'?!trainingInfo(s,c.id).reason:filter==='heroes'?isHero(c):filter==='legacy'?!isHero(c):true);
+}
 export function chooseFocus(s,id,focus){
   if(!byId(id)||!s.counts[id]||!((s.mastery?.[id]??0)>0||promotionPower(s,id)>0)||!['power','guard'].includes(focus))throw Error('強化か第2段階への昇格で成長方針を選べます');
   s.focus??=Object.fromEntries(CHARACTERS.map(c=>[c.id,'power']));s.focus[id]=focus;

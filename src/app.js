@@ -57,7 +57,7 @@ function trainingDialog(id){
   const preview=structuredClone(state);if(eligible.stage>current)G.promote(preview,id);
   const stats=G.isHero(c)?G.stats(state,c):null,after=stats?G.stats(preview,c):null;
   const skillPreview=structuredClone(state);skillPreview.mastery[id]=Math.min(2,info.rank+1);
-  modal(`<section class="training-view"><div class="training-art tier-${Math.min(current,5)}">${crest(c)}<span class="stage-badge">第${current}段階</span></div><div><div class="eyebrow">${c.rarity} / ${c.role}</div><h2>${c.name}</h2><p>${G.isHero(c)?G.SKILLS[id].description:'C / UCの継承者。戦闘枠を使わず、全員の成長を支えます。'}</p><p><b>${fmt(state.counts[id])}枚</b> / ${next?`次の条件 ${fmt(next)}枚（あと${fmt(Math.max(0,next-state.counts[id]))}枚）`:'最終段階'}</p><p>累計条件・カード消費なし。複数段階をまとめて昇格できます。</p><p>${growthText(state,id)}${eligible.stage>current?` → ${growthText(preview,id)}`:''}</p>${stats?`<p>攻撃 ${fmt(stats.atk)} → ${fmt(after.atk)} / HP ${fmt(stats.hp)} → ${fmt(after.hp)}</p>`:''}<button class="primary wide" data-promote="${id}" ${eligible.stage>current?'':'disabled'}>${eligible.stage>current?`昇格可能：第${current} → 第${eligible.stage}段階`:'カードを集めて次の昇格へ'}</button><h3>${G.isHero(c)?'固有技の鍛錬':'継承の鍛錬'} ${info.rank} / 2</h3><p>${growthText(state,id)} → ${growthText(skillPreview,id)}</p><button class="wide" data-train-skill="${id}" ${info.reason?'disabled':''}>${info.reason||`鍛える：素材 ${info.cost}`}</button><p>素材：召喚・ランキング戦・庭園巡回と任意目標。鍛錬は転生後も保持。</p><div class="button-row">${['power','guard'].map(f=>`<button data-focus="${f}" data-focus-id="${id}" ${info.rank||current>=2?'':'disabled'} class="${(state.focus[id]??'power')===f?'equipped':''}">${f==='power'?'攻撃を伸ばす':'耐久を伸ばす'}</button>`).join('')}</div><p>方針は無料で選び直せます。${G.isHero(c)?'昇格・鍛錬後は攻撃+8%かHP+12%。':'鍛錬1段につき全員の攻撃+1.5%かHP+2%。昇格も方針に応じて加算。'}</p></div></section>`,'training-modal');
+  modal(`${mission>=0?`<button data-return-patrol>庭園「${G.MISSIONS[mission].name}」へ戻る</button>`:''}<section class="training-view"><div class="training-art tier-${Math.min(current,5)}">${crest(c)}<span class="stage-badge">第${current}段階</span></div><div><div class="eyebrow">${c.rarity} / ${c.role}</div><h2>${c.name}</h2><p>${G.isHero(c)?G.SKILLS[id].description:'C / UCの継承者。戦闘枠を使わず、全員の成長を支えます。'}</p><p><b>${fmt(state.counts[id])}枚</b> / ${next?`次の条件 ${fmt(next)}枚（あと${fmt(Math.max(0,next-state.counts[id]))}枚）`:'最終段階'}</p><p>累計条件・カード消費なし。複数段階をまとめて昇格できます。</p><p>${growthText(state,id)}${eligible.stage>current?` → ${growthText(preview,id)}`:''}</p>${stats?`<p>攻撃 ${fmt(stats.atk)} → ${fmt(after.atk)} / HP ${fmt(stats.hp)} → ${fmt(after.hp)}</p>`:''}<button class="primary wide" data-promote="${id}" ${eligible.stage>current?'':'disabled'}>${eligible.stage>current?`昇格可能：第${current} → 第${eligible.stage}段階`:'カードを集めて次の昇格へ'}</button><h3>${G.isHero(c)?'固有技の鍛錬':'継承の鍛錬'} ${info.rank} / 2</h3><p>${growthText(state,id)} → ${growthText(skillPreview,id)}</p><button class="wide" data-train-skill="${id}" ${info.reason?'disabled':''}>${info.reason||`鍛える：素材 ${info.cost}`}</button><p>素材：召喚・ランキング戦・庭園巡回と任意目標。鍛錬は転生後も保持。</p><div class="button-row">${['power','guard'].map(f=>`<button data-focus="${f}" data-focus-id="${id}" ${info.rank||current>=2?'':'disabled'} class="${(state.focus[id]??'power')===f?'equipped':''}">${f==='power'?'攻撃を伸ばす':'耐久を伸ばす'}</button>`).join('')}</div><p>方針は無料で選び直せます。${G.isHero(c)?'昇格・鍛錬後は攻撃+8%かHP+12%。':'鍛錬1段につき全員の攻撃+1.5%かHP+2%。昇格も方針に応じて加算。'}</p></div></section>`,'training-modal');
 }
 function promotionResult(result,replay=false){
   const c=G.byId(result.id),before=structuredClone(state);before.promotions[result.id]=result.from;
@@ -79,10 +79,12 @@ function party(){
   return `<div class="party">${state.team.map((id,i)=>{const c=G.byId(id),s=G.stats(state,c);return `<div class="party-card">${crest(c)}<div>${badge(c)} <span class="muted">Lv.${state.levels[id]}</span><h3>${c.name}</h3><small>${i<2?'前衛':'後衛'} · ${c.element} / ${c.role}</small><p>ATK ${fmt(s.atk)} <span class="muted"> · ${G.awakening(state,c)}凸</span></p></div></div>`;}).join('')}${state.team.length<4?'<button class="party-empty" data-page="collection">＋<small>仲間を編成</small></button>':''}</div>`;
 }
 function collection(){
-  const chars=G.CHARACTERS.filter(c=>filter==='all'||(filter==='legacy'?!G.isHero(c):G.isHero(c)));
+  const chars=G.collectionCandidates(state,filter);
   return heading('LEGACY ARCHIVE','継承図鑑','主役を育てる。無数の出会いを、全員の力に変える。',`<span class="tag">全体攻撃 +${pct(G.collectionBonus(state))}%</span>`)+`
   <section class="panel formation"><div class="section-title"><h2>出撃編成 <small>${state.team.length} / 4</small></h2><span class="muted">左から前衛2人 → 後衛2人</span></div>${party()}</section>
-  <div class="tabs">${[['all','すべて'],['heroes','主力キャラ'],['legacy','全体強化 C / UC']].map(([id,label])=>`<button class="${filter===id?'selected':''}" data-filter="${id}">${label}</button>`).join('')}</div>
+  <div class="tabs">${[['all','すべて'],['heroes','主力キャラ'],['legacy','全体強化 C / UC'],['promotion','昇格可能'],['training','鍛錬可能']].map(([id,label])=>`<button class="${filter===id?'selected':''}" data-filter="${id}">${label}</button>`).join('')}</div>
+  ${mission>=0?`<button class="primary wide" data-return-patrol>庭園「${G.MISSIONS[mission].name}」へ戻る</button>`:''}
+  ${!chars.length?'<section class="panel"><p>今の条件に合う仲間はいません。絞り込みは育成後も保持されます。</p><button data-filter="all">すべての仲間を表示</button></section>':''}
   <div class="character-grid">${chars.map(c=>{
     const n=state.counts[c.id],hero=G.isHero(c),r=G.RARITIES[c.rarity],owned=n>0;
     return `<article class="panel character-card tier-${Math.min(G.promotionStage(state,c.id),5)} ${owned?'':'unowned'}" style="--rarity:${r.color}"><div class="card-top">${badge(c)}<span>${c.element} · ${c.role}</span></div>${crest(c)}<small>${c.title}</small><h2>${c.name}</h2><div class="stage-badge">第${G.promotionStage(state,c.id)}段階</div><button data-training="${c.id}" ${owned?'':'disabled'}>${G.promotion(state.counts[c.id]).stage>G.promotionStage(state,c.id)?'昇格可能！':(G.PROMOTION_THRESHOLDS[G.promotionStage(state,c.id)]?`次の昇格まで ${fmt(Math.max(0,G.PROMOTION_THRESHOLDS[G.promotionStage(state,c.id)]-n))}枚 / 育成`:'最終段階 / 育成')}</button><p class="owned-count">所持 ${fmt(n)}体</p>${hero?
@@ -155,6 +157,8 @@ document.addEventListener('click',e=>{
   if(playing)return;
   run(()=>{
     if(b.dataset.page){page=b.dataset.page;render();window.scrollTo({top:0});return;}
+    if(b.hasAttribute('data-return-patrol')){closeModal();page='arena';render();window.scrollTo({top:0});return;}
+    if(b.dataset.retryPatrol!==undefined){if(state.presentation?.kind!=='campaign'||state.presentation.result.mission!==Number(b.dataset.retryPatrol))return;mission=Number(b.dataset.retryPatrol);page='arena';playBattle();return;}
     if(b.dataset.training){closeModal();trainingDialog(b.dataset.training);return;}
     if(b.dataset.promote){const r=commit('promotion',s=>G.promote(s,b.dataset.promote));render();promotionResult(r);return;}
     if(b.dataset.trainSkill){state=trainTransaction(storage,state,s=>G.trainSkill(s,b.dataset.trainSkill));render();trainingDialog(b.dataset.trainSkill);return;}
@@ -234,12 +238,14 @@ function playSummon(){
 }
 function battleResult(result){
   if(result.mission!==undefined){
-    modal(`<div class="battle-result"><span>${result.win?'VICTORY':'RETRY'}</span><h2>${G.MISSIONS[result.mission].name}</h2><p>${result.win?(result.first?`初回踏破！ 育成素材 +${result.reward.dust} / おこづかい +${fmt(result.reward.cash)}`:`再戦完了・育成素材 +${result.reward.dust}（初回報酬は受取済み）`):'育成・隊列を見直して再挑戦しよう。消費はありません。'}</p><p>${result.bonus?'任意目標達成：素材120を上の報酬に含みます。':'任意目標：'+G.OBJECTIVES[result.mission]}</p>${result.summary?`<p>${result.summary.turns}ターン / 生存 ${result.summary.survivors}/${result.summary.total}<br>与ダメージ ${fmt(result.summary.damage)} / 回復 ${fmt(result.summary.healing)} / 守りで軽減 ${fmt(result.summary.prevented)}</p>`:''}<p>結果は保存済みです。閉じてから次の巡回や育成へ進めます。</p><button class="primary" data-action="close">巡回へ戻る</button></div>`);return;
+    modal(`<div class="battle-result"><span>${result.win?'VICTORY':'RETRY'}</span><h2>${G.MISSIONS[result.mission].name}</h2><p>${result.win?(result.first?`初回踏破！ 育成素材 +${result.reward.dust} / おこづかい +${fmt(result.reward.cash)}`:`再戦完了・育成素材 +${result.reward.dust}（初回報酬は受取済み）`):'育成・隊列を見直して再挑戦しよう。消費はありません。'}</p><p>${result.bonus?'任意目標達成：素材120を上の報酬に含みます。':'任意目標：'+G.OBJECTIVES[result.mission]}</p>${result.summary?`<p>${result.summary.turns}ターン / 生存 ${result.summary.survivors}/${result.summary.total}<br>与ダメージ ${fmt(result.summary.damage)} / 回復 ${fmt(result.summary.healing)} / 守りで軽減 ${fmt(result.summary.prevented)}</p>`:''}<p>結果は保存済みです。閉じてから次の巡回や育成へ進めます。</p><div class="button-row"><button class="primary" data-retry-patrol="${result.mission}">同じ庭園に再挑戦</button><button data-action="close">巡回へ戻る</button></div></div>`);return;
   }
   modal(`<div class="battle-result"><span class="eyebrow">${result.win?'VICTORY':'DEFEAT'}</span><h2>${result.win?'勝利。新しい星へ。':'次は、きっと届く。'}</h2><div class="rank-result">${state.rank}<small>位</small></div><p>${result.win?`おこづかい +¥${fmt(result.reward.cash)} · 育成素材 +${fmt(result.reward.dust)}`:'編成と育成を見直して再挑戦しよう。'}</p><p>結果は保存済みです。</p><button class="primary" data-action="close">闘技場に戻る</button></div>`);
 }
 function playBattle(){
+  if(playing)return;
   const result=mission>=0?commit('campaign',s=>{const r=G.campaignBattle(s,mission);G.applyCampaign(s,r);return r;}):commit('battle',s=>{const r=G.battle(s);G.applyBattle(s,r);return r;});
+  if($('#modal').open)$('#modal').close();
   render();setPlaying(true);$('#playback-text').textContent='BATTLE START';sound('tap');
   stage.battle(result,shortMotion(),f=>{$('#playback-text').textContent=`TURN ${f.turn} · ${f.text}`;},()=>{setPlaying(false);render();sound(result.win?'purchase':'tap');battleResult(result);});
 }
