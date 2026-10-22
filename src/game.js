@@ -39,7 +39,7 @@ export function promote(s,id){
   const from=promotionStage(s,id),to=promotion(s.counts[id]).stage;
   if(to<=from)throw Error('次の昇格に必要な枚数が足りません');
   s.promotions??=Object.fromEntries(CHARACTERS.map(c=>[c.id,s.counts[c.id]>0?1:0]));
-  s.promotions[id]=to;return {id,from,to};
+  s.promotions[id]=to;s.confirmedCounts??={};s.confirmedCounts[id]=s.counts[id];return {id,from,to};
 }
 export function initialState(now = Date.now()) {
   return { version:1, cash:18000, gems:3000, dust:300, facility:0, rank:100, bestRank:100,
@@ -47,6 +47,7 @@ export function initialState(now = Date.now()) {
     counts:Object.fromEntries(CHARACTERS.map(c => [c.id, ['iris','noel','mira'].includes(c.id) ? 1 : 0])),
     levels:Object.fromEntries(CHARACTERS.filter(isHero).map(c => [c.id,1])),
     promotions:Object.fromEntries(CHARACTERS.map(c=>[c.id,['iris','noel','mira'].includes(c.id)?1:0])),
+    confirmedCounts:Object.fromEntries(CHARACTERS.map(c=>[c.id,['iris','noel','mira'].includes(c.id)?1:0])),
     mastery:Object.fromEntries(CHARACTERS.map(c=>[c.id,0])),
     focus:Object.fromEntries(CHARACTERS.map(c=>[c.id,'power'])),
     team:['noel','iris','mira'], settings:{ sound:false, quick:false, soft:false } };
@@ -74,10 +75,10 @@ export function buy(s, id, quantity=1) {
 }
 export function bonusFor(s,c) {
   const r = RARITIES[c.rarity];
-  return r.bonus ? Math.sqrt(Math.min(s.counts[c.id],r.cap)/r.cap)*r.bonus : 0;
+  return r.bonus ? Math.sqrt(Math.min(s.confirmedCounts?.[c.id]??s.counts[c.id],r.cap)/r.cap)*r.bonus : 0;
 }
 export const collectionBonus = s => CHARACTERS.reduce((sum,c) => sum + bonusFor(s,c),0);
-export const awakening = (s,c) => Math.min(RARITIES[c.rarity].cap, Math.max(0,s.counts[c.id]-1));
+export const awakening = (s,c) => Math.min(RARITIES[c.rarity].cap, Math.max(0,(s.confirmedCounts?.[c.id]??s.counts[c.id])-1));
 export function stats(s,c) {
   const mult = (1 + awakening(s,c)*.18)*(1 + (s.levels[c.id]-1)*.08);
   const trained=(s.mastery?.[c.id]??0)>0||promotionPower(s,c.id)>0,focus=s.focus?.[c.id]??'power';
@@ -287,6 +288,9 @@ export function validateSave(raw) {
     const n=raw.counts?.[c.id];
     if(!Number.isSafeInteger(n)||n<0||n>1e15)throw Error('キャラの所持数が不正です');
     s.counts[c.id]=n;
+    const confirmed=raw.confirmedCounts?.[c.id]??n;
+    if(!Number.isSafeInteger(confirmed)||confirmed<0||confirmed>n)throw Error('確定済みカード枚数が不正です');
+    s.confirmedCounts[c.id]=confirmed;
     const promoted=raw.promotions?.[c.id]??(n>0?1:0);
     if(!Number.isInteger(promoted)||promoted<0||promoted>promotion(n).stage||(n>0&&promoted===0))throw Error('昇格記録が不正です');
     s.promotions[c.id]=promoted;

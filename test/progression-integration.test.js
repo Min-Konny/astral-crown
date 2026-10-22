@@ -39,7 +39,7 @@ test('all six legacy supports saturate and never accumulate on repeated selectio
 });
 test('300000-card legacy migration and promotion retain every card and preexisting support',()=>{
   const raw=G.initialState(1000);for(const c of G.CHARACTERS)raw.counts[c.id]=300000;
-  delete raw.promotions;delete raw.mastery;delete raw.focus;
+  delete raw.confirmedCounts;delete raw.promotions;delete raw.mastery;delete raw.focus;
   let s=G.restore(raw,1000).state;const before=G.collectionBonus(s);let saved;
   for(const c of G.CHARACTERS){
     const tx=transact({setItem:(k,v)=>saved=v},s,'promotion',s=>G.promote(s,c.id),1000);s=tx.state;

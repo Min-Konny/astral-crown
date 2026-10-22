@@ -2,6 +2,17 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createStage} from '../src/scenes.js';
 import * as G from '../src/game.js';
+import {readFileSync} from 'node:fs';
+
+test('hidden illustrated stage retains layout so Phaser RESIZE never receives a zero parent',()=>{
+  const css=readFileSync(new URL('../src/game-ui.css',import.meta.url),'utf8');
+  const hidden=css.match(/#game-stage\[hidden\]\s*\{([^}]+)\}/g);
+  assert.equal(hidden.length,1);
+  assert.match(hidden[0],/display:block/);
+  assert.match(hidden[0],/visibility:hidden/);
+  assert.match(hidden[0],/pointer-events:none/);
+  assert.match(css,/#game-stage\{[^}]*position:fixed;inset:0/);
+});
 
 test('missing engine preserves access to committed results without replaying actions',async()=>{
   const errors=[],stage=createStage({},message=>errors.push(message));

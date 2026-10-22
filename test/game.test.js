@@ -36,13 +36,13 @@ test('天井直前と自然SSR排出時に天井がリセットされる',()=>{
 });
 test('低レアは編成外で攻撃だけを増加し、10万体でボーナス上限',()=>{
   const s=G.initialState(),c=G.byId('noel'),before=G.stats(s,c);
-  s.counts.guard=100;assert.ok(G.stats(s,c).atk>before.atk);assert.equal(G.stats(s,c).hp,before.hp);
+  delete s.confirmedCounts;s.counts.guard=100;assert.ok(G.stats(s,c).atk>before.atk);assert.equal(G.stats(s,c).hp,before.hp);
   assert.throws(()=>G.toggleTeam(s,'guard'));
   s.counts.guard=100000;assert.equal(G.collectionBonus(s),.25);
   s.counts.guard=200000;assert.equal(G.collectionBonus(s),.25);
 });
 test('SSRは本体と5体で5凸し、余剰では凸と戦力が増加しない',()=>{
-  const s=G.initialState(),c=G.byId('luna');s.counts.luna=6;
+  const s=G.initialState(),c=G.byId('luna');delete s.confirmedCounts;s.counts.luna=6;
   assert.equal(G.awakening(s,c),5);const before=G.stats(s,c);s.counts.luna=500;
   assert.equal(G.awakening(s,c),5);assert.deepEqual(G.stats(s,c),before);
 });
@@ -71,7 +71,7 @@ test('敗北では順位も通貨も変化しない',()=>{
 });
 test('転生条件、引継ぎ、リセットが仕様通り',()=>{
   const s=G.initialState();assert.throws(()=>G.ascend(s));
-  s.rank=46;s.bestRank=46;s.levels.iris=20;s.counts.guard=2345;s.counts.luna=6;s.spent=99999;s.pulls=400;s.facility=5;s.pity=55;
+  s.rank=46;s.bestRank=46;s.levels.iris=20;s.counts.guard=2345;delete s.confirmedCounts;s.counts.luna=6;s.spent=99999;s.pulls=400;s.facility=5;s.pity=55;
   const counts=structuredClone(s.counts),team=[...s.team];assert.equal(G.ascend(s),5);
   assert.deepEqual(s.counts,counts);assert.deepEqual(s.team,team);assert.equal(s.spent,99999);assert.equal(s.pulls,400);
   assert.equal(s.seals,5);assert.equal(s.season,2);assert.equal(s.rank,100);assert.equal(s.bestRank,46);
