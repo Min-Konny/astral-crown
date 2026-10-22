@@ -24,3 +24,24 @@ dialog{color:#24445e;background:#f7fcff;border:1px solid white;box-shadow:0 20px
 .mini-portrait{width:62px;height:84px;margin:auto;background-size:auto 100%}.crest.illustrated{background:transparent;border:0;box-shadow:none;transform:none}.crest.illustrated::before,.crest.illustrated::after{display:none}.legacy-gain strong{color:#247797!important}.rarity-totals span{color:#355c79!important}.result .legacy-gain p{color:#426a80}
 @media(max-width:650px){.mini-portrait{width:45px;height:61px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+.patrol .chapter p{max-width:440px;line-height:1.7}
+.patrol .opponent{max-width:390px;top:210px}
+.patrol .arena-dock{display:flex;flex-wrap:wrap;width:640px;justify-content:center}
+.patrol .arena-dock .tabs{width:100%;display:flex;gap:8px}
+.patrol .tabs button{flex:1;min-height:44px;white-space:normal}
+@media(max-width:650px){.patrol .chapter p{max-width:88vw}.patrol .opponent{top:190px;max-width:88%;text-align:left}.patrol .arena-dock{width:90%;bottom:100px}.patrol .arena-dock>.primary{min-height:48px;font-size:16px}.patrol .arena-dock button{min-height:44px}}
+.training-modal{max-width:900px;width:94vw;background:#142642;color:#edf6ff}
+.training-view{display:grid;grid-template-columns:minmax(160px,1fr) 1.5fr;gap:24px;align-items:center}
+.training-art{position:relative;padding:24px;border:2px solid #88a4bd;border-radius:24px;background:radial-gradient(ellipse,#284b6b,#11213b);text-align:center}
+.training-art .crest{width:100%;height:280px;margin:auto}.training-art .mini-portrait{width:200px;max-width:100%;height:100%;background-size:auto 100%}
+.training-modal h2,.training-modal h3,.training-modal p,.promotion-modal h2,.promotion-modal p{color:#edf6ff}
+.training-modal .eyebrow,.promotion-modal .eyebrow,.training-modal .stage-badge,.promotion-modal .stage-badge{color:#b9defb}
+.stage-badge{display:inline-block;border:1px solid #92b8dc;border-radius:20px;padding:6px 14px;margin:8px 0;color:#5c93bb;background:#10213b;font-weight:bold}
+.tier-2{border-color:#62d8a4}.tier-3{border-color:#73b9ff;box-shadow:0 0 24px #418ac844}.tier-4{border-color:#c197ff;box-shadow:0 0 32px #9660db55}.tier-5{border-color:#ffd98b;box-shadow:0 0 36px #b7874055}
+.promotion-modal{background:#101e35;color:#edf6ff;width:620px;max-width:94vw;text-align:center}
+.promotion-view .training-art{max-width:260px;margin:auto;animation:promotion-rise .65s ease-out both}
+.promotion-view .stage-badge{animation:promotion-rise .8s ease-out both}
+@keyframes promotion-rise{from{transform:translateY(14px) scale(.94);opacity:.5}to{transform:none;opacity:1}}
+.promotion-view.still *,.soft .promotion-view *,.quick .promotion-view *{animation:none!important}
+@media(prefers-reduced-motion:reduce){.promotion-view *{animation:none!important}}
+@media(max-width:650px){.training-view{grid-template-columns:1fr}.training-art{max-width:260px;margin:auto}.training-art .crest{height:200px}.training-art .mini-portrait{width:145px}.training-view button{min-height:44px}}

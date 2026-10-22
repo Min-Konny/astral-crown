@@ -11,16 +11,31 @@ export function createStage(parent, onError) {
   }
 }
 function createPhaserStage(parent, onError) {
-  let current,queued,sequence=0,finish=null;
+  let current,queued,sequence=0,finish=null,failed=false,canvas;
+  const contextLost=()=>fail();
+  function fail(){
+    if(failed)return;
+    failed=true;
+    if(canvas)canvas.style.visibility='hidden';
+    // Cancel stale visual callbacks before releasing the HTML input lock.
+    // Outcomes have already been committed; never rerun gameplay here.
+    const done=finish;finish=null;clear();current=null;
+    done?.();
+    onError('画像・描画を利用できないため演出を省略しました。操作は続けられます。画像の復帰には再読み込みしてください。');
+  }
   class AstralStage extends Phaser.Scene {
     constructor(){super('astral');}
     preload(){
+      canvas=this.game?.canvas;
+      canvas?.addEventListener('webglcontextlost',contextLost);
+      canvas?.addEventListener('contextlost',contextLost);
       this.load.image('garden','./assets/garden.png');
       this.load.image('luna','./assets/luna.png');
       this.load.image('party','./assets/party.png');
-      this.load.on('loaderror',()=>onError('画像を読み込めません。再読み込みしてください。'));
+      this.load.on('loaderror',fail);
     }
     create(){
+      if(failed)return;
       const source=this.textures.get('party').getSourceImage(),width=source.width,height=source.height;
       // Art-directed atlas regions, kept as frames without modifying the original image.
       const cuts=[0,.282,.507,.757,1];
@@ -45,7 +60,7 @@ function createPhaserStage(parent, onError) {
     return {s,w,h};
   }
   function draw(mode,state,reduced){
-    queued=[mode,state,reduced];if(!current||finish)return;
+    queued=[mode,state,reduced];if(failed||!current||finish)return;
     clear();const {s,w,h}=backdrop(mode),mobile=w<650;
     if(mode==='home'||mode==='summon'){
       const hero=s.add.image(w*(mobile?.54:.57),h*(mobile?.99:.93),'luna').setOrigin(.5,1);
@@ -58,7 +73,7 @@ function createPhaserStage(parent, onError) {
       }
     }else if(mode==='arena'){
       placeUnits(state.team.map(id=>({id,name:byId(id).name,hp:1,max:1})), 'a',w,h);
-      placeUnits(['noel','ash','iris','mira'].map(id=>({id,name:byId(id).name,hp:1,max:1})),'b',w,h);
+      placeUnits((state.previewEnemy||['noel','ash','iris','mira'].map(id=>byId(id))).map(c=>({id:c.id,name:c.name,hp:1,max:1})),'b',w,h);
     }
     // Draw into the existing canvas without a full-screen transition overlay.
   }
@@ -93,7 +108,7 @@ function createPhaserStage(parent, onError) {
       s.add.text(w/2,h*.82,`${best.rarity}  ${best.name}`,{fontFamily:'sans-serif',fontSize:w<650?'28px':'42px',fontStyle:'bold',color:'#fff5cc',stroke:'#173a66',strokeThickness:5}).setOrigin(.5);
       s.add.text(w/2,h*.9,best.title,{fontFamily:'sans-serif',fontSize:'18px',color:'#ffffff',stroke:'#173a66',strokeThickness:3}).setOrigin(.5);
       if(!reduced){s.tweens.add({targets:art,alpha:{from:0,to:1},x:{from:w*.65,to:w/2},duration:550,ease:'Cubic.easeOut'});}
-      s.time.delayedCall(reduced?50:1900,complete);
+      s.time.delayedCall(reduced?50:1900,()=>{if(sequence===ticket)complete();});
     };
     if(reduced){reveal();return;}
     s.tweens.add({targets:ring,scale:1.8,angle:180,alpha:.15,duration:1500});
@@ -116,7 +131,7 @@ function createPhaserStage(parent, onError) {
           const view=units[side][u.id];view.hp.width=view.width*u.hp/u.max;
           view.sprite.setAlpha(u.hp?1:.25);view.label.setText(`${u.name} ${u.hp}`);
         }
-        const value=s.add.text(target.x,target.y-70,`${f.kind==='heal'?'+':'−'}${f.amount}`,{fontFamily:'sans-serif',fontSize:f.skill?'30px':'23px',fontStyle:'bold',color:f.kind==='heal'?'#43e8bd':'#ffffff',stroke:'#16334c',strokeThickness:4}).setOrigin(.5);
+        const value=s.add.text(target.x,target.y-70,f.kind==='guard'?'GUARD':`${f.kind==='heal'?'+':'−'}${f.amount}`,{fontFamily:'sans-serif',fontSize:f.skill?'30px':'23px',fontStyle:'bold',color:f.kind==='heal'?'#43e8bd':'#ffffff',stroke:'#16334c',strokeThickness:4}).setOrigin(.5);
         if(!reduced){
           target.sprite.setTint(f.kind==='heal'?0x99ffdd:0xffaabb);
           s.time.delayedCall(130,()=>target.sprite.active&&target.sprite.clearTint());
@@ -125,9 +140,13 @@ function createPhaserStage(parent, onError) {
         }else s.time.delayedCall(100,()=>value.destroy());
         s.time.delayedCall(reduced?30:450,step);
       };
-      if(reduced||f.kind==='heal')hit();
+      if(reduced||f.kind==='heal'||f.kind==='guard')hit();
       else s.tweens.add({targets:actor.sprite,x:actor.x+(f.side==='a'?24:-24),duration:160,yoyo:true,onYoyo:hit});
     };step();
   }
-  return {show:draw,summon,battle,skip:complete,destroy:()=>game.destroy(true)};
+  return {show:draw,summon,battle,skip:complete,destroy:()=>{
+    canvas?.removeEventListener('webglcontextlost',contextLost);
+    canvas?.removeEventListener('contextlost',contextLost);
+    finish=null;clear();current=null;failed=true;game.destroy(true);
+  }};
 }

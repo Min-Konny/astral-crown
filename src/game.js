@@ -27,11 +27,28 @@ export const PACKS = [
 ];
 export const byId = id => CHARACTERS.find(c => c.id === id);
 export const isHero = c => !RARITIES[c.rarity].bonus;
+export const PROMOTION_THRESHOLDS=[1,10,50,200,1000,5000,20000,100000,300000];
+export function promotion(count){
+  const stage=PROMOTION_THRESHOLDS.filter(n=>count>=n).length;
+  return {stage,next:PROMOTION_THRESHOLDS[stage]??null,remaining:Math.max(0,(PROMOTION_THRESHOLDS[stage]??count)-count)};
+}
+export const promotionStage=(s,id)=>s.promotions?.[id]??(s.counts[id]>0?1:0);
+export const promotionPower=(s,id)=>Math.max(0,promotionStage(s,id)-1);
+export function promote(s,id){
+  if(!byId(id)||!s.counts[id])throw Error('仲間にしてから昇格できます');
+  const from=promotionStage(s,id),to=promotion(s.counts[id]).stage;
+  if(to<=from)throw Error('次の昇格に必要な枚数が足りません');
+  s.promotions??=Object.fromEntries(CHARACTERS.map(c=>[c.id,s.counts[c.id]>0?1:0]));
+  s.promotions[id]=to;return {id,from,to};
+}
 export function initialState(now = Date.now()) {
   return { version:1, cash:18000, gems:3000, dust:300, facility:0, rank:100, bestRank:100,
-    season:1, seals:0, pity:0, spent:0, pulls:0, mail:false, lastSeen:now,
+    season:1, seals:0, pity:0, spent:0, pulls:0, mail:false, lastSeen:now, campaignCleared:0, campaignRuns:0, campaignMedals:0,
     counts:Object.fromEntries(CHARACTERS.map(c => [c.id, ['iris','noel','mira'].includes(c.id) ? 1 : 0])),
     levels:Object.fromEntries(CHARACTERS.filter(isHero).map(c => [c.id,1])),
+    promotions:Object.fromEntries(CHARACTERS.map(c=>[c.id,['iris','noel','mira'].includes(c.id)?1:0])),
+    mastery:Object.fromEntries(CHARACTERS.map(c=>[c.id,0])),
+    focus:Object.fromEntries(CHARACTERS.map(c=>[c.id,'power'])),
     team:['noel','iris','mira'], settings:{ sound:false, quick:false, soft:false } };
 }
 export const income = s => 120 * 1.65 ** s.facility * (1 + s.seals * .25);
@@ -63,7 +80,25 @@ export const collectionBonus = s => CHARACTERS.reduce((sum,c) => sum + bonusFor(
 export const awakening = (s,c) => Math.min(RARITIES[c.rarity].cap, Math.max(0,s.counts[c.id]-1));
 export function stats(s,c) {
   const mult = (1 + awakening(s,c)*.18)*(1 + (s.levels[c.id]-1)*.08);
-  return { atk:c.atk*mult*(1+collectionBonus(s))*(1+s.seals*.08), hp:Math.round(c.hp*mult) };
+  const trained=(s.mastery?.[c.id]??0)>0||promotionPower(s,c.id)>0,focus=s.focus?.[c.id]??'power';
+  const ascend=1+promotionPower(s,c.id)*.02;
+  return { atk:c.atk*mult*(1+collectionBonus(s))*(1+s.seals*.08)*(1+legacyTraining(s,'power'))*(trained&&focus==='power'?1.08:1)*ascend, hp:Math.round(c.hp*mult*(1+legacyTraining(s,'guard'))*(trained&&focus==='guard'?1.12:1)*ascend) };
+}
+export const legacyTraining=(s,focus)=>CHARACTERS.filter(c=>!isHero(c)&&s.counts[c.id]>0&&(s.focus?.[c.id]??'power')===focus).reduce((n,c)=>n+(s.mastery?.[c.id]??0)*(focus==='power'?.015:.02)+promotionPower(s,c.id)*(focus==='power'?.005:.0075),0);
+export function trainingInfo(s,id){
+  const c=byId(id);if(!c)throw Error('仲間が見つかりません');
+  const rank=s.mastery?.[id]??0,requiredLevel=(rank+1)*3;
+  const reason=!s.counts[id]?'召喚で仲間にしよう':rank>=2?'強化完了':(s.campaignCleared??0)<rank+1?`巡回 ${rank+1} を踏破しよう`:isHero(c)&&s.levels[id]<requiredLevel?`Lv.${requiredLevel} で解放`:s.dust<150*(rank+1)?'育成素材が足りません':'';
+  return {rank,cost:150*(rank+1),reason};
+}
+export function trainSkill(s,id){
+  const info=trainingInfo(s,id);if(info.reason)throw Error(info.reason);
+  s.mastery??=Object.fromEntries(CHARACTERS.map(c=>[c.id,0]));
+  s.dust-=info.cost;s.mastery[id]=info.rank+1;
+}
+export function chooseFocus(s,id,focus){
+  if(!byId(id)||!s.counts[id]||!((s.mastery?.[id]??0)>0||promotionPower(s,id)>0)||!['power','guard'].includes(focus))throw Error('強化か第2段階への昇格で成長方針を選べます');
+  s.focus??=Object.fromEntries(CHARACTERS.map(c=>[c.id,'power']));s.focus[id]=focus;
 }
 export const power = s => s.team.reduce((sum,id) => {const t=stats(s,byId(id));return sum+t.atk*5+t.hp;},0);
 export function summon(s,n,banner='pickup',random=Math.random) {
@@ -89,7 +124,7 @@ export function summon(s,n,banner='pickup',random=Math.random) {
       }
     }
     c ||= pool[Math.min(pool.length-1,Math.floor(random()*pool.length))];
-    s.counts[c.id]++; result.counts[c.id]=(result.counts[c.id]||0)+1; result.rarities[rarity]++;
+    s.counts[c.id]++;if(s.promotions&&s.promotions[c.id]===0)s.promotions[c.id]=1; result.counts[c.id]=(result.counts[c.id]||0)+1; result.rarities[rarity]++;
   }
   s.dust += n*8; s.pulls += n; result.after=collectionBonus(s);
   return result;
@@ -126,25 +161,45 @@ export function rival(s) {
     rank:Math.max(1,s.rank-5),
     units:ids.map(id=>{const c=byId(id);return {...c,atk:Math.round(c.atk*scale),hp:Math.round(c.hp*scale)};}) };
 }
-export function battle(s) {
-  const enemy=rival(s), allies=s.team.map(id=>({...byId(id),...stats(s,byId(id))}));
+export const SKILLS = {
+  noel:{name:'守りの輪',description:'3ターンごとに味方全員の次の被ダメージを40%軽減。'},
+  sol:{name:'不退の盾',description:'3ターンごとに味方全員の次の被ダメージを40%軽減。'},
+  iris:{name:'貫く一矢',description:'3ターンごとに防御役の軽減を無視する1.8倍の単体攻撃。'},
+  ash:{name:'火花の奔流',description:'3ターンごとに生存する敵全員へ0.9倍の範囲攻撃。'},
+  luna:{name:'星の裁き',description:'3ターンごとに2.2倍の単体攻撃。'},
+  mira:{name:'木漏れ日の祈り',description:'3ターンごとにHP割合が最も低い味方を攻撃力の1.8倍回復。'},
+  flora:{name:'芽吹きの合唱',description:'3ターンごとに生存する味方全員を攻撃力の0.9倍回復。'},
+};
+export function battle(s, enemy=rival(s)) {
+  const allies=s.team.map(id=>({...byId(id),...stats(s,byId(id)),mastery:s.mastery?.[id]??0,promotion:promotionPower(s,id)}));
   const a=allies.map(c=>({...c,max:c.hp})), b=enemy.units.map(c=>({...c,max:c.hp}));
   const frames=[];
   const snap=(text,turn,event)=>frames.push({text,turn,...event,a:a.map(c=>({id:c.id,name:c.name,hp:c.hp,max:c.max})),b:b.map(c=>({id:c.id,name:c.name,hp:c.hp,max:c.max}))});
   for(let turn=1;turn<=30;turn++) {
-    for(const [own,other] of [[a,b],[b,a]]) {
-      for(const u of own.filter(x=>x.hp>0)) {
-        if(!other.some(x=>x.hp>0))break;
-        if(u.role==='支援'&&turn%3===0){
-          const target=own.filter(x=>x.hp>0).sort((x,y)=>x.hp/x.max-y.hp/y.max)[0];
-          const heal=Math.min(target.max-target.hp,Math.round(u.atk*1.8));
-          target.hp+=heal;snap(`${u.name}の祈り → ${target.name}を${heal}回復`,turn,{kind:'heal',actor:u.id,target:target.id,side:own===a?'a':'b',targetSide:own===a?'a':'b',amount:heal,skill:true});
-        }else{
-          const target=other.find(x=>x.hp>0), adv=advantage(u.element,target.element);
-          const skill=u.role==='攻撃'&&turn%3===0;
-          const damage=Math.max(1,Math.round(u.atk*adv*(skill?1.8:1)*(target.role==='防御'?.75:1)));
-          target.hp=Math.max(0,target.hp-damage);
-          snap(`${u.name}${skill?'の奥義':'の攻撃'} → ${target.name} ${damage}${adv>1?' 属性有利':''}`,turn,{kind:'attack',actor:u.id,target:target.id,side:own===a?'a':'b',targetSide:own===a?'b':'a',amount:damage,skill,advantage:adv});
+    for(const [own,other] of [[a,b],[b,a]]) for(const u of own.filter(x=>x.hp>0)) {
+      if(!other.some(x=>x.hp>0))break;
+      const skill=turn%3===0,side=own===a?'a':'b',foe=own===a?'b':'a';
+      const evolved=own===a||enemy.rank===undefined,boost=1+(u.mastery??0)*.15+(u.promotion??0)*.03;
+      const ability=skill?(evolved?SKILLS[u.id]?.name:'通常奥義'):undefined;
+      if(skill&&u.role==='防御'&&evolved){
+        for(const target of own.filter(x=>x.hp>0))target.guard=Math.min(.65,.4+(u.mastery??0)*.06+(u.promotion??0)*.01);
+        snap(`${u.name} / ${ability} → 味方全員を守る`,turn,{kind:'guard',actor:u.id,target:u.id,side,targetSide:side,amount:0,skill:true,ability});
+      }else if(skill&&u.role==='支援'){
+        const targets=u.id==='flora'&&evolved?own.filter(x=>x.hp>0):[own.filter(x=>x.hp>0).sort((x,y)=>x.hp/x.max-y.hp/y.max)[0]];
+        for(const target of targets){
+          const heal=Math.min(target.max-target.hp,Math.round(u.atk*(u.id==='flora'&&evolved?.9:1.8)*boost));
+          target.hp+=heal;snap(`${u.name} / ${ability} → ${target.name} +${heal}`,turn,{kind:'heal',actor:u.id,target:target.id,side,targetSide:side,amount:heal,skill:true,ability});
+        }
+      }else{
+        const targets=skill&&u.id==='ash'&&evolved?other.filter(x=>x.hp>0):[u.backline?other.findLast(x=>x.hp>0):other.find(x=>x.hp>0)];
+        for(const target of targets){
+          const adv=advantage(u.element,target.element),guarded=!!target.guard;
+          const mult=skill&&u.role==='攻撃'?(evolved?(u.id==='ash'?.9:u.id==='luna'?2.2:1.8)*boost:1.8):1;
+          const defense=target.role==='防御'&&!(skill&&u.id==='iris'&&evolved) ?.75:1;
+          const base=u.atk*adv*mult*defense;
+          const damage=Math.max(1,Math.round(base*(guarded?1-target.guard:1)));
+          const dealt=Math.min(target.hp,damage);target.guard=false;target.hp=Math.max(0,target.hp-damage);
+          snap(`${u.name}${ability?' / '+ability:'の攻撃'} → ${target.name} ${damage}${guarded?'（守りで軽減）':''}`,turn,{kind:'attack',actor:u.id,target:target.id,side,targetSide:foe,amount:damage,dealt,skill,ability,advantage:adv,prevented:guarded?Math.max(0,Math.round(base)-damage):0});
         }
       }
     }
@@ -152,7 +207,11 @@ export function battle(s) {
   }
   const ratio=units=>units.reduce((t,u)=>t+u.hp/u.max,0)/units.length;
   const win=ratio(a)>ratio(b);
-  return {win,frames,enemy,allies,reward:win?{cash:2000+(100-s.rank)*100,dust:180+(100-s.rank)*10}:null};
+  const summary={turns:frames.at(-1)?.turn||0,survivors:a.filter(u=>u.hp>0).length,total:a.length,
+    damage:frames.filter(f=>f.side==='a'&&f.kind==='attack').reduce((v,f)=>v+f.dealt,0),
+    healing:frames.filter(f=>f.side==='a'&&f.kind==='heal').reduce((v,f)=>v+f.amount,0),
+    prevented:frames.filter(f=>f.targetSide==='a').reduce((v,f)=>v+(f.prevented||0),0)};
+  return {win,frames,summary,enemy,allies,reward:win?{cash:2000+(100-s.rank)*100,dust:180+(100-s.rank)*10}:null};
 }
 export function applyBattle(s,result) {
   if(result.applied)throw Error('戦闘結果は反映済みです');
@@ -160,6 +219,35 @@ export function applyBattle(s,result) {
   if(result.win){
     s.rank=result.enemy.rank; s.bestRank=Math.min(s.bestRank,s.rank);
     s.cash=Math.min(1e15,s.cash+result.reward.cash);s.dust+=result.reward.dust;
+  }
+}
+export const MISSIONS = [
+  {id:0,name:'庭園の門',hint:'守護役を前へ。前衛を突破する攻撃役を育てよう。',ids:['noel','ash'],scale:.65,dust:240,cash:2000},
+  {id:1,name:'木陰の射線',hint:'射手は最後尾を狙う。後衛の耐久と回復役の育成が鍵。',ids:['noel','iris','mira'],scale:.85,dust:360,cash:3500,backline:'iris'},
+  {id:2,name:'誓いの守り手',hint:'盾と回復の連携。攻撃役を育て、回復を上回る火力で挑もう。',ids:['sol','ash','flora'],scale:.85,dust:600,cash:5000},
+];
+export function missionEnemy(id){
+  const m=MISSIONS[id];if(!m)throw Error('巡回先が見つかりません');
+  return {name:m.name,units:m.ids.map(id=>{const c=byId(id);return {...c,atk:Math.round(c.atk*m.scale),hp:Math.round(c.hp*m.scale),backline:id===m.backline};})};
+}
+export function campaignBattle(s,id){
+  if(!Number.isInteger(id)||!MISSIONS[id]||id>(s.campaignCleared??0))throw Error('前の巡回をクリアしてください');
+  const result=battle(s,missionEnemy(id)),m=MISSIONS[id];
+  const bonus=result.win&&objectiveMet(id,result.summary)&&!((s.campaignMedals??0)&(1<<id));
+  return {...result,mission:id,run:s.campaignRuns??0,first:id===(s.campaignCleared??0),bonus,
+    reward:result.win?{cash:id===(s.campaignCleared??0)?m.cash:0,dust:(id===(s.campaignCleared??0)?m.dust:0)+(bonus?120:0)}:null};
+}
+export const OBJECTIVES=['3人以上で全員生存して勝利','回復と守りの軽減を両方発動して勝利','12ターン以内に勝利'];
+export const objectiveMet=(id,x)=>id===0?x.total>=3&&x.survivors===x.total:id===1?x.healing>0&&x.prevented>0:x.turns<=12;
+export function applyCampaign(s,result){
+  if(result.applied||result.run!==(s.campaignRuns??0))throw Error('巡回結果は反映済みか古い結果です');
+  if(!MISSIONS[result.mission]||result.mission>(s.campaignCleared??0))throw Error('巡回結果が不正です');
+  result.applied=true;s.campaignRuns=(s.campaignRuns??0)+1;
+  if(result.win&&result.mission===(s.campaignCleared??0)){
+    const m=MISSIONS[result.mission];s.cash=Math.min(1e15,s.cash+m.cash);s.dust+=m.dust;s.campaignCleared=result.mission+1;
+  }
+  if(result.win&&objectiveMet(result.mission,result.summary)&&!((s.campaignMedals??0)&(1<<result.mission))){
+    s.campaignMedals=(s.campaignMedals??0)|(1<<result.mission);s.dust+=120;
   }
 }
 export const ascensionReward = s => s.rank<=50?Math.floor((101-s.rank)/10):0;
@@ -177,6 +265,11 @@ export function claimMail(s) {
 export function validateSave(raw) {
   if(!raw||raw.version!==1)throw Error('未対応のセーブ形式です');
   const s=initialState();
+  for(const [key,max] of [['campaignCleared',3],['campaignRuns',1e15],['campaignMedals',7]]){
+    const value=raw[key]??0;
+    if(!Number.isSafeInteger(value)||value<0||value>max)throw Error('巡回記録が不正です');
+    s[key]=value;
+  }
   for(const key of ['cash','gems','dust','facility','rank','bestRank','season','seals','pity','spent','pulls','lastSeen']){
     const n=raw[key];
     if(typeof n!=='number'||!Number.isFinite(n)||n<0||n>1e16)throw Error(`不正な保存値: ${key}`);
@@ -185,9 +278,15 @@ export function validateSave(raw) {
   }
   if(s.rank<1||s.rank>100||s.bestRank<1||s.bestRank>s.rank||s.facility>30||s.pity>99||s.season<1)throw Error('保存値が範囲外です');
   for(const c of CHARACTERS){
+    const mastery=raw.mastery?.[c.id]??0,focus=raw.focus?.[c.id]??'power';
+    if(!Number.isInteger(mastery)||mastery<0||mastery>2||!['power','guard'].includes(focus))throw Error('育成方針が不正です');
+    s.mastery[c.id]=mastery;s.focus[c.id]=focus;
     const n=raw.counts?.[c.id];
     if(!Number.isSafeInteger(n)||n<0||n>1e15)throw Error('キャラの所持数が不正です');
     s.counts[c.id]=n;
+    const promoted=raw.promotions?.[c.id]??(n>0?1:0);
+    if(!Number.isInteger(promoted)||promoted<0||promoted>promotion(n).stage||(n>0&&promoted===0))throw Error('昇格記録が不正です');
+    s.promotions[c.id]=promoted;
     if(isHero(c)){
       const l=raw.levels?.[c.id];
       if(!Number.isInteger(l)||l<1||l>50)throw Error('キャラレベルが不正です');
