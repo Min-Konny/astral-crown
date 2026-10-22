@@ -81,3 +81,17 @@ body.soft button,body.quick button{transition:none}
 body.soft button:active:not(:disabled),body.quick button:active:not(:disabled){transform:none}
 body.soft dialog[open],body.quick dialog[open]{animation:none}
 @media(prefers-reduced-motion:reduce){body button{transition:none}dialog[open]{animation:none}body button:active:not(:disabled){transform:none}}
+/* A generic hover background previously erased launch's gradient but kept white text. */
+body button:is(.launch,.primary):not(:disabled){background:linear-gradient(115deg,#18779d,#135c86);color:#fff;border-color:#72c8e5}
+body button:is(.launch,.primary):hover:not(:disabled),body button:is(.launch,.primary):focus-visible:not(:disabled){background:linear-gradient(115deg,#1b7e9f,#145b83);color:#fff}
+body button:is(.launch,.primary):active:not(:disabled){background:#135c86;color:#fff}
+body button:is(.launch,.primary):disabled{background:#e1eaf0;color:#435a6e}
+body .home-cta button,body .home-cta button :is(b,small,span){transform:none}
+body .home-cta .launch :is(b,small,span){color:inherit}
+body button{transition:transform 220ms cubic-bezier(.2,1.65,.35,1),box-shadow 130ms ease,border-color 130ms ease;transform-origin:center}
+body button:active:not(:disabled){transform:translateY(2px) scale(.965,.94);transition:transform 65ms ease-out,box-shadow 65ms ease-out}
+body.soft button,body.quick button{transition:none}
+body.soft button:active:not(:disabled),body.quick button:active:not(:disabled){transform:none}
+@media(prefers-reduced-motion:reduce){body button{transition:none}body button:active:not(:disabled){transform:none}}
+.battle-result .button-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.battle-result [data-next-patrol]{grid-column:1/-1;min-height:56px;font-size:17px}
+@media(max-width:600px){.battle-result .button-row{grid-template-columns:1fr}.battle-result button{min-height:48px}}

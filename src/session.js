@@ -1,4 +1,12 @@
 import * as G from './game.js';
+// Result navigation only selects an unlocked destination; reward commits remain in transact.
+export function patrolDestination(state,from,action,run=state.campaignRuns??0){
+  const r=state.presentation?.kind==='campaign'?state.presentation.result:null;
+  if(!r||r.mission!==from||!G.MISSIONS[from]||run!==(state.campaignRuns??0))return null;
+  if(action==='retry')return from;
+  if(action==='next'&&r.win&&G.MISSIONS[from+1]&&from+1<=(state.campaignCleared??0))return from+1;
+  return null;
+}
 export const SAVE_KEY = 'astral-crown-save-v1';
 export function trainTransaction(storage,state,action,now=Date.now()){
   const next=structuredClone(state);action(next);next.lastSeen=now;
