@@ -1,0 +1,45 @@
+import {byId,stats,promotionPower,SKILLS,rival} from '../../src/game.js';
+const advantage=(a,b)=>a===b?1:({炎:'森',森:'水',水:'炎'}[a]===b?1.25:.8);
+export function battle(s, enemy=rival(s)) {
+  const allies=s.team.map(id=>({...byId(id),...stats(s,byId(id)),mastery:s.mastery?.[id]??0,promotion:promotionPower(s,id)}));
+  const a=allies.map(c=>({...c,max:c.hp})), b=enemy.units.map(c=>({...c,max:c.hp}));
+  const frames=[];
+  const snap=(text,turn,event)=>frames.push({text,turn,...event,a:a.map(c=>({id:c.id,name:c.name,hp:c.hp,max:c.max})),b:b.map(c=>({id:c.id,name:c.name,hp:c.hp,max:c.max}))});
+  for(let turn=1;turn<=30;turn++) {
+    for(const [own,other] of [[a,b],[b,a]]) for(const u of own.filter(x=>x.hp>0)) {
+      if(!other.some(x=>x.hp>0))break;
+      const skill=turn%3===0,side=own===a?'a':'b',foe=own===a?'b':'a';
+      const evolved=own===a||enemy.rank===undefined,boost=1+(u.mastery??0)*.15+(u.promotion??0)*.03;
+      const ability=skill?(evolved?SKILLS[u.id]?.name:'通常奥義'):undefined;
+      if(skill&&u.role==='防御'&&evolved){
+        for(const target of own.filter(x=>x.hp>0))target.guard=Math.min(.65,.4+(u.mastery??0)*.06+(u.promotion??0)*.01);
+        snap(`${u.name} / ${ability} → 味方全員を守る`,turn,{kind:'guard',actor:u.id,target:u.id,side,targetSide:side,amount:0,skill:true,ability});
+      }else if(skill&&u.role==='支援'){
+        const targets=u.id==='flora'&&evolved?own.filter(x=>x.hp>0):[own.filter(x=>x.hp>0).sort((x,y)=>x.hp/x.max-y.hp/y.max)[0]];
+        for(const target of targets){
+          const heal=Math.min(target.max-target.hp,Math.round(u.atk*(u.id==='flora'&&evolved?.9:1.8)*boost));
+          target.hp+=heal;snap(`${u.name} / ${ability} → ${target.name} +${heal}`,turn,{kind:'heal',actor:u.id,target:target.id,side,targetSide:side,amount:heal,skill:true,ability});
+        }
+      }else{
+        const targets=skill&&u.id==='ash'&&evolved?other.filter(x=>x.hp>0):[u.backline?other.findLast(x=>x.hp>0):other.find(x=>x.hp>0)];
+        for(const target of targets){
+          const adv=advantage(u.element,target.element),guarded=!!target.guard;
+          const mult=skill&&u.role==='攻撃'?(evolved?(u.id==='ash'?.9:u.id==='luna'?2.2:1.8)*boost:1.8):1;
+          const defense=target.role==='防御'&&!(skill&&u.id==='iris'&&evolved) ?.75:1;
+          const base=u.atk*adv*mult*defense;
+          const damage=Math.max(1,Math.round(base*(guarded?1-target.guard:1)));
+          const dealt=Math.min(target.hp,damage);target.guard=false;target.hp=Math.max(0,target.hp-damage);
+          snap(`${u.name}${ability?' / '+ability:'の攻撃'} → ${target.name} ${damage}${guarded?'（守りで軽減）':''}`,turn,{kind:'attack',actor:u.id,target:target.id,side,targetSide:foe,amount:damage,dealt,skill,ability,advantage:adv,prevented:guarded?Math.max(0,Math.round(base)-damage):0});
+        }
+      }
+    }
+    if(!a.some(x=>x.hp>0)||!b.some(x=>x.hp>0))break;
+  }
+  const ratio=units=>units.reduce((t,u)=>t+u.hp/u.max,0)/units.length;
+  const win=ratio(a)>ratio(b);
+  const summary={turns:frames.at(-1)?.turn||0,survivors:a.filter(u=>u.hp>0).length,total:a.length,
+    damage:frames.filter(f=>f.side==='a'&&f.kind==='attack').reduce((v,f)=>v+f.dealt,0),
+    healing:frames.filter(f=>f.side==='a'&&f.kind==='heal').reduce((v,f)=>v+f.amount,0),
+    prevented:frames.filter(f=>f.targetSide==='a').reduce((v,f)=>v+(f.prevented||0),0)};
+  return {win,frames,summary,enemy,allies,reward:win?{cash:2000+(100-s.rank)*100,dust:180+(100-s.rank)*10}:null};
+}

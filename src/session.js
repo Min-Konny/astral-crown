@@ -15,6 +15,71 @@ export function patrolDestination(state,from,action,run=state.campaignRuns??0){
   return null;
 }
 export const SAVE_KEY = 'astral-crown-save-v1';
+const combatKeys=['rank','bestRank','campaignRuns','campaignCleared','campaignMedals','team','counts','levels','mastery','promotions','confirmedCounts','focus','seals'];
+export function pendingBattleToken(state){const p=state.pendingBattle;return p?`${p.id}:${p.revision}`:null;}
+export function pendingCombat(state){
+  const p=state.pendingBattle;
+  if(!p||p.id!==state.battleSerial||!Number.isSafeInteger(p.revision)||p.revision<0||p.revision>1000000||!Array.isArray(p.actions)||p.actions.length>240||p.revision<p.actions.length)throw Error('Invalid pending battle');
+  const seed=G.validateSave(p.seed);
+  if(combatKeys.some(k=>JSON.stringify(seed[k])!==JSON.stringify(state[k])))throw Error('Battle setup changed');
+  if(!Number.isInteger(p.mission)||p.mission< -1||p.mission>=G.MISSIONS.length||p.mission>seed.campaignCleared)throw Error('Invalid mission');
+  const combat=G.beginCombat(seed,p.mission<0?G.rival(seed):G.missionEnemy(p.mission));
+  for(const action of p.actions){
+    if(!['auto','manual'].includes(action.mode)||![undefined,'use','hold'].includes(action.choice))throw Error('Invalid battle action');
+    combat.mode=action.mode;
+    if(G.stepCombat(combat,action.choice).waiting)throw Error('Missing skill decision');
+  }
+  if(G.combatStatus(combat).done)throw Error('Completed battle must have a receipt');
+  combat.mode=state.settings.skillMode??'auto';return combat;
+}
+export function restorePendingBattle(raw,state){
+  if(!raw.pendingBattle)return state;
+  const next={...state,pendingBattle:structuredClone(raw.pendingBattle)};
+  pendingCombat(next);return next;
+}
+// A damaged action journal must not erase an otherwise valid collection/save.
+// Import stays strict through restorePendingBattle; startup can preserve the base.
+export function restoreBattleSave(raw,now=Date.now()){
+  const restored=G.restore(raw,now);
+  try{restored.state=restorePendingBattle(raw,restored.state);}
+  catch{restored.battleDamaged=true;}
+  restored.state.presentation=raw.pendingBattle?null:receipt(raw);
+  return restored;
+}
+function saveCombat(storage,next,now){next.lastSeen=now;storage.setItem(SAVE_KEY,JSON.stringify(next));return next;}
+export function startPendingBattle(storage,state,mission=-1,now=Date.now()){
+  if(state.pendingBattle)throw Error('Battle is already in progress');
+  const next=structuredClone(state);delete next.presentation;
+  const seed=structuredClone(next);next.battleSerial=(next.battleSerial??0)+1;
+  if(!Number.isSafeInteger(next.battleSerial)||next.battleSerial>1e15)throw Error('Battle counter limit reached');
+  next.pendingBattle={id:next.battleSerial,revision:0,mission,seed,actions:[]};pendingCombat(next);
+  return saveCombat(storage,next,now);
+}
+export function changeBattleMode(storage,state,mode,token=pendingBattleToken(state),now=Date.now()){
+  if(!['auto','manual'].includes(mode))throw Error('Invalid skill mode');
+  if(state.pendingBattle&&token!==pendingBattleToken(state))throw Error('Stale battle control');
+  const next=structuredClone(state);next.settings.skillMode=mode;
+  if(next.pendingBattle){pendingCombat(next);next.pendingBattle.revision++;}
+  return saveCombat(storage,next,now);
+}
+export function advancePendingBattle(storage,state,token,choice,now=Date.now()){
+  if(!token||token!==pendingBattleToken(state))throw Error('Stale battle action');
+  const next=structuredClone(state),combat=pendingCombat(next),step=G.stepCombat(combat,choice);
+  if(step.waiting)return {state,waiting:true,frames:[]};
+  next.pendingBattle.actions.push({mode:combat.mode,...(choice?{choice}:{})});next.pendingBattle.revision++;
+  let result;
+  if(step.done){
+    const p=next.pendingBattle;result=G.combatResult(combat);
+    if(p.mission>=0){
+      const m=G.MISSIONS[p.mission],first=p.mission===next.campaignCleared,bonus=result.win&&G.objectiveMet(p.mission,result.summary)&&!((next.campaignMedals??0)&(1<<p.mission));
+      Object.assign(result,{mission:p.mission,run:next.campaignRuns??0,first,bonus,reward:result.win?{cash:first?m.cash:0,dust:(first?m.dust:0)+(bonus?120:0)}:null});
+      G.applyCampaign(next,result);
+    }else G.applyBattle(next,result);
+    next.presentation={kind:p.mission<0?'battle':'campaign',result:{win:result.win,reward:result.reward,rank:next.rank,...(p.mission>=0?{mission:p.mission,first:result.first,bonus:result.bonus,summary:result.summary}:{})}};
+    delete next.pendingBattle;
+  }
+  saveCombat(storage,next,now);return {state:next,waiting:false,frames:step.frames,result};
+}
 export function trainTransaction(storage,state,action,now=Date.now()){
   const next=structuredClone(state);action(next);next.lastSeen=now;
   storage.setItem(SAVE_KEY,JSON.stringify(next));return next;

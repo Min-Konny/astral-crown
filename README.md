@@ -46,7 +46,9 @@ GitHub Actionsはテストとビルドの成功後に `dist/` のみをPagesに�
 
 ## Phaser presentation
 
-Home, summon and auto battle use Phaser 3.90.0. Accessible HTML handles navigation and results. The original v1 save key is preserved. Summons and battle rewards are saved before animation; reload restores their receipt without rerolling or granting rewards again.
+Home, summon and battle use Phaser 3.90.0. Accessible HTML handles navigation and results. The original v1 save key is preserved. Summons are saved before animation. Battles save each resolved action before its animation and resume from that action on reload; only the terminal action commits rewards and the result receipt, together in one write.
+
+Skill mode defaults to AUTO. MANUAL pauses only before a living ally's ready skill: use it or hold it and make a normal attack. First readiness is turn 3; using a skill makes it ready again three turns later, while holding preserves readiness. Changing modes during animation affects the next unresolved action. Animation skip never chooses a manual skill. A failed battle write stops progress and offers retry without advancing combat or granting rewards.
 
 - `src/scenes.js`: illustrated scenes and battle event playback
 - `src/session.js`: atomic state persistence and presentation receipts

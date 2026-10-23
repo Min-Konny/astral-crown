@@ -151,3 +151,12 @@ body #playback-text{background:var(--surface);color:var(--ink)}
 @media(max-width:650px){body .chapter{padding:8px 10px;max-width:60%}body .chapter h1{font-size:23px}body .chapter :is(span,p){font-size:11px}body .home-tools{max-width:36%}body .home-tools button{min-width:0;padding:9px;font-size:11px}body .home-tools small{font-size:11px}body .character-line p{font-size:14px}body .summon-ui .chapter,body .arena-ui .chapter{max-width:88%}body .summon-description{top:220px;padding:10px 14px}body .summon-description h2{font-size:28px;margin:5px 0}body .patrol .opponent{top:225px;max-width:90%}body .opponent p{font-size:13px}body .summon-dock p{font-size:13px}body .sidebar nav button{font-size:11px}body .home-cta small{font-size:10px!important}body .home-cta span{font-size:11px!important}}
 @media(max-width:650px){#playback-text{font-size:14px;bottom:0;padding:10px 12px}}
 @media(max-width:600px){.battle-result .button-row{grid-template-columns:1fr}.battle-result button{min-height:48px}}
+@media(max-width:650px){body.playing:has(#combat-controls:not([hidden])) #playback-text{top:12px;bottom:auto;left:4%;transform:none;width:55%;max-width:55%;font-size:12px;text-align:left;padding:8px;max-height:150px;overflow:auto}}
+/* Battle decisions use opaque surfaces and remain available without canvas. */
+#combat-controls{position:absolute;top:8px;left:4%;width:min(420px,92%);padding:12px;background:var(--surface);color:var(--ink);border:2px solid #54738a;border-radius:16px;pointer-events:auto}
+#combat-controls[hidden]{display:none}
+#combat-controls p{font-size:14px;line-height:1.5;margin:8px 0}
+#combat-controls button{min-height:44px}
+#combat-controls [aria-pressed=true],.skill-mode-choice [aria-pressed=true]{background:#194b70;color:#fff;border-color:#194b70}
+.skill-mode-choice{display:flex;gap:8px;grid-column:1/-1}
+@media(max-width:650px){#combat-controls{top:auto;bottom:0;padding:8px}#combat-controls p{font-size:13px}#combat-controls button{padding:8px 12px;font-size:13px}}

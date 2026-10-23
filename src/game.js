@@ -50,7 +50,7 @@ export function initialState(now = Date.now()) {
     confirmedCounts:Object.fromEntries(CHARACTERS.map(c=>[c.id,['iris','noel','mira'].includes(c.id)?1:0])),
     mastery:Object.fromEntries(CHARACTERS.map(c=>[c.id,0])),
     focus:Object.fromEntries(CHARACTERS.map(c=>[c.id,'power'])),
-    team:['noel','iris','mira'], settings:{ sound:false, quick:false, soft:false } };
+    team:['noel','iris','mira'], settings:{ sound:false, quick:false, soft:false, skillMode:'auto' }, battleSerial:0 };
 }
 export const income = s => 120 * 1.65 ** s.facility * (1 + s.seals * .25);
 export const facilityCost = s => 3000 * 2 ** s.facility;
@@ -174,15 +174,34 @@ export const SKILLS = {
   mira:{name:'木漏れ日の祈り',description:'3ターンごとにHP割合が最も低い味方を攻撃力の1.8倍回復。'},
   flora:{name:'芽吹きの合唱',description:'3ターンごとに生存する味方全員を攻撃力の0.9倍回復。'},
 };
-export function battle(s, enemy=rival(s)) {
+export function beginCombat(s,enemy=rival(s),mode='auto') {
+  if(!['auto','manual'].includes(mode))throw Error('Invalid skill mode');
   const allies=s.team.map(id=>({...byId(id),...stats(s,byId(id)),mastery:s.mastery?.[id]??0,promotion:promotionPower(s,id)}));
-  const a=allies.map(c=>({...c,max:c.hp})), b=enemy.units.map(c=>({...c,max:c.hp}));
-  const frames=[];
+  return {allies,enemy:structuredClone(enemy),a:allies.map(c=>({...c,max:c.hp})),b:enemy.units.map(c=>({...c,max:c.hp})),frames:[],turn:1,side:'a',cursor:0,mode,readyAt:Object.fromEntries(allies.map(c=>[c.id,3])),rank:s.rank,done:false};
+}
+function seekCombat(c){
+  while(!c.done){
+    if(c.turn>30||!c.a.some(x=>x.hp>0)||!c.b.some(x=>x.hp>0)){c.done=true;break;}
+    const own=c[c.side];
+    if(c.cursor>=own.length){c.cursor=0;if(c.side==='a')c.side='b';else{c.side='a';c.turn++;}continue;}
+    if(own[c.cursor].hp<=0){c.cursor++;continue;}
+    break;
+  }
+}
+export function combatStatus(c){
+  seekCombat(c);if(c.done)return {done:true};
+  const actor=c[c.side][c.cursor],ready=c.side==='a'&&c.turn>=c.readyAt[actor.id];
+  return {done:false,turn:c.turn,side:c.side,actor:actor.id,ready,waiting:ready&&c.mode==='manual',cooldown:c.side==='a'?Math.max(0,c.readyAt[actor.id]-c.turn):Math.max(0,3-c.turn%3)};
+}
+export function stepCombat(c,choice){
+  const status=combatStatus(c);if(status.done)throw Error('Combat already finished');
+  if(status.waiting&&!['use','hold'].includes(choice))return {waiting:true,frames:[]};
+  if(choice!==undefined&&(!status.waiting||!['use','hold'].includes(choice)))throw Error('Skill decision is not available');
+  const {a,b,enemy,frames,turn}=c,side=c.side,foe=side==='a'?'b':'a',own=c[side],other=c[foe],u=own[c.cursor];
+  const skill=side==='a'?status.ready&&(c.mode==='auto'||choice==='use'):turn%3===0;
+  if(skill&&side==='a')c.readyAt[u.id]=turn+3;
+  const from=frames.length;
   const snap=(text,turn,event)=>frames.push({text,turn,...event,a:a.map(c=>({id:c.id,name:c.name,hp:c.hp,max:c.max})),b:b.map(c=>({id:c.id,name:c.name,hp:c.hp,max:c.max}))});
-  for(let turn=1;turn<=30;turn++) {
-    for(const [own,other] of [[a,b],[b,a]]) for(const u of own.filter(x=>x.hp>0)) {
-      if(!other.some(x=>x.hp>0))break;
-      const skill=turn%3===0,side=own===a?'a':'b',foe=own===a?'b':'a';
       const evolved=own===a||enemy.rank===undefined,boost=1+(u.mastery??0)*.15+(u.promotion??0)*.03;
       const ability=skill?(evolved?SKILLS[u.id]?.name:'通常奥義'):undefined;
       if(skill&&u.role==='防御'&&evolved){
@@ -206,9 +225,11 @@ export function battle(s, enemy=rival(s)) {
           snap(`${u.name}${ability?' / '+ability:'の攻撃'} → ${target.name} ${damage}${guarded?'（守りで軽減）':''}`,turn,{kind:'attack',actor:u.id,target:target.id,side,targetSide:foe,amount:damage,dealt,skill,ability,advantage:adv,prevented:guarded?Math.max(0,Math.round(base)-damage):0});
         }
       }
-    }
-    if(!a.some(x=>x.hp>0)||!b.some(x=>x.hp>0))break;
-  }
+  c.cursor++;seekCombat(c);return {waiting:false,done:c.done,frames:frames.slice(from)};
+}
+export function combatResult(c){
+  if(!combatStatus(c).done)throw Error('Combat is unfinished');
+  const {a,b,frames,enemy,allies}=c,s={rank:c.rank};
   const ratio=units=>units.reduce((t,u)=>t+u.hp/u.max,0)/units.length;
   const win=ratio(a)>ratio(b);
   const summary={turns:frames.at(-1)?.turn||0,survivors:a.filter(u=>u.hp>0).length,total:a.length,
@@ -216,6 +237,11 @@ export function battle(s, enemy=rival(s)) {
     healing:frames.filter(f=>f.side==='a'&&f.kind==='heal').reduce((v,f)=>v+f.amount,0),
     prevented:frames.filter(f=>f.targetSide==='a').reduce((v,f)=>v+(f.prevented||0),0)};
   return {win,frames,summary,enemy,allies,reward:win?{cash:2000+(100-s.rank)*100,dust:180+(100-s.rank)*10}:null};
+}
+export function battle(s,enemy=rival(s)){
+  const c=beginCombat(s,enemy);
+  while(!combatStatus(c).done)stepCombat(c);
+  return combatResult(c);
 }
 export function applyBattle(s,result) {
   if(result.applied)throw Error('戦闘結果は反映済みです');
@@ -309,6 +335,10 @@ export function validateSave(raw) {
     if(typeof raw.settings?.[key]!=='boolean')throw Error('設定が不正です');
     s.settings[key]=raw.settings[key];
   }
+  s.settings.skillMode=raw.settings?.skillMode??'auto';
+  if(!['auto','manual'].includes(s.settings.skillMode))throw Error('Invalid skill mode');
+  s.battleSerial=raw.battleSerial??0;
+  if(!Number.isSafeInteger(s.battleSerial)||s.battleSerial<0||s.battleSerial>1e15)throw Error('Invalid battle serial');
   return s;
 }
 export function restore(raw,now=Date.now()){

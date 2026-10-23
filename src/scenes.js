@@ -11,7 +11,7 @@ export function createStage(parent, onError) {
   }
 }
 function createPhaserStage(parent, onError) {
-    let current,queued,sequence=0,finish=null,failed=false,canvas,battleActive=false;
+    let current,queued,sequence=0,finish=null,failed=false,canvas,battleActive=false,liveUnits=null,retainBattle=false,liveState=null,awaitingLive=null,battleEffects=[];
   const contextLost=()=>fail();
   function fail(){
     if(failed)return;
@@ -41,15 +41,15 @@ function createPhaserStage(parent, onError) {
       const cuts=[0,.282,.507,.757,1];
       for(let i=0;i<4;i++)this.textures.get('party').add(i,0,Math.round(width*cuts[i]),0,Math.round(width*(cuts[i+1]-cuts[i])),height);
       current=this;
-      this.scale.on('resize',()=>{if(!finish&&queued)draw(...queued);});
-      if(queued)draw(...queued);
+      this.scale.on('resize',()=>{if(!finish&&liveState){const snapshot=liveState;clear();battle(snapshot,true,()=>{},()=>{});}else if(!finish&&queued)draw(...queued);});
+      if(awaitingLive){const snapshot=awaitingLive;awaitingLive=null;battle(snapshot,true,()=>{},()=>{});}else if(queued)draw(...queued);
     }
   }
   const game=new Phaser.Game({type:Phaser.AUTO,parent,backgroundColor:'#10224b',antialias:true,
     scale:{mode:Phaser.Scale.RESIZE,width:parent.clientWidth,height:parent.clientHeight},
     scene:AstralStage,render:{powerPreference:'low-power'},fps:{target:30,forceSetTimeOut:true},audio:{noAudio:true}});
   function clear(){
-    sequence++;battleActive=false;if(!current)return;
+    sequence++;battleActive=false;liveUnits=null;liveState=null;retainBattle=false;battleEffects=[];if(!current)return;
     current.time.timeScale=1;current.tweens.timeScale=1;
     current.tweens.killAll();current.time.removeAllEvents();current.children.removeAll(true);
   }
@@ -61,6 +61,7 @@ function createPhaserStage(parent, onError) {
     return {s,w,h};
   }
   function draw(mode,state,reduced){
+    awaitingLive=null;
     queued=[mode,state,reduced];if(failed||!current||finish)return;
     clear();const {s,w,h}=backdrop(mode),mobile=w<650;
     if(mode==='home'||mode==='summon'){
@@ -78,21 +79,27 @@ function createPhaserStage(parent, onError) {
     }
     // Draw into the existing canvas without a full-screen transition overlay.
   }
-  function placeUnits(units,side,w,h){
+  function placeUnits(units,side,w,h,compact=false){
     const s=current,map={};
     units.forEach((u,i)=>{
       const mobile=w<650, direction=side==='a'?1:-1;
       const x=mobile?w*(side==='a'?.25:.75):w*(side==='a'?.26:.74)+direction*(i%2?-.10:.06)*w;
-      const y=mobile?h*(.32+i*.14):h*(.48+Math.floor(i/2)*.22);
+      const y=mobile?h*(compact?.27+i*.13:.32+i*.14):h*(.48+Math.floor(i/2)*.22);
       const shadow=s.add.ellipse(x,y+7,w*(mobile?.16:.075),12,0x244961,.2);
       const sprite=s.add.image(x,y,'party',frameFor(u.id)).setOrigin(.5,1).setFlipX(side==='b');
-      sprite.setScale(Math.min(h*(mobile?.105:.18)/sprite.height,w*(mobile?.22:.12)/sprite.width));
+      sprite.setScale(Math.min(h*(mobile?(compact?.075:.105):.18)/sprite.height,w*(mobile?.22:.12)/sprite.width));
       const label=s.add.text(x,y+18,u.name||'',{fontFamily:'sans-serif',fontSize:mobile?'12px':'15px',color:'#143351',backgroundColor:'#ffffffdd',padding:{x:6,y:3}}).setOrigin(.5,0);
-      const hp=s.add.rectangle(x,y+9,mobile?56:90,5,side==='a'?0x24aeb5:0xe2788f);
+      const hp=s.add.rectangle(x,y+9,(mobile?56:90)*u.hp/(u.max||u.hp||1),5,side==='a'?0x24aeb5:0xe2788f);sprite.setAlpha(u.hp?1:.25);label.setText(`${u.name} ${u.hp}`);
       map[u.id]={sprite,label,hp,shadow,x,y,width:mobile?56:90,max:u.max||u.hp};
     });return map;
   }
-  function complete(){if(!finish)return;const cb=finish;finish=null;clear();cb();}
+  function complete(){
+    if(!finish)return;const cb=finish;finish=null;
+    for(const effect of battleEffects)if(effect.active)effect.destroy();battleEffects=[];
+    if(!retainBattle)clear();
+    else {sequence++;current.time.removeAllEvents();current.tweens.killAll();for(const [side,views] of Object.entries(liveUnits||{}))for(const [id,u] of Object.entries(views)){u.sprite.x=u.x;u.sprite.clearTint();const model=(side==='a'?liveState.allies:liveState.enemy.units).find(x=>x.id===id);u.hp.width=u.width*model.hp/model.max;u.sprite.setAlpha(model.hp?1:.25);u.label.setText(`${model.name} ${model.hp}`);}}
+    cb();
+  }
   function summon(result,characters,reduced,done){
     if(!current){done();return;}
     clear();finish=done;const ticket=sequence,{s,w,h}=backdrop('summon');
@@ -117,9 +124,12 @@ function createPhaserStage(parent, onError) {
     s.time.delayedCall(1550,reveal);
   }
   function battle(result,reduced,onFrame,done){
-    if(!current){done();return;}
-    clear();finish=done;battleActive=true;const ticket=sequence,{s,w,h}=backdrop('arena');
-    const units={a:placeUnits(result.allies.map(u=>({...u,max:u.hp})),'a',w,h),b:placeUnits(result.enemy.units.map(u=>({...u,max:u.hp})),'b',w,h)};
+    if(!current){if(result.live&&!failed){const last=result.frames.at(-1);awaitingLive={live:true,allies:last?.a??result.allies,enemy:{units:last?.b??result.enemy.units},frames:[]};}done();return;}
+    if(!result.live||!liveUnits)clear();
+    finish=done;battleActive=true;retainBattle=!!result.live;const ticket=sequence;
+    const {s,w,h}=liveUnits?{s:current,w:current.scale.width,h:current.scale.height}:backdrop('arena');
+    const units=liveUnits||{a:placeUnits(result.allies.map(u=>({...u,max:u.max??u.hp})),'a',w,h,result.live),b:placeUnits(result.enemy.units.map(u=>({...u,max:u.max??u.hp})),'b',w,h,result.live)};
+    if(result.live){liveUnits=units;const last=result.frames.at(-1);liveState={live:true,allies:last?.a??result.allies,enemy:{units:last?.b??result.enemy.units},frames:[]};}
     let index=0;
     const step=()=>{
       if(sequence!==ticket)return;
@@ -133,11 +143,12 @@ function createPhaserStage(parent, onError) {
           view.sprite.setAlpha(u.hp?1:.25);view.label.setText(`${u.name} ${u.hp}`);
         }
         const value=s.add.text(target.x,target.y-70,f.kind==='guard'?'GUARD':`${f.kind==='heal'?'+':'−'}${f.dealt??f.amount}`,{fontFamily:'sans-serif',fontSize:f.skill?'30px':'23px',fontStyle:'bold',color:f.kind==='heal'?'#43e8bd':'#ffffff',stroke:'#16334c',strokeThickness:4}).setOrigin(.5);
+        battleEffects.push(value);
         if(!reduced){
           target.sprite.setTint(f.kind==='heal'?0x99ffdd:0xffaabb);
           s.time.delayedCall(130,()=>target.sprite.active&&target.sprite.clearTint());
           s.tweens.add({targets:value,y:value.y-40,alpha:0,duration:620,onComplete:()=>value.destroy()});
-          if(f.skill){const burst=s.add.circle(target.x,target.y-50,15,f.kind==='heal'?0x77ffdd:0xaedaff,.7);s.tweens.add({targets:burst,scale:5,alpha:0,duration:400,onComplete:()=>burst.destroy()});}
+          if(f.skill){const burst=s.add.circle(target.x,target.y-50,15,f.kind==='heal'?0x77ffdd:0xaedaff,.7);battleEffects.push(burst);s.tweens.add({targets:burst,scale:5,alpha:0,duration:400,onComplete:()=>burst.destroy()});}
         }else s.time.delayedCall(100,()=>value.destroy());
         s.time.delayedCall(reduced?30:450,step);
       };

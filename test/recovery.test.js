@@ -28,6 +28,23 @@ function harness(){
     scales:()=>[scene.time.timeScale,scene.tweens.timeScale],failImage:()=>loadError(),lose:()=>canvas.dispatchEvent(new Event('webglcontextlost'))};
 }
 
+test('live action skip keeps the battlefield but invalidates its old hit callback',()=>{
+ const previous=globalThis.Phaser;
+ try{
+  const h=harness(),stage=createStage({},()=>{});h.boot();
+  const r=G.battle(G.initialState()),slice=i=>({live:true,allies:r.allies,enemy:r.enemy,frames:[r.frames[i]]});
+  let completed=0,frames=0;
+  stage.battle(slice(0),false,()=>frames++,()=>completed++);
+  const oldHit=h.tweens.find(t=>t.onYoyo)?.onYoyo;assert.ok(oldHit);
+  stage.skip();assert.equal(completed,1);
+  stage.battle(slice(1),false,()=>frames++,()=>completed++);
+  oldHit();assert.equal(completed,1);assert.equal(frames,2);
+  stage.skip();stage.skip();assert.equal(completed,2);
+  h.lose();stage.battle(slice(2),false,()=>assert.fail(),()=>completed++);assert.equal(completed,3);
+  stage.destroy();
+ }finally{if(previous===undefined)delete globalThis.Phaser;else globalThis.Phaser=previous;}
+});
+
 test('battle speed changes only clocks and resets on skip, failure and subsequent scenes',()=>{
  const previous=globalThis.Phaser;
  try{
