@@ -94,4 +94,8 @@ body.soft button,body.quick button{transition:none}
 body.soft button:active:not(:disabled),body.quick button:active:not(:disabled){transform:none}
 @media(prefers-reduced-motion:reduce){body button{transition:none}body button:active:not(:disabled){transform:none}}
 .battle-result .button-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.battle-result [data-next-patrol]{grid-column:1/-1;min-height:56px;font-size:17px}
+#battle-speed{position:absolute;left:4%;top:14px;pointer-events:auto;min-height:44px}
+#battle-speed[hidden]{display:none}
+#playback-text{white-space:pre-line;line-height:1.65;background:#f8fcfff5;color:#203d59}
+@media(max-width:650px){#playback-text{font-size:14px;bottom:0;padding:10px 12px}}
 @media(max-width:600px){.battle-result .button-row{grid-template-columns:1fr}.battle-result button{min-height:48px}}

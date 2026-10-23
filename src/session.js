@@ -1,4 +1,11 @@
 import * as G from './game.js';
+// Presentation only: use resolved events, never simulate or award from this readout.
+export function battleReadout(frame,index,total){
+  const side=frame.side==='a'?'味方':'敵';
+  const actor=G.byId(frame.actor)?.name??frame.actor,target=(frame.targetSide==='a'?'味方 ':'敵 ')+(G.byId(frame.target)?.name??frame.target);
+  const effect=frame.kind==='guard'?'味方全員を守る':frame.kind==='heal'?`${target}を ${frame.amount} 回復`:`${target}に ${frame.dealt??frame.amount} ダメージ${frame.prevented?`（守りで ${frame.prevented} 軽減）`:''}`;
+  return `TURN ${frame.turn} · ${index+1}/${total}行動\n${side} ${actor} / ${frame.ability||'通常攻撃'} → ${effect}\n${frame.turn%3===0?'スキル発動ターン':'次のスキル発動：TURN '+(frame.turn+3-frame.turn%3)} · オート戦闘`;
+}
 // Result navigation only selects an unlocked destination; reward commits remain in transact.
 export function patrolDestination(state,from,action,run=state.campaignRuns??0){
   const r=state.presentation?.kind==='campaign'?state.presentation.result:null;

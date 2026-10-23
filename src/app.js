@@ -1,6 +1,6 @@
 import * as G from './game.js';
 import {createStage} from './scenes.js';
-import {SAVE_KEY,transact,receipt,trainTransaction,patrolDestination} from './session.js';
+import {SAVE_KEY,transact,receipt,trainTransaction,patrolDestination,battleReadout} from './session.js';
 const $=q=>document.querySelector(q), key=SAVE_KEY;
 // Preview tabs use tab-scoped storage so QA never touches a player's local save.
 const preview=new URLSearchParams(location.search).get('preview')==='1';
@@ -214,7 +214,10 @@ window.addEventListener('pagehide',save);
 let playing=false;
 const stage=createStage($('#game-stage'),toast);
 $('#skip-playback').onclick=()=>stage.skip();
-function setPlaying(value){playing=value;document.body.classList.toggle('playing',value);$('#playback').hidden=!value;}
+let battleSpeed=1;
+const speedButton=document.createElement('button');speedButton.id='battle-speed';speedButton.hidden=true;speedButton.textContent='演出 1倍';speedButton.setAttribute('aria-label','戦闘の演出速度を切り替える');$('#playback').append(speedButton);
+speedButton.onclick=()=>{if(!playing||speedButton.hidden)return;battleSpeed=battleSpeed===1?2:1;stage.setBattleSpeed?.(battleSpeed);speedButton.textContent=`演出 ${battleSpeed}倍`;};
+function setPlaying(value){if(!value)speedButton.hidden=true;playing=value;document.body.classList.toggle('playing',value);$('#playback').hidden=!value;}
 function gameHUD(){
   if(page==='home')return `<section class="home-ui"><div class="chapter"><span>ASTRAL CROWN / 星冠の継承者</span><h1>星見の庭園</h1><p>SEASON ${state.season} · あなたの物語が、動き出す。</p></div><div class="home-tools"><button data-action="mail" ${state.mail?'disabled':''}>${state.mail?'配布受取済み':'お詫びの星晶石 +3,000'}</button><button data-action="work">仕事する +¥${fmt(300*(1+state.seals*.25))}</button><button data-action="facility" ${state.facility>=30?'disabled':''}>収入強化 Lv.${state.facility}<small>¥${fmt(G.facilityCost(state))}</small></button></div><div class="character-line"><span>月冠の魔女</span><h2>リュネ</h2><p>「おかえりなさい。<br>今日は、どの星へ会いに行きましょう？」</p></div><div class="home-cta"><button data-page="summon"><small>PICK UP / 月冠の契約</small><b>星の召喚</b><span>リュネとの出会いを、あなたに →</span></button><button class="launch" data-page="arena"><small>CROWN ARENA / ${state.rank}位</small><b>出撃する →</b></button></div></section>`;
   if(page==='summon')return `<section class="summon-ui"><div class="chapter"><span>CELESTIAL SUMMON</span><h1>月冠の契約</h1><p>星を越えて、あなたに出会う。</p></div><div class="summon-description"><span class="pickup-label">PICK UP SSR</span><h2>リュネ</h2><p>月冠の魔女 / 水属性・攻撃型</p><button data-action="rates">提供割合・天井</button></div><div class="summon-dock"><div class="tabs"><button data-banner="pickup" class="${banner==='pickup'?'selected':''}">ピックアップ</button><button data-banner="standard" class="${banner==='standard'?'selected':''}">常設</button></div><p>SSR 2% · 次の確定まで ${100-state.pity}連${banner==='pickup'?' · SSR時リュネ50%':''}</p><div class="pull-options">${[10,100,1000,10000].map(n=>`<button data-count="${n}" class="${count===n?'selected':''}">${fmt(n)}連</button>`).join('')}</div><button class="primary" data-action="summon">${fmt(count)}連召喚 <small>星晶石 ${fmt(count*300)}</small></button><button class="text-button" data-page="shop">星晶石を補充 →</button></div></section>`;
@@ -249,7 +252,8 @@ function playBattle(){
   const result=mission>=0?commit('campaign',s=>{const r=G.campaignBattle(s,mission);G.applyCampaign(s,r);return r;}):commit('battle',s=>{const r=G.battle(s);G.applyBattle(s,r);return r;});
   if($('#modal').open)$('#modal').close();
   render();setPlaying(true);$('#playback-text').textContent='BATTLE START';sound('tap');
-  stage.battle(result,shortMotion(),f=>{$('#playback-text').textContent=`TURN ${f.turn} · ${f.text}`;},()=>{setPlaying(false);render();sound(result.win?'purchase':'tap');battleResult(result);});
+  battleSpeed=1;speedButton.textContent='演出 1倍';speedButton.hidden=shortMotion();
+  stage.battle(result,shortMotion(),(f,i,n)=>{$('#playback-text').textContent=battleReadout(f,i,n);},()=>{setPlaying(false);render();sound(result.win?'purchase':'tap');battleResult(result);});
 }
 render();
 if(state.presentation){

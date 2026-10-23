@@ -25,8 +25,25 @@ function harness(){
     constructor(config){new config.scene();}destroy(){}
   }};
   return {canvas,tasks,tweens,boot(failImage=false){scene.preload();if(failImage)loadError();scene.create();},
-    failImage:()=>loadError(),lose:()=>canvas.dispatchEvent(new Event('webglcontextlost'))};
+    scales:()=>[scene.time.timeScale,scene.tweens.timeScale],failImage:()=>loadError(),lose:()=>canvas.dispatchEvent(new Event('webglcontextlost'))};
 }
+
+test('battle speed changes only clocks and resets on skip, failure and subsequent scenes',()=>{
+ const previous=globalThis.Phaser;
+ try{
+  const h=harness(),stage=createStage({clientWidth:390,clientHeight:844},()=>{});h.boot();
+  const r=G.campaignBattle(G.initialState(),0),before=structuredClone(r);let done=0;
+  stage.battle(r,false,()=>{},()=>done++);stage.setBattleSpeed(2);assert.deepEqual(h.scales(),[2,2]);
+  stage.setBattleSpeed(99);assert.deepEqual(h.scales(),[2,2]);
+  const stale=[...h.tasks,...h.tweens.map(t=>t.onYoyo).filter(Boolean)];
+  stage.skip();stage.skip();assert.equal(done,1);assert.deepEqual(h.scales(),[1,1]);
+  stage.setBattleSpeed(2);assert.deepEqual(h.scales(),[1,1]);
+  stage.battle(r,false,()=>{},()=>done++);stage.setBattleSpeed(2);
+  for(const callback of stale)callback();assert.equal(done,1);assert.deepEqual(h.scales(),[2,2]);
+  h.lose();assert.equal(done,2);assert.deepEqual(h.scales(),[1,1]);
+  assert.deepEqual(r,before);stage.destroy();
+ }finally{if(previous===undefined)delete globalThis.Phaser;else globalThis.Phaser=previous;}
+});
 
 for(const failure of ['image','context'])for(const kind of ['summon','battle'])for(const reduced of [false,true]){
   test(`${failure} failure during ${kind} (reduced=${reduced}) releases results once and preserves reload receipt`,()=>{

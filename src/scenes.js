@@ -11,7 +11,7 @@ export function createStage(parent, onError) {
   }
 }
 function createPhaserStage(parent, onError) {
-  let current,queued,sequence=0,finish=null,failed=false,canvas;
+    let current,queued,sequence=0,finish=null,failed=false,canvas,battleActive=false;
   const contextLost=()=>fail();
   function fail(){
     if(failed)return;
@@ -49,7 +49,8 @@ function createPhaserStage(parent, onError) {
     scale:{mode:Phaser.Scale.RESIZE,width:parent.clientWidth,height:parent.clientHeight},
     scene:AstralStage,render:{powerPreference:'low-power'},fps:{target:30,forceSetTimeOut:true},audio:{noAudio:true}});
   function clear(){
-    sequence++;if(!current)return;
+    sequence++;battleActive=false;if(!current)return;
+    current.time.timeScale=1;current.tweens.timeScale=1;
     current.tweens.killAll();current.time.removeAllEvents();current.children.removeAll(true);
   }
   function backdrop(mode){
@@ -117,13 +118,13 @@ function createPhaserStage(parent, onError) {
   }
   function battle(result,reduced,onFrame,done){
     if(!current){done();return;}
-    clear();finish=done;const ticket=sequence,{s,w,h}=backdrop('arena');
+    clear();finish=done;battleActive=true;const ticket=sequence,{s,w,h}=backdrop('arena');
     const units={a:placeUnits(result.allies.map(u=>({...u,max:u.hp})),'a',w,h),b:placeUnits(result.enemy.units.map(u=>({...u,max:u.hp})),'b',w,h)};
     let index=0;
     const step=()=>{
       if(sequence!==ticket)return;
       const f=result.frames[index++];if(!f){complete();return;}
-      onFrame(f);
+      onFrame(f,index-1,result.frames.length);
       const actor=units[f.side][f.actor],target=units[f.targetSide][f.target];
       const hit=()=>{
         if(sequence!==ticket)return;
@@ -131,7 +132,7 @@ function createPhaserStage(parent, onError) {
           const view=units[side][u.id];view.hp.width=view.width*u.hp/u.max;
           view.sprite.setAlpha(u.hp?1:.25);view.label.setText(`${u.name} ${u.hp}`);
         }
-        const value=s.add.text(target.x,target.y-70,f.kind==='guard'?'GUARD':`${f.kind==='heal'?'+':'−'}${f.amount}`,{fontFamily:'sans-serif',fontSize:f.skill?'30px':'23px',fontStyle:'bold',color:f.kind==='heal'?'#43e8bd':'#ffffff',stroke:'#16334c',strokeThickness:4}).setOrigin(.5);
+        const value=s.add.text(target.x,target.y-70,f.kind==='guard'?'GUARD':`${f.kind==='heal'?'+':'−'}${f.dealt??f.amount}`,{fontFamily:'sans-serif',fontSize:f.skill?'30px':'23px',fontStyle:'bold',color:f.kind==='heal'?'#43e8bd':'#ffffff',stroke:'#16334c',strokeThickness:4}).setOrigin(.5);
         if(!reduced){
           target.sprite.setTint(f.kind==='heal'?0x99ffdd:0xffaabb);
           s.time.delayedCall(130,()=>target.sprite.active&&target.sprite.clearTint());
@@ -144,7 +145,10 @@ function createPhaserStage(parent, onError) {
       else s.tweens.add({targets:actor.sprite,x:actor.x+(f.side==='a'?24:-24),duration:160,yoyo:true,onYoyo:hit});
     };step();
   }
-  return {show:draw,summon,battle,skip:complete,destroy:()=>{
+  return {show:draw,summon,battle,setBattleSpeed:(speed)=>{
+    if(!battleActive||!current||!finish||![1,2].includes(speed))return;
+    current.time.timeScale=speed;current.tweens.timeScale=speed;
+  },skip:complete,destroy:()=>{
     canvas?.removeEventListener('webglcontextlost',contextLost);
     canvas?.removeEventListener('contextlost',contextLost);
     finish=null;clear();current=null;failed=true;game.destroy(true);

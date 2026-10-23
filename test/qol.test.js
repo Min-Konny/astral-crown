@@ -19,7 +19,7 @@ const source=readFileSync(new URL('../src/app.js',import.meta.url),'utf8').repla
 test('real battle entry locks repeat input, preserves modal on failed save and resumes committed result',()=>{
  let state=G.initialState(),saved,fail=false,done,closes=0;
  const modal={open:true,close(){this.open=false;closes++;}},label={textContent:''};
- const context=vm.createContext({G,mission:0,playing:false,$:q=>q==='#modal'?modal:label,
+ const context=vm.createContext({G,mission:0,playing:false,battleSpeed:1,speedButton:{},$:q=>q==='#modal'?modal:label,
  commit:(kind,action)=>{const tx=transact({setItem:(k,v)=>{if(fail)throw Error('storage full');saved=v;}},state,kind,action);state=tx.state;return tx.result;},
  render(){},sound(){},shortMotion:()=>false,setPlaying:v=>context.playing=v,
  stage:{battle:(r,reduced,frame,cb)=>{done=cb;}},battleResult:()=>{modal.open=true;}});
