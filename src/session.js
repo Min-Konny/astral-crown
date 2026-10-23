@@ -15,6 +15,19 @@ export function patrolDestination(state,from,action,run=state.campaignRuns??0){
   return null;
 }
 export const SAVE_KEY = 'astral-crown-save-v1';
+export function rankingContinuation(state,token=`${state.battleSerial??0}:${state.rank}`){
+  const r=state.presentation?.kind==='battle'?state.presentation.result:null;
+  if(state.pendingBattle||!r||r.rank!==state.rank||token!==`${state.battleSerial??0}:${state.rank}`||(r.win&&state.rank===1))return null;
+  return {token,rank:G.rival(state).rank,retry:!r.win};
+}
+export function continueRanking(storage,state,token,now=Date.now()){
+  if(!rankingContinuation(state,token))throw Error('この結果からは出撃できません。闘技場へ戻ってください');
+  return startPendingBattle(storage,state,-1,now);
+}
+export function levelTransaction(storage,state,id,level,now=Date.now()){
+  if(G.levelInfo(state,id).level!==level)throw Error('育成表示が更新されました。現在のレベルを確認してください');
+  return trainTransaction(storage,state,s=>G.levelUp(s,id),now);
+}
 const combatKeys=['rank','bestRank','campaignRuns','campaignCleared','campaignMedals','team','counts','levels','mastery','promotions','confirmedCounts','focus','seals'];
 export function pendingBattleToken(state){const p=state.pendingBattle;return p?`${p.id}:${p.revision}`:null;}
 export function pendingCombat(state){

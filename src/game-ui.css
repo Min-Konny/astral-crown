@@ -176,3 +176,6 @@ body #playback-text{background:var(--surface);color:var(--ink)}
  #playback-toolbar button{max-width:65%;min-height:44px;padding:8px 12px;font-size:13px}
  body #playback #playback-text,body.playing:has(#combat-controls:not([hidden])) #playback-text{position:static;order:1;transform:none;width:100%;max-width:100%;margin:0;font-size:13px;text-align:left;line-height:1.6;padding:8px 10px;max-height:130px;overflow:auto;pointer-events:auto;flex-shrink:0}
 }
+.level-control{white-space:normal;overflow-wrap:anywhere;line-height:1.5}
+.level-control small,body .character-card button.level-control small{display:block;color:inherit;opacity:1;font-size:13px;line-height:1.5}
+@media(max-width:360px){body[data-page=collection] #main .party{grid-template-columns:minmax(0,1fr)}body[data-page=collection] #main .party-card{min-width:0}}

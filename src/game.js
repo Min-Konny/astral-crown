@@ -133,13 +133,15 @@ export function summon(s,n,banner='pickup',random=Math.random) {
   s.dust += n*8; s.pulls += n; result.after=collectionBonus(s);
   return result;
 }
-export function levelUp(s,id) {
+export function levelInfo(s,id) {
   const c=byId(id);
-  if(!c || !isHero(c) || !s.counts[id])throw Error('所持している主力キャラを選んでください');
-  if(s.levels[id]>=50)throw Error('通常レベルは最大です');
-  const cost=s.levels[id]*30;
-  if(s.dust<cost)throw Error('育成素材が足りません');
-  s.dust-=cost;s.levels[id]++;
+  const level=s.levels[id]??0,cost=level*30,missing=Math.max(0,cost-s.dust);
+  const reason=!c||!isHero(c)||!s.counts[id]?'所持している主力キャラを選んでください':level>=50?'通常レベルは最大です':missing?`育成素材があと${missing}必要です`:'';
+  return {level,cost,missing,reason};
+}
+export function levelUp(s,id) {
+  const info=levelInfo(s,id);if(info.reason)throw Error(info.reason);
+  s.dust-=info.cost;s.levels[id]++;
 }
 export function toggleTeam(s,id) {
   const c=byId(id);
