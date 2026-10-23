@@ -217,7 +217,8 @@ let playing=false;
 const stage=createStage($('#game-stage'),toast);
 $('#skip-playback').onclick=()=>{if(state.pendingBattle){fastBattle=true;stage.skip();if(!animating&&!battleError)pumpBattle();}else stage.skip();};
 let battleSpeed=1;
-const speedButton=document.createElement('button');speedButton.id='battle-speed';speedButton.hidden=true;speedButton.textContent='演出 1倍';speedButton.setAttribute('aria-label','戦闘の演出速度を切り替える');$('#playback').append(speedButton);
+const playbackToolbar=document.createElement('div');playbackToolbar.id='playback-toolbar';$('#playback').append(playbackToolbar);playbackToolbar.append($('#skip-playback'));
+const speedButton=document.createElement('button');speedButton.id='battle-speed';speedButton.hidden=true;speedButton.textContent='演出 1倍';speedButton.setAttribute('aria-label','戦闘の演出速度を切り替える');playbackToolbar.prepend(speedButton);
 speedButton.onclick=()=>{if(!playing||speedButton.hidden)return;battleSpeed=battleSpeed===1?2:1;stage.setBattleSpeed?.(battleSpeed);speedButton.textContent=`演出 ${battleSpeed}倍`;};
 function setPlaying(value){if(!value)speedButton.hidden=true;playing=value;document.body.classList.toggle('playing',value);$('#playback').hidden=!value;}
 function skillModeButtons(){return '<div class="skill-mode-choice" aria-label="スキル発動モード">'+['auto','manual'].map(m=>'<button data-skill-mode="'+m+'" aria-pressed="'+((state.settings.skillMode??'auto')===m)+'">'+m.toUpperCase()+'</button>').join('')+'</div>';}

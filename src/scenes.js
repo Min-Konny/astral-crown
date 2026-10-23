@@ -1,6 +1,6 @@
 // Phaser owns the illustrated stage; accessible HTML owns navigation and dialogs.
 import {byId} from './game.js';
-import {STARTER_ART,characterArt} from './character-art.js';
+import {CHARACTER_ART,characterArt} from './character-art.js';
 export function createStage(parent, onError) {
   try { return createPhaserStage(parent,onError); }
   catch {
@@ -32,7 +32,7 @@ function createPhaserStage(parent, onError) {
       this.load.image('garden','./assets/garden.png');
       this.load.image('luna','./assets/luna.png');
       this.load.image('party','./assets/party.png');
-      for(const [id,src] of Object.entries(STARTER_ART))this.load.image(characterArt(id).key,src);
+      for(const [id,src] of Object.entries(CHARACTER_ART))this.load.image(characterArt(id).key,src);
       this.load.on('loaderror',file=>{if(file?.key?.startsWith('hero-'))return;fail();});
     }
     create(){

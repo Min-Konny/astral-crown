@@ -165,3 +165,14 @@ body #playback-text{background:var(--surface);color:var(--ink)}
 #combat-controls [aria-pressed=true],.skill-mode-choice [aria-pressed=true]{background:#194b70;color:#fff;border-color:#194b70}
 .skill-mode-choice{display:flex;gap:8px;grid-column:1/-1}
 @media(max-width:650px){#combat-controls{top:auto;bottom:0;padding:8px}#combat-controls p{font-size:13px}#combat-controls button{padding:8px 12px;font-size:13px}}
+/* Playback actions and action text occupy separate rows on narrow screens. */
+#playback-toolbar{position:absolute;right:4%;top:14px;display:flex;gap:8px;max-width:44%;pointer-events:auto}
+#playback-toolbar :is(#battle-speed,#skip-playback){position:static;min-width:0;white-space:normal}
+#playback-text{overflow-wrap:anywhere}
+@media(min-width:651px){#combat-controls{width:min(420px,48%)}}
+@media(max-width:650px){
+ #playback{inset:8px 0 72px;padding:8px 4%;display:flex;flex-direction:column;gap:8px}
+ #playback-toolbar{position:static;order:0;max-width:none;width:100%;justify-content:space-between;flex-shrink:0}
+ #playback-toolbar button{max-width:65%;min-height:44px;padding:8px 12px;font-size:13px}
+ body #playback #playback-text,body.playing:has(#combat-controls:not([hidden])) #playback-text{position:static;order:1;transform:none;width:100%;max-width:100%;margin:0;font-size:13px;text-align:left;line-height:1.6;padding:8px 10px;max-height:130px;overflow:auto;pointer-events:auto;flex-shrink:0}
+}
