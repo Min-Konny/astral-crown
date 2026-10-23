@@ -17,8 +17,8 @@ npm start
 
 1. 拠点でお詫び石を受け取り、収入設備を強化します。
 2. 星晶ショップでゲーム内のおこづかいを星晶石に交換します。
-3. 星の召喚で10連。SSRは5凸、CとUCは編成外から全体攻撃を強化します。
-4. 継承図鑑で主力を育成・編成します。防御役を前に置きます。
+3. 星の召喚で10連。集めた枚数をコレクションで手動強化します。CとUCは編成外から全体を支援します。
+4. 継承図鑑で集めたカードを手動強化し、主力を育成・編成します。防御役を前に置きます。
 5. 闘技場のNPCと対戦して順位を上げます。
 6. 50位以内で転生。所持数・凸・図鑑を維持して、収入と攻撃の永続倍率を得ます。
 
@@ -38,11 +38,11 @@ npm test
 
 ## 静的サイトのビルド
 
-`npm run build` で公開用の14ファイルを `dist/` にまとめます。HTMLの参照は相対パスなので、GitHub Pagesのプロジェクト配下でも動作します。セーブは公開先のブラウザ保存領域に分かれるため、ローカル版から移す場合は設定の書き出し・読み込みを利用してください。
+`npm run build` で公開用の28ファイルを `dist/` にまとめます。HTMLの参照は相対パスなので、GitHub Pagesのプロジェクト配下でも動作します。セーブは公開先のブラウザ保存領域に分かれるため、ローカル版から移す場合は設定の書き出し・読み込みを利用してください。
 
 GitHub Actionsはテストとビルドの成功後に `dist/` のみをPagesに配信します。検証画像、ローカルサーバー、テストファイルはサイトの配信対象に含めません。
 
-立ち絵・庭園背景・4種類のちびキャラはオリジナルの生成画像です。全員分の固有画像・BGM・声・商用アプリ化・Steam連携はまだ含みません。経済は試作用の仮バランスで、販売版の長期進行は別途調整します。
+立ち絵・庭園背景・既存13人それぞれの専用ちびキャラはオリジナルの生成画像です。全員分の大型立ち絵・BGM・声・商用アプリ化・Steam連携はまだ含みません。経済は試作用の仮バランスで、販売版の長期進行は別途調整します。
 
 ## Phaser presentation
 
@@ -58,3 +58,5 @@ Skill mode defaults to AUTO. MANUAL pauses only before a living ally's ready ski
 For disposable browser QA, use `?preview=1`. It uses tab-scoped sessionStorage and never touches the normal localStorage save. Do not use this mode for permanent progress.
 
 Third-party software notices: [sources and build checks](licenses/README.md), [published notices](https://min-konny.github.io/astral-crown/vendor/THIRD-PARTY-NOTICES.txt).
+
+疑似購入・設備強化・配布受取・転生も、保存成功後に状態と完了表示を確定します。保存失敗時は操作前の状態を保ち、その場で再試行できます。実際の決済や外部通信は行いません。

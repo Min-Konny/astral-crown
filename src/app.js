@@ -1,7 +1,7 @@
 import * as G from './game.js';
 import {portraitHTML} from './character-art.js';
 import {createStage} from './scenes.js';
-import {SAVE_KEY,transact,receipt,trainTransaction,patrolDestination,battleReadout,restoreBattleSave,restorePendingBattle,pendingCombat,pendingBattleToken,startPendingBattle,advancePendingBattle,changeBattleMode} from './session.js';
+import {SAVE_KEY,resourceTransaction,transact,receipt,trainTransaction,patrolDestination,battleReadout,restoreBattleSave,restorePendingBattle,pendingCombat,pendingBattleToken,startPendingBattle,advancePendingBattle,changeBattleMode} from './session.js';
 const $=q=>document.querySelector(q), key=SAVE_KEY;
 // Preview tabs use tab-scoped storage so QA never touches a player's local save.
 const preview=new URLSearchParams(location.search).get('preview')==='1';
@@ -122,9 +122,16 @@ function checkout(id){
   const base=G.PACKS.find(p=>p.id===id),p={...base,price:base.price*packQuantity,gems:base.gems*packQuantity,name:base.name+' ×'+fmt(packQuantity)};
   modal(`<div class="eyebrow">SIMULATED CHECKOUT</div><h2>お支払い方法を選択</h2><p>ゲーム内のおこづかいを使います。</p><div class="payment-methods">${[['carrier','▣','キャリア決済','ASTRA mobile'],['credit','▰','クレジット','CROWN CARD •••• 0000'],['prepaid','▤','プリペイド','STAR GIFT 残高連携']].map(([id,icon,label,note],i)=>`<label><input type="radio" name="payment" value="${id}" ${i===0?'checked':''}><span>${icon}</span><div>${label}<small>${note}</small></div></label>`).join('')}</div><div class="receipt"><div><span>${p.name}</span><b>✧ ${fmt(p.gems)}</b></div><div><span>ゲーム内のお支払い額</span><strong>¥ ${fmt(p.price)}</strong></div><div><span>購入後のおこづかい</span><span>¥ ${fmt(state.cash-p.price)}</span></div></div><p class="simulation-label">実際の請求は発生しません。決済情報は不要です。</p><button class="primary wide" data-confirm-pack="${p.id}" ${state.cash<p.price?'disabled':''}>${state.cash<p.price?'残高不足です':'購入を確定する'}</button>`);
 }
+function commitResources(action){
+  let tx;
+  try{tx=resourceTransaction(storage,state,action);}
+  catch(e){throw Error('保存・確定できませんでした。状態は変更していません。再試行できます：'+e.message);}
+  state=tx.state;saveFailed=false;$('#save-status').textContent='✓ このブラウザに保存済み';
+  return tx.result;
+}
 function purchase(id){
-  const method=document.querySelector('input[name=payment]:checked')?.value||'carrier',p=G.buy(state,id,packQuantity);
-  save();render();sound('purchase');
+  const method=document.querySelector('input[name=payment]:checked')?.value||'carrier',p=commitResources(s=>G.buy(s,id,packQuantity));
+  render();sound('purchase');
   modal(`<div class="purchase-success"><span class="eyebrow">PAYMENT APPROVED</span><div class="approved">✓</div><h2>決済が完了しました</h2><p>${{carrier:'キャリア決済',credit:'クレジット',prepaid:'プリペイド'}[method]} · ゲーム内のお支払い</p><div class="paid-amount">¥ <span id="paid-counter">0</span></div><div class="gem-award">✧ +${fmt(p.gems)}<small>星晶石を獲得</small></div><p>累計疑似課金額 ¥ ${fmt(state.spent)}</p><button class="primary wide" data-go-summon>さっそく召喚する →</button><button class="text-button" data-action="close">ショップに戻る</button></div>`,'effect-modal');
   const start=performance.now();
   const animate=t=>{const el=$('#paid-counter');if(!el)return;const f=shortMotion()?1:Math.min(1,(t-start)/800);el.textContent=fmt(p.price*(1-(1-f)**3));if(f<1)requestAnimationFrame(animate);};
@@ -181,11 +188,11 @@ document.addEventListener('click',e=>{
     const actions={
       close:closeModal,
       work:()=>{G.work(state);wallet();save();sound();},
-      facility:()=>{G.upgradeFacility(state);save();render();sound('purchase');},
-      mail:()=>{G.claimMail(state);save();render();toast('お詫びの星晶石 +3,000');sound('purchase');},
+      facility:()=>{commitResources(G.upgradeFacility);render();sound('purchase');},
+      mail:()=>{commitResources(G.claimMail);render();toast('お詫びの星晶石 +3,000');sound('purchase');},
       summon:playSummon,
       rates,battle:playBattle,ascend:confirmAscend,
-      'confirm-ascend':()=>{const n=G.ascend(state);save();closeModal();render();toast(`シーズン${state.season}へようこそ。継承印 +${n}`);sound('ssr');},
+      'confirm-ascend':()=>{const n=commitResources(G.ascend);closeModal();render();toast(`シーズン${state.season}へようこそ。継承印 +${n}`);sound('ssr');},
       export:()=>{save();const url=URL.createObjectURL(new Blob([JSON.stringify(state,null,2)],{type:'application/json'}));const a=document.createElement('a');a.href=url;a.download='astral-crown-save.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);},
       import:()=>$('#import-file').click(),
       reset:()=>modal(`<h2>セーブを初期化しますか？</h2><p>キャラ・凸・購入記録・継承印を含め、すべて失われます。必要なら先に書き出してください。</p><button class="danger wide" data-action="confirm-reset">すべて消去して最初から</button><button class="text-button" data-action="close">キャンセル</button>`),

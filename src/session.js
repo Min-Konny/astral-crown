@@ -81,8 +81,11 @@ export function advancePendingBattle(storage,state,token,choice,now=Date.now()){
   saveCombat(storage,next,now);return {state:next,waiting:false,frames:step.frames,result};
 }
 export function trainTransaction(storage,state,action,now=Date.now()){
-  const next=structuredClone(state);action(next);next.lastSeen=now;
-  storage.setItem(SAVE_KEY,JSON.stringify(next));return next;
+  return resourceTransaction(storage,state,action,now).state;
+}
+export function resourceTransaction(storage,state,action,now=Date.now()){
+  const next=structuredClone(state),result=action(next);next.lastSeen=now;
+  storage.setItem(SAVE_KEY,JSON.stringify(next));return {state:next,result};
 }
 // One localStorage write commits both resources and the replay receipt.
 // The caller replaces its state only after this write succeeds.
