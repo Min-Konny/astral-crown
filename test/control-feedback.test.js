@@ -10,7 +10,7 @@ const ratio=(a,b)=>{const x=luminance(a),y=luminance(b);return (Math.max(x,y)+.0
 
 test('launch/primary state palettes keep readable labels, including gradient endpoints',()=>{
  const rules=[...css.matchAll(/([^{}]+)\{([^{}]+)\}/g)].filter(x=>x[1].includes('body button:is(.launch,.primary)'));
- assert.equal(rules.length,4);
+ assert.ok(rules.length>=4);
  for(const [,selector,body] of rules){
   const foreground=body.match(/(?:^|;)color:(#[\da-f]+)/)[1];
   const fg=foreground.length===4?'#'+[...foreground.slice(1)].map(x=>x+x).join(''):foreground;

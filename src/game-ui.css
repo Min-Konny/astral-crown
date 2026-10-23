@@ -97,5 +97,57 @@ body.soft button:active:not(:disabled),body.quick button:active:not(:disabled){t
 #battle-speed{position:absolute;left:4%;top:14px;pointer-events:auto;min-height:44px}
 #battle-speed[hidden]{display:none}
 #playback-text{white-space:pre-line;line-height:1.65;background:#f8fcfff5;color:#203d59}
+/* Readable surface tokens. Art remains behind opaque text surfaces, never behind glyphs. */
+:root{--ink:#17344d;--ink-secondary:#36536a;--surface:#f8fcff;--surface-alt:#e4eff6;--ink-on-dark:#f3f8ff;--ink-muted-on-dark:#c4d9ec;--muted:var(--ink-secondary);--text:var(--ink)}
+body{color:var(--ink)}
+body :is(p,.muted,.eyebrow,.notice,.simulation-label,.passive-note,.char-stats,.owned-count,.legacy-value){color:var(--ink-secondary)}
+body :is(.panel,.formation,.shop-summary,.pack,.pack.premium,.receipt,.rarity-totals,.legacy-gain){background:var(--surface);color:var(--ink)}
+body :is(.panel,.receipt,.pack,.settings-list,.payment-methods) :is(small,p,span,em){color:var(--ink-secondary)}
+body :is(.chapter,.character-line,.opponent,.summon-dock){background:var(--surface);color:var(--ink);border-radius:12px;filter:none}
+body .chapter{padding:10px 14px;max-width:90%;box-shadow:0 3px 14px #10294724}
+body .chapter :is(p,span){background:none;color:var(--ink-secondary);font-size:12px;letter-spacing:.04em}
+body .chapter h1{color:var(--ink);margin:5px 0}
+body :is(.character-line,.opponent) :is(p,small,span){color:var(--ink-secondary);font-size:14px;line-height:1.65}
+body .home-tools button{background:var(--surface);color:var(--ink);font-size:13px}
+body .home-tools small{color:var(--ink-secondary);font-size:12px}
+body .home-cta button:not(.launch){background:var(--surface);color:var(--ink)}
+body .home-cta button:not(.launch) :is(small,span){color:var(--ink-secondary);font-size:12px}
+body[data-page=summon] .chapter,body .summon-description{background:#142b46;color:var(--ink-on-dark);padding:12px 16px;border-radius:12px}
+body[data-page=summon] .chapter :is(h1,p,span),body .summon-description :is(h2,p,.pickup-label){color:var(--ink-on-dark);background:none;text-shadow:none}
+body .summon-description p{font-size:14px}
+body :is(.summon-dock,.page-heading,.shop-summary,.pack,.battle-result,.settings-list) p{font-size:14px;line-height:1.7}
+body :is(.settings-list,.payment-methods) small{font-size:13px;color:var(--ink-secondary)}
+body :is(.pack,.shop-summary,.rarity-totals,.legacy-gain) strong{color:var(--ink)}
+body .gold{color:#715218!important}
+body :is(.rarity,.receipt span[style],.stars,.legacy-value strong){color:var(--ink)!important}
+body .rarity{background:var(--surface-alt);border-bottom:3px solid var(--rarity,#6d91ad);padding:3px 6px;border-radius:4px}
+body header,body .sidebar,body footer{background:var(--surface);color:var(--ink-secondary)}
+body .wallet :is(small,em),body .season small{color:var(--ink-secondary);font-size:11px}
+body .sidebar nav button{color:var(--ink-secondary)}
+body button{background:var(--surface);color:var(--ink)}
+body button:hover:not(:disabled){background:var(--surface-alt);color:var(--ink)}
+body button:disabled{background:#e1eaf0;color:#435a6e;opacity:1}
+body :is(button.selected,button.equipped,.tabs button.selected,.sidebar nav button.active){background:#cee6f4!important;color:#173f5b!important;border-color:#3c7598!important}
+body button :is(small,b){color:inherit}
+body button:is(.primary,.launch):not(:disabled){background:linear-gradient(115deg,#18779d,#135c86);color:#fff}
+body button:is(.primary,.launch):hover:not(:disabled),body button:is(.primary,.launch):focus-visible:not(:disabled){background:linear-gradient(115deg,#1b7e9f,#145b83);color:#fff}
+body button:is(.primary,.launch):active:not(:disabled){background:#135c86;color:#fff}
+body button:is(.primary,.launch):disabled{background:#e1eaf0;color:#435a6e}
+body dialog{background:var(--surface);color:var(--ink)}
+body dialog :is(h2,h3){color:var(--ink)}
+body :is(dialog.training-modal,dialog.promotion-modal){background:#142642;color:var(--ink-on-dark)}
+body :is(.training-modal,.promotion-modal) :is(h2,h3,p,.eyebrow,.stage-badge){color:var(--ink-on-dark)}
+body :is(.training-modal,.promotion-modal) .stage-badge{background:#10213b}
+body .danger,body #dialog-notice{color:#8b2626;background:#fff0ed}
+body .rank-result{color:#17638a}
+body :is(.gem-award,.paid-amount){color:var(--ink);background:var(--surface-alt)}
+body .tabs button:not(.selected){color:var(--ink-secondary)}
+body .receipt b{color:var(--ink)}
+body button.party-empty{color:var(--ink-secondary)}
+@media(max-width:650px){body .ten-results{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}body .pull-card>b,body .pull-card>span{font-size:12px}body .pull-card .mini-portrait{width:60px;height:80px}body .summon-dock .pull-options button{font-size:12px}}
+body .chapter p{display:block;margin:5px 0 0;padding:0;line-height:1.7}
+@media(max-width:650px){body .home-ui .chapter{max-width:52%}body .home-ui .chapter h1{font-size:21px}}
+body #playback-text{background:var(--surface);color:var(--ink)}
+@media(max-width:650px){body .chapter{padding:8px 10px;max-width:60%}body .chapter h1{font-size:23px}body .chapter :is(span,p){font-size:11px}body .home-tools{max-width:36%}body .home-tools button{min-width:0;padding:9px;font-size:11px}body .home-tools small{font-size:11px}body .character-line p{font-size:14px}body .summon-ui .chapter,body .arena-ui .chapter{max-width:88%}body .summon-description{top:220px;padding:10px 14px}body .summon-description h2{font-size:28px;margin:5px 0}body .patrol .opponent{top:225px;max-width:90%}body .opponent p{font-size:13px}body .summon-dock p{font-size:13px}body .sidebar nav button{font-size:11px}body .home-cta small{font-size:10px!important}body .home-cta span{font-size:11px!important}}
 @media(max-width:650px){#playback-text{font-size:14px;bottom:0;padding:10px 12px}}
 @media(max-width:600px){.battle-result .button-row{grid-template-columns:1fr}.battle-result button{min-height:48px}}
