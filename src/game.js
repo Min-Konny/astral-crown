@@ -191,14 +191,14 @@ function seekCombat(c){
 export function combatStatus(c){
   seekCombat(c);if(c.done)return {done:true};
   const actor=c[c.side][c.cursor],ready=c.side==='a'&&c.turn>=c.readyAt[actor.id];
-  return {done:false,turn:c.turn,side:c.side,actor:actor.id,ready,waiting:ready&&c.mode==='manual',cooldown:c.side==='a'?Math.max(0,c.readyAt[actor.id]-c.turn):Math.max(0,3-c.turn%3)};
+  return {done:false,turn:c.turn,side:c.side,actor:actor.id,ready,waiting:ready&&c.mode==='manual',cooldown:c.side==='a'?Math.max(0,c.readyAt[actor.id]-c.turn):(3-((c.turn-(actor.skillOffset??0))%3+3)%3)%3};
 }
 export function stepCombat(c,choice){
   const status=combatStatus(c);if(status.done)throw Error('Combat already finished');
   if(status.waiting&&!['use','hold'].includes(choice))return {waiting:true,frames:[]};
   if(choice!==undefined&&(!status.waiting||!['use','hold'].includes(choice)))throw Error('Skill decision is not available');
   const {a,b,enemy,frames,turn}=c,side=c.side,foe=side==='a'?'b':'a',own=c[side],other=c[foe],u=own[c.cursor];
-  const skill=side==='a'?status.ready&&(c.mode==='auto'||choice==='use'):turn%3===0;
+  const skill=side==='a'?status.ready&&(c.mode==='auto'||choice==='use'):(turn-(u.skillOffset??0))%3===0;
   if(skill&&side==='a')c.readyAt[u.id]=turn+3;
   const from=frames.length;
   const snap=(text,turn,event)=>frames.push({text,turn,...event,a:a.map(c=>({id:c.id,name:c.name,hp:c.hp,max:c.max})),b:b.map(c=>({id:c.id,name:c.name,hp:c.hp,max:c.max}))});
@@ -236,6 +236,7 @@ export function combatResult(c){
     damage:frames.filter(f=>f.side==='a'&&f.kind==='attack').reduce((v,f)=>v+f.dealt,0),
     healing:frames.filter(f=>f.side==='a'&&f.kind==='heal').reduce((v,f)=>v+f.amount,0),
     prevented:frames.filter(f=>f.targetSide==='a').reduce((v,f)=>v+(f.prevented||0),0)};
+  if(enemy.units.some(u=>u.skillOffset))summary.skillBlocks=frames.filter(f=>f.side==='b'&&f.skill&&(f.prevented??0)>0).length;
   return {win,frames,summary,enemy,allies,reward:win?{cash:2000+(100-s.rank)*100,dust:180+(100-s.rank)*10}:null};
 }
 export function battle(s,enemy=rival(s)){
@@ -255,10 +256,13 @@ export const MISSIONS = [
   {id:0,name:'庭園の門',hint:'守護役を前へ。前衛を突破する攻撃役を育てよう。',ids:['noel','ash'],scale:.65,dust:240,cash:2000},
   {id:1,name:'木陰の射線',hint:'射手は最後尾を狙う。後衛の耐久と回復役の育成が鍵。',ids:['noel','iris','mira'],scale:.85,dust:360,cash:3500,backline:'iris'},
   {id:2,name:'誓いの守り手',hint:'盾と回復の連携。攻撃役を育て、回復を上回る火力で挑もう。',ids:['sol','ash','flora'],scale:.85,dust:600,cash:5000},
+  {id:3,name:'星渡りの橋',tactic:'前衛の回復役と後衛射手',hint:'回復役が最前列、守り手が最後尾。回復前に前列を突破し、最後尾への狙撃には編成と回復で備えよう。',ids:['mira','iris','sol'],scale:1.05,dust:480,cash:5000,backline:'iris'},
+  {id:4,name:'静謐の回廊',tactic:'2・5・8ターンの範囲攻撃',hint:'アッシュの範囲技は2・5・8ターン。盾を温存して危険なターンに合わせ、回復で立て直そう。',ids:['noel','ash','flora'],scale:1.15,dust:600,cash:6000,skillOffsets:{ash:2}},
+  {id:5,name:'宵星の広場',tactic:'後衛狙撃と全体回復',hint:'前衛・射手・範囲攻撃・回復の4人編成。回復役の前に突破し、盾と回復を組み合わせよう。',ids:['noel','iris','ash','flora'],scale:1.15,dust:720,cash:7000,backline:'iris'},
 ];
 export function missionEnemy(id){
   const m=MISSIONS[id];if(!m)throw Error('巡回先が見つかりません');
-  return {name:m.name,units:m.ids.map(id=>{const c=byId(id);return {...c,atk:Math.round(c.atk*m.scale),hp:Math.round(c.hp*m.scale),backline:id===m.backline};})};
+  return {name:m.name,units:m.ids.map(id=>{const c=byId(id);return {...c,atk:Math.round(c.atk*m.scale),hp:Math.round(c.hp*m.scale),backline:id===m.backline,skillOffset:m.skillOffsets?.[id]??0};})};
 }
 export function campaignBattle(s,id){
   if(!Number.isInteger(id)||!MISSIONS[id]||id>(s.campaignCleared??0))throw Error('前の巡回をクリアしてください');
@@ -267,8 +271,8 @@ export function campaignBattle(s,id){
   return {...result,mission:id,run:s.campaignRuns??0,first:id===(s.campaignCleared??0),bonus,
     reward:result.win?{cash:id===(s.campaignCleared??0)?m.cash:0,dust:(id===(s.campaignCleared??0)?m.dust:0)+(bonus?120:0)}:null};
 }
-export const OBJECTIVES=['3人以上で全員生存して勝利','回復と守りの軽減を両方発動して勝利','12ターン以内に勝利'];
-export const objectiveMet=(id,x)=>id===0?x.total>=3&&x.survivors===x.total:id===1?x.healing>0&&x.prevented>0:x.turns<=12;
+export const OBJECTIVES=['3人以上で全員生存して勝利','回復と守りの軽減を両方発動して勝利','12ターン以内に勝利','3人以上で全員生存して勝利','範囲技の被弾を盾で3人分以上軽減し、回復して勝利','18ターン以内に回復と盾の軽減を使って勝利'];
+export const objectiveMet=(id,x)=>[()=>x.total>=3&&x.survivors===x.total,()=>x.healing>0&&x.prevented>0,()=>x.turns<=12,()=>x.total>=3&&x.survivors===x.total,()=>x.skillBlocks>=3&&x.healing>0,()=>x.turns<=18&&x.healing>0&&x.prevented>0][id]?.()??false;
 export function applyCampaign(s,result){
   if(result.applied||result.run!==(s.campaignRuns??0))throw Error('巡回結果は反映済みか古い結果です');
   if(!MISSIONS[result.mission]||result.mission>(s.campaignCleared??0))throw Error('巡回結果が不正です');
@@ -295,7 +299,7 @@ export function claimMail(s) {
 export function validateSave(raw) {
   if(!raw||raw.version!==1)throw Error('未対応のセーブ形式です');
   const s=initialState();
-  for(const [key,max] of [['campaignCleared',3],['campaignRuns',1e15],['campaignMedals',7]]){
+  for(const [key,max] of [['campaignCleared',MISSIONS.length],['campaignRuns',1e15],['campaignMedals',(1<<MISSIONS.length)-1]]){
     const value=raw[key]??0;
     if(!Number.isSafeInteger(value)||value<0||value>max)throw Error('巡回記録が不正です');
     s[key]=value;

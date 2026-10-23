@@ -47,5 +47,5 @@ test('legacy medals default to zero and failed storage never commits an objectiv
   const before=structuredClone(s);
   assert.throws(()=>transact({setItem(){throw Error('quota');}},s,'campaign',state=>run(state,0)),/quota/);
   assert.deepEqual(s,before);
-  assert.throws(()=>G.restore({...old,campaignMedals:8},1000));
+  assert.throws(()=>G.restore({...old,campaignMedals:1<<G.MISSIONS.length},1000));
 });

@@ -122,5 +122,7 @@ export function receipt(raw) {
 
 function validSummary(x){
   if(!x||!['turns','survivors','total','damage','healing','prevented'].every(k=>Number.isSafeInteger(x[k])&&x[k]>=0&&x[k]<=1e15))return null;
-  return Object.fromEntries(['turns','survivors','total','damage','healing','prevented'].map(k=>[k,x[k]]));
+  const clean=Object.fromEntries(['turns','survivors','total','damage','healing','prevented'].map(k=>[k,x[k]]));
+  if(Number.isSafeInteger(x.skillBlocks)&&x.skillBlocks>=0&&x.skillBlocks<=240)clean.skillBlocks=x.skillBlocks;
+  return clean;
 }

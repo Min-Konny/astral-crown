@@ -6,7 +6,7 @@ const action=id=>s=>{const r=G.campaignBattle(s,id);G.applyCampaign(s,r);return 
 test('old saves default patrol progress; malformed progress is rejected',()=>{
   const s=G.initialState(1000);delete s.campaignCleared;delete s.campaignRuns;
   const restored=G.restore(s,1000).state;assert.equal(restored.campaignCleared,0);
-  for(const value of [-1,4,NaN,'1'])assert.throws(()=>G.restore({...s,campaignCleared:value},1000));
+  for(const value of [-1,G.MISSIONS.length+1,NaN,'1'])assert.throws(()=>G.restore({...s,campaignCleared:value},1000));
 });
 test('three patrols form a complete starter-team training loop without gacha',()=>{
   const s=G.initialState(1000);const rank=s.rank;

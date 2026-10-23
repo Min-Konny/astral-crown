@@ -28,9 +28,9 @@ test('result destinations require matching receipt, victory and an unlocked next
  assert.equal(patrolDestination(s,0,'next'),1);assert.equal(patrolDestination(s,0,'retry'),0);
  assert.deepEqual(s,before);assert.equal(patrolDestination(s,1,'next'),null);
  s.presentation.result.win=false;assert.equal(patrolDestination(s,0,'next'),null);assert.equal(patrolDestination(s,0,'retry'),0);
- s.presentation.result={mission:2,win:true};s.campaignCleared=3;
- assert.equal(patrolDestination(s,2,'next'),null);assert.equal(patrolDestination(s,2,'retry'),2);
- delete s.presentation;assert.equal(patrolDestination(s,2,'retry'),null);
+ s.presentation.result={mission:G.MISSIONS.length-1,win:true};s.campaignCleared=G.MISSIONS.length;
+ assert.equal(patrolDestination(s,G.MISSIONS.length-1,'next'),null);assert.equal(patrolDestination(s,G.MISSIONS.length-1,'retry'),G.MISSIONS.length-1);
+ delete s.presentation;assert.equal(patrolDestination(s,G.MISSIONS.length-1,'retry'),null);
 });
 
 test('old same-map retry buttons expire after a new run, including defeat and reload',()=>{
