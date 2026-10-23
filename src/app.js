@@ -57,7 +57,9 @@ function levelControl(id){
   const i=G.levelInfo(state,id);
   return '<button class="level-control wide" data-level="'+id+'" data-level-current="'+i.level+'" '+(i.reason?'disabled':'')+'>Lv.'+i.level+(i.level>=50?' / 50 · 上限':(' → '+(i.level+1)))+'<small>'+ (i.level>=50?'通常レベルは最大です':('必要素材 '+fmt(i.cost)+' / 所持 '+fmt(state.dust)+(i.reason?' · '+i.reason:' · 育成する')) )+'</small></button>';
 }
+let trainingReturnId=null;
 function trainingDialog(id){
+  trainingReturnId=id;
   const c=G.byId(id),info=G.trainingInfo(state,id),current=G.promotionStage(state,id),eligible=G.promotion(state.counts[id]),next=G.PROMOTION_THRESHOLDS[current];
   const preview=structuredClone(state);if(eligible.stage>current)G.promote(preview,id);
   const stats=G.isHero(c)?G.stats(state,c):null,after=stats?G.stats(preview,c):null;
@@ -126,6 +128,14 @@ function modal(html,cls=''){
   if(!$('#modal').open)$('#modal').showModal();
 }
 $('#modal').addEventListener('cancel',()=>{clearTimeout(timer);dismissReceipt();});
+$('#modal').addEventListener('close',()=>{
+  if($('#modal').open)return; // A replacement dialog may already be open.
+  if(trainingReturnId&&page==='collection'){
+    const target=$(`[data-training="${trainingReturnId}"]:not(:disabled)`)||$('[data-filter="all"]')||$('nav [data-page="collection"]');
+    target?.focus({preventScroll:true});
+  }
+  trainingReturnId=null;
+});
 function checkout(id){
   const base=G.PACKS.find(p=>p.id===id),p={...base,price:base.price*packQuantity,gems:base.gems*packQuantity,name:base.name+' ×'+fmt(packQuantity)};
   modal(`<div class="eyebrow">SIMULATED CHECKOUT</div><h2>お支払い方法を選択</h2><p>ゲーム内のおこづかいを使います。</p><div class="payment-methods">${[['carrier','▣','キャリア決済','ASTRA mobile'],['credit','▰','クレジット','CROWN CARD •••• 0000'],['prepaid','▤','プリペイド','STAR GIFT 残高連携']].map(([id,icon,label,note],i)=>`<label><input type="radio" name="payment" value="${id}" ${i===0?'checked':''}><span>${icon}</span><div>${label}<small>${note}</small></div></label>`).join('')}</div><div class="receipt"><div><span>${p.name}</span><b>✧ ${fmt(p.gems)}</b></div><div><span>ゲーム内のお支払い額</span><strong>¥ ${fmt(p.price)}</strong></div><div><span>購入後のおこづかい</span><span>¥ ${fmt(state.cash-p.price)}</span></div></div><p class="simulation-label">実際の請求は発生しません。決済情報は不要です。</p><button class="primary wide" data-confirm-pack="${p.id}" ${state.cash<p.price?'disabled':''}>${state.cash<p.price?'残高不足です':'購入を確定する'}</button>`);

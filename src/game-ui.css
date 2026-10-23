@@ -187,3 +187,7 @@ body #playback-text{background:var(--surface);color:var(--ink)}
 body dialog.effect-modal{background:#f6fbff;color:#203d59}
 @media(prefers-reduced-motion:reduce){.purchase-success:before{animation:none}}
 body.soft .purchase-success:before,body.quick .purchase-success:before{animation:none}
+/* Collection overlays keep the surrounding luminance near the underlying archive. */
+body[data-page=collection] dialog:is(.training-modal,.promotion-modal){background:#e1eff8;color:#203d59}
+body[data-page=collection] :is(.training-modal,.promotion-modal) :is(h2,h3,p,.eyebrow){color:#203d59}
+body[data-page=collection] dialog:is(.training-modal,.promotion-modal)::backdrop{background:rgba(16,41,71,.06);backdrop-filter:blur(3px)}
