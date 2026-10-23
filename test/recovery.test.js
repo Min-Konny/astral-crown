@@ -25,8 +25,17 @@ function harness(){
     constructor(config){new config.scene();}destroy(){}
   }};
   return {canvas,tasks,tweens,boot(failImage=false){scene.preload();if(failImage)loadError();scene.create();},
-    scales:()=>[scene.time.timeScale,scene.tweens.timeScale],failImage:()=>loadError(),lose:()=>canvas.dispatchEvent(new Event('webglcontextlost'))};
+    scales:()=>[scene.time.timeScale,scene.tweens.timeScale],failImage:file=>loadError(file),lose:()=>canvas.dispatchEvent(new Event('webglcontextlost'))};
 }
+
+test('optional starter image failure keeps legacy atlas battle available',()=>{
+ const previous=globalThis.Phaser;
+ try{
+  const h=harness(),errors=[],stage=createStage({},x=>errors.push(x));h.boot();h.failImage({key:'hero-noel'});
+  let frames=0,done=0;stage.battle(G.battle(G.initialState()),false,()=>frames++,()=>done++);
+  assert(frames>0);assert.deepEqual(errors,[]);stage.skip();assert.equal(done,1);stage.destroy();
+ }finally{if(previous===undefined)delete globalThis.Phaser;else globalThis.Phaser=previous;}
+});
 
 test('live action skip keeps the battlefield but invalidates its old hit callback',()=>{
  const previous=globalThis.Phaser;

@@ -1,4 +1,5 @@
 import * as G from './game.js';
+import {portraitHTML} from './character-art.js';
 import {createStage} from './scenes.js';
 import {SAVE_KEY,transact,receipt,trainTransaction,patrolDestination,battleReadout,restoreBattleSave,restorePendingBattle,pendingCombat,pendingBattleToken,startPendingBattle,advancePendingBattle,changeBattleMode} from './session.js';
 const $=q=>document.querySelector(q), key=SAVE_KEY;
@@ -70,10 +71,10 @@ function wallet(){
   const income=$('#income-value');if(income)income.textContent='¥ '+fmt(G.income(state))+' / 秒';
 }
 function heading(eyebrow,title,description,extra=''){return `<div class="page-heading"><div><div class="eyebrow">${eyebrow}</div><h1>${title}</h1><p>${description}</p></div>${extra}</div>`;}
-function crest(c,extra=''){
-  const frame={luna:0,sol:1,flora:3,noel:1,iris:2,ash:1,mira:3,sage:0,ranger:2,smith:1,guard:1,scholar:0,herbalist:3}[c.id];
-  return '<div class="crest illustrated '+extra+'" aria-hidden="true"><div class="mini-portrait" style="background-position:'+frame*100/3+'% center"></div></div>';
-}
+function crest(c,extra=''){return '<div class="crest illustrated '+extra+'" aria-hidden="true">'+portraitHTML(c.id)+'</div>';}
+document.addEventListener('load',e=>{if(e.target.matches?.('img[data-hero-art]'))e.target.parentElement.classList.add('has-dedicated-art');},true);
+document.addEventListener('error',e=>{if(e.target.matches?.('img[data-hero-art]')){e.target.parentElement.classList.remove('has-dedicated-art');e.target.remove();}},true);
+
 function badge(c){return `<span class="rarity" style="color:${G.RARITIES[c.rarity].color}">${c.rarity}</span>`;}
 function party(){
   return `<div class="party">${state.team.map((id,i)=>{const c=G.byId(id),s=G.stats(state,c);return `<div class="party-card">${crest(c)}<div>${badge(c)} <span class="muted">Lv.${state.levels[id]}</span><h3>${c.name}</h3><small>${i<2?'前衛':'後衛'} · ${c.element} / ${c.role}</small><p>ATK ${fmt(s.atk)} <span class="muted"> · ${G.awakening(state,c)}凸</span></p></div></div>`;}).join('')}${state.team.length<4?'<button class="party-empty" data-page="collection">＋<small>仲間を編成</small></button>':''}</div>`;
@@ -132,8 +133,8 @@ function purchase(id){
 function pullCards(r){
   if(r.n!==10)return '';
   return '<div class="ten-results">'+Object.entries(r.counts).flatMap(([id,n])=>Array.from({length:n},()=>{
-    const c=G.byId(id),frame={luna:0,sol:1,flora:3,noel:1,iris:2,ash:1,mira:3,sage:0,ranger:2,smith:1,guard:1,scholar:0,herbalist:3}[id];
-    return '<div class="pull-card" style="--rarity:'+G.RARITIES[c.rarity].color+'"><span>'+c.rarity+'</span><div class="mini-portrait" style="background-position:'+frame*100/3+'% center"></div><b>'+c.name+'</b></div>';
+    const c=G.byId(id);
+    return '<div class="pull-card" style="--rarity:'+G.RARITIES[c.rarity].color+'"><span>'+c.rarity+'</span>'+portraitHTML(c.id)+'<b>'+c.name+'</b></div>';
   })).join('')+'</div>';
 }
 function summonResult(r){

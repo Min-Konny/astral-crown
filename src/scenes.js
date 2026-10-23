@@ -1,6 +1,6 @@
 // Phaser owns the illustrated stage; accessible HTML owns navigation and dialogs.
 import {byId} from './game.js';
-const frameFor=id=>({luna:0,sol:1,flora:3,noel:1,iris:2,ash:1,mira:3,sage:0,ranger:2,smith:1,guard:1,scholar:0,herbalist:3}[id]??0);
+import {STARTER_ART,characterArt} from './character-art.js';
 export function createStage(parent, onError) {
   try { return createPhaserStage(parent,onError); }
   catch {
@@ -32,7 +32,8 @@ function createPhaserStage(parent, onError) {
       this.load.image('garden','./assets/garden.png');
       this.load.image('luna','./assets/luna.png');
       this.load.image('party','./assets/party.png');
-      this.load.on('loaderror',fail);
+      for(const [id,src] of Object.entries(STARTER_ART))this.load.image(characterArt(id).key,src);
+      this.load.on('loaderror',file=>{if(file?.key?.startsWith('hero-'))return;fail();});
     }
     create(){
       if(failed)return;
@@ -86,7 +87,8 @@ function createPhaserStage(parent, onError) {
       const x=mobile?w*(side==='a'?.25:.75):w*(side==='a'?.26:.74)+direction*(i%2?-.10:.06)*w;
       const y=mobile?h*(compact?.27+i*.13:.32+i*.14):h*(.48+Math.floor(i/2)*.22);
       const shadow=s.add.ellipse(x,y+7,w*(mobile?.16:.075),12,0x244961,.2);
-      const sprite=s.add.image(x,y,'party',frameFor(u.id)).setOrigin(.5,1).setFlipX(side==='b');
+      const art=characterArt(u.id),dedicated=s.textures.exists?.(art.key);
+      const sprite=s.add.image(x,y,dedicated?art.key:'party',dedicated?undefined:art.frame).setOrigin(.5,1).setFlipX(side==='b');
       sprite.setScale(Math.min(h*(mobile?(compact?.075:.105):.18)/sprite.height,w*(mobile?.22:.12)/sprite.width));
       const label=s.add.text(x,y+18,u.name||'',{fontFamily:'sans-serif',fontSize:mobile?'12px':'15px',color:'#143351',backgroundColor:'#ffffffdd',padding:{x:6,y:3}}).setOrigin(.5,0);
       const hp=s.add.rectangle(x,y+9,(mobile?56:90)*u.hp/(u.max||u.hp||1),5,side==='a'?0x24aeb5:0xe2788f);sprite.setAlpha(u.hp?1:.25);label.setText(`${u.name} ${u.hp}`);
@@ -111,7 +113,8 @@ function createPhaserStage(parent, onError) {
     const reveal=()=>{
       if(sequence!==ticket)return;
       ring.destroy();core.destroy();text.destroy();
-      const art=s.add.image(w/2,h*.8,best.id==='luna'?'luna':'party',best.id==='luna'?undefined:frameFor(best.id)).setOrigin(.5,1);
+      const identity=characterArt(best.id),dedicated=s.textures.exists?.(identity.key);
+      const art=s.add.image(w/2,h*.8,best.id==='luna'?'luna':dedicated?identity.key:'party',best.id==='luna'||dedicated?undefined:identity.frame).setOrigin(.5,1);
       art.setScale(Math.min(h*.63/art.height,w*.8/art.width));
       s.add.text(w/2,h*.82,`${best.rarity}  ${best.name}`,{fontFamily:'sans-serif',fontSize:w<650?'28px':'42px',fontStyle:'bold',color:'#fff5cc',stroke:'#173a66',strokeThickness:5}).setOrigin(.5);
       s.add.text(w/2,h*.9,best.title,{fontFamily:'sans-serif',fontSize:'18px',color:'#ffffff',stroke:'#173a66',strokeThickness:3}).setOrigin(.5);
