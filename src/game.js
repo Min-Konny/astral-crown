@@ -1,3 +1,13 @@
+// Cosmetic milestones from requirements §6; amounts are simulated spending only.
+export const SPENDING_TITLES = [
+  {id:'first',name:'初課金',amount:480},
+  {id:'patron',name:'太客',amount:10000},
+  {id:'legend',name:'伝説の支援者',amount:100000},
+];
+export function spendingTitles(spent){
+  const total=Number.isFinite(spent)&&spent>=0?spent:0;
+  return {unlocked:SPENDING_TITLES.filter(t=>total>=t.amount),next:SPENDING_TITLES.find(t=>total<t.amount)??null};
+}
 export const RARITIES = {
   C: { rate: .50, cap: 100000, bonus: .25, color: '#a5afc2' },
   UC: { rate: .28, cap: 30000, bonus: .35, color: '#62d8a4' },

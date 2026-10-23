@@ -97,11 +97,15 @@ function collection(){
       `<div class="legacy-value">全体攻撃 <strong>+${pct(G.bonusFor(state,c))}%</strong></div><div class="progress"><i style="width:${Math.min(100,n/r.cap*100)}%"></i></div><p class="muted">${fmt(n)} / ${fmt(r.cap)}体で完成</p><div class="passive-note">編成不要 · 手動昇格で全員を強化<br>最大 +${r.bonus*100}%</div>`}</article>`;
   }).join('')}</div>`;
 }
+function titleSummary(){
+  const t=G.spendingTitles(state.spent);
+  return '<section class="spending-titles" aria-label="疑似課金の称号"><b>疑似課金の称号 · 見た目のみ</b><div class="title-badges">'+(t.unlocked.length?t.unlocked.map(x=>'<span>取得済み：'+x.name+'</span>').join(''):'<span>まだ取得していません</span>')+'</div><p>'+ (t.next?'次は「'+t.next.name+'」 · 累計 '+fmt(t.next.amount)+'（あと '+fmt(t.next.amount-state.spent)+'）':'すべての称号を取得済み')+'</p><small>ゲーム内のおこづかいのみ。能力・報酬への影響はありません。</small></section>';
+}
 function shop(){
   return heading('STAR CRYSTAL BOUTIQUE','星を買う。夢を回す。','財布の限界を超える体験を、ゲームの中だけで。',`<span class="tag">REAL MONEY FREE</span>`)+`
   <div class="simulation-label">◇ これはゲーム内の疑似課金です。実際のお支払い・決済情報の入力はありません。</div>
   <section class="panel shop-summary"><div><small>累計疑似課金額</small><strong>¥ ${fmt(state.spent)}</strong><p>今日も王国の運営を支えていただき、ありがとうございます。</p></div><div class="shop-gem" aria-hidden="true">◇</div></section>
-  <div class="section-title"><h2>まとめて購入</h2><span class="muted">選択数ぶんを一括決済</span></div><div class="tabs pack-quantities">${[1,10,100,1000].map(n=>`<button data-quantity="${n}" class="${packQuantity===n?'selected':''}">×${fmt(n)}</button>`).join('')}</div>
+  ${titleSummary()}<div class="section-title"><h2>まとめて購入</h2><span class="muted">選択数ぶんを一括決済</span></div><div class="tabs pack-quantities">${[1,10,100,1000].map(n=>`<button data-quantity="${n}" class="${packQuantity===n?'selected':''}">×${fmt(n)}</button>`).join('')}</div>
   <div class="pack-grid">${G.PACKS.map((p,i)=>`<article class="panel pack ${i===2?'premium':''}"><span class="tag">${p.tag}</span><div class="crystals" aria-hidden="true">${['◇','◇ ◇','◇ ✧ ◇'][i]}</div><h2>${p.name}${packQuantity>1?' ×'+fmt(packQuantity):''}</h2><strong>✧ ${fmt(p.gems*packQuantity)}</strong><p>星晶石 / ${fmt(p.gems*packQuantity/300)}連分</p><button class="${i===2?'primary':''}" data-pack="${p.id}">¥ ${fmt(p.price*packQuantity)} <small>ゲーム内</small></button></article>`).join('')}</div>
   <div class="notice">おこづかい収入 <b>¥ ${fmt(G.income(state))} / 秒</b><button class="text-button" data-page="home">収入設備を育てる →</button></div>`;
 }
@@ -134,9 +138,11 @@ function commitResources(action){
   return tx.result;
 }
 function purchase(id){
+  const previousSpent=state.spent;
   const method=document.querySelector('input[name=payment]:checked')?.value||'carrier',p=commitResources(s=>G.buy(s,id,packQuantity));
+  const earned=G.spendingTitles(state.spent).unlocked.filter(t=>previousSpent<t.amount);
   render();sound('purchase');
-  modal(`<div class="purchase-success"><span class="eyebrow">PAYMENT APPROVED</span><div class="approved">✓</div><h2>決済が完了しました</h2><p>${{carrier:'キャリア決済',credit:'クレジット',prepaid:'プリペイド'}[method]} · ゲーム内のお支払い</p><div class="paid-amount">¥ <span id="paid-counter">0</span></div><div class="gem-award">✧ +${fmt(p.gems)}<small>星晶石を獲得</small></div><p>累計疑似課金額 ¥ ${fmt(state.spent)}</p><button class="primary wide" data-go-summon>さっそく召喚する →</button><button class="text-button" data-action="close">ショップに戻る</button></div>`,'effect-modal');
+  modal(`<div class="purchase-success"><span class="eyebrow">PAYMENT APPROVED</span><div class="approved">✓</div><h2>決済が完了しました</h2><p>${{carrier:'キャリア決済',credit:'クレジット',prepaid:'プリペイド'}[method]} · ゲーム内のお支払い</p><div class="paid-amount">¥ <span id="paid-counter">0</span></div><div class="gem-award">✧ +${fmt(p.gems)}<small>星晶石を獲得</small></div><p>累計疑似課金額 ¥ ${fmt(state.spent)}</p>${earned.length?`<div class="spending-titles title-earned" role="status"><b>称号を取得：${earned.map(t=>t.name).join('・')}</b><p>疑似課金の記念です。能力・報酬は変わりません。</p></div>`:''}<button class="primary wide" data-go-summon>さっそく召喚する →</button><button class="text-button" data-action="close">ショップに戻る</button></div>`,'effect-modal');
   const start=performance.now();
   const animate=t=>{const el=$('#paid-counter');if(!el)return;const f=shortMotion()?1:Math.min(1,(t-start)/800);el.textContent=fmt(p.price*(1-(1-f)**3));if(f<1)requestAnimationFrame(animate);};
   requestAnimationFrame(animate);
