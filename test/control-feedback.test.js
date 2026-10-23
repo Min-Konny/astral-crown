@@ -21,12 +21,19 @@ test('launch/primary state palettes keep readable labels, including gradient end
 
 test('pressed visuals have no retained JS state and motion overrides follow compression',()=>{
  // Static regression guard only: native pointer cancellation/focus behavior needs browser QA.
- const lastPress=css.lastIndexOf('transform:translateY(2px) scale(.965,.94)');
+ const lastPress=css.lastIndexOf('transform:translateY(2px) scale(1.02,.94)');
  assert.ok(lastPress>=0);
+  assert.match(css,/scale\(1\.02,\.94\);transition:none/);
  assert.ok(css.lastIndexOf('body.soft button:active:not(:disabled),body.quick button:active:not(:disabled){transform:none}')>lastPress);
  assert.ok(css.lastIndexOf('@media(prefers-reduced-motion:reduce)')>lastPress);
  assert.match(css,/body button:disabled\{[^}]*transform:none/);
  assert.match(css,/body button:focus-visible\{[^}]*outline:3px/);
  const source=readFileSync(new URL('../src/app.js',import.meta.url),'utf8');
  assert.doesNotMatch(source,/addEventListener\(['"](?:pointerdown|mousedown|touchstart)['"]/);
+});
+
+test('saved growth acknowledgement remains legible and respects reduced motion',()=>{
+  assert.ok(ratio('#203d59','#d7e9f3')>=4.5);
+  assert.match(css,/body\.soft \.growth-feedback,body\.quick \.growth-feedback\{animation:none\}/);
+  assert.match(css,/@media\(prefers-reduced-motion:reduce\)\{body \.training-modal \.growth-feedback\{animation:none\}\}/);
 });

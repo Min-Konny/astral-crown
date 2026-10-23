@@ -88,8 +88,8 @@ body button:is(.launch,.primary):active:not(:disabled){background:#135c86;color:
 body button:is(.launch,.primary):disabled{background:#e1eaf0;color:#435a6e}
 body .home-cta button,body .home-cta button :is(b,small,span){transform:none}
 body .home-cta .launch :is(b,small,span){color:inherit}
-body button{transition:transform 220ms cubic-bezier(.2,1.65,.35,1),box-shadow 130ms ease,border-color 130ms ease;transform-origin:center}
-body button:active:not(:disabled){transform:translateY(2px) scale(.965,.94);transition:transform 65ms ease-out,box-shadow 65ms ease-out}
+body button{transition:transform 260ms cubic-bezier(.2,1.65,.35,1),box-shadow 130ms ease,border-color 130ms ease;transform-origin:center}
+body button:active:not(:disabled){transform:translateY(2px) scale(1.02,.94);transition:none}
 body.soft button,body.quick button{transition:none}
 body.soft button:active:not(:disabled),body.quick button:active:not(:disabled){transform:none}
 @media(prefers-reduced-motion:reduce){body button{transition:none}body button:active:not(:disabled){transform:none}}
@@ -191,3 +191,10 @@ body.soft .purchase-success:before,body.quick .purchase-success:before{animation
 body[data-page=collection] dialog:is(.training-modal,.promotion-modal){background:#e1eff8;color:#203d59}
 body[data-page=collection] :is(.training-modal,.promotion-modal) :is(h2,h3,p,.eyebrow){color:#203d59}
 body[data-page=collection] dialog:is(.training-modal,.promotion-modal)::backdrop{background:rgba(16,41,71,.06);backdrop-filter:blur(3px)}
+
+/* Saved growth has a small local acknowledgement; no timers or simulation changes. */
+body .training-modal .growth-status{min-height:4.5em;margin:8px 0 16px;padding:10px 12px;border-left:4px solid #7da2b9;border-radius:12px;background:#d7e9f3;color:#203d59;font-size:14px;line-height:1.65}
+body .training-modal .growth-feedback{border-left-color:#18779d;animation:growth-settle 280ms ease-out}
+@keyframes growth-settle{from{transform:translateY(3px)}to{transform:none}}
+body.soft .growth-feedback,body.quick .growth-feedback{animation:none}
+@media(prefers-reduced-motion:reduce){body .training-modal .growth-feedback{animation:none}}
