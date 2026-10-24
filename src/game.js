@@ -271,6 +271,8 @@ export const MISSIONS = [
   {id:3,name:'星渡りの橋',tactic:'前衛の回復役と後衛射手',hint:'回復役が最前列、守り手が最後尾。回復前に前列を突破し、最後尾への狙撃には編成と回復で備えよう。',ids:['mira','iris','sol'],scale:1.05,dust:480,cash:5000,backline:'iris'},
   {id:4,name:'静謐の回廊',tactic:'2・5・8ターンの範囲攻撃',hint:'アッシュの範囲技は2・5・8ターン。盾を温存して危険なターンに合わせ、回復で立て直そう。',ids:['noel','ash','flora'],scale:1.15,dust:600,cash:6000,skillOffsets:{ash:2}},
   {id:5,name:'宵星の広場',tactic:'後衛狙撃と全体回復',hint:'前衛・射手・範囲攻撃・回復の4人編成。回復役の前に突破し、盾と回復を組み合わせよう。',ids:['noel','iris','ash','flora'],scale:1.15,dust:720,cash:7000,backline:'iris'},
+  {id:6,name:'風切りの回廊',tactic:'1・4・7ターンの範囲攻撃',hint:'回復役のいない盾・射手・範囲攻撃の編成。最初の範囲技は受け、3ターン目に盾を温存して4ターン目に合わせよう。後衛の耐久にも備えよう。',ids:['noel','iris','ash'],scale:1.3,dust:600,cash:6000,backline:'iris',skillOffsets:{ash:1}},
+  {id:7,name:'夜明けの泉',tactic:'前列の回復役と交互の攻撃',hint:'回復役が先頭。射手は1・4・7ターン、範囲技は2・5・8ターンに発動。前列を早く突破し、盾を範囲技に、回復を被弾後に合わせよう。',ids:['flora','sol','iris','ash'],scale:1.05,dust:720,cash:7000,backline:'iris',skillOffsets:{iris:1,ash:2}},
 ];
 export function missionEnemy(id){
   const m=MISSIONS[id];if(!m)throw Error('巡回先が見つかりません');
@@ -283,8 +285,8 @@ export function campaignBattle(s,id){
   return {...result,mission:id,run:s.campaignRuns??0,first:id===(s.campaignCleared??0),bonus,
     reward:result.win?{cash:id===(s.campaignCleared??0)?m.cash:0,dust:(id===(s.campaignCleared??0)?m.dust:0)+(bonus?120:0)}:null};
 }
-export const OBJECTIVES=['3人以上で全員生存して勝利','回復と守りの軽減を両方発動して勝利','12ターン以内に勝利','3人以上で全員生存して勝利','範囲技の被弾を盾で3人分以上軽減し、回復して勝利','18ターン以内に回復と盾の軽減を使って勝利'];
-export const objectiveMet=(id,x)=>[()=>x.total>=3&&x.survivors===x.total,()=>x.healing>0&&x.prevented>0,()=>x.turns<=12,()=>x.total>=3&&x.survivors===x.total,()=>x.skillBlocks>=3&&x.healing>0,()=>x.turns<=18&&x.healing>0&&x.prevented>0][id]?.()??false;
+export const OBJECTIVES=['3人以上で全員生存して勝利','回復と守りの軽減を両方発動して勝利','12ターン以内に勝利','3人以上で全員生存して勝利','範囲技の被弾を盾で3人分以上軽減し、回復して勝利','18ターン以内に回復と盾の軽減を使って勝利','3人以上で全員生存し、範囲技を盾で累計5人分以上軽減して勝利','3人以上で全員生存し、18ターン以内に勝利'];
+export const objectiveMet=(id,x)=>[()=>x.total>=3&&x.survivors===x.total,()=>x.healing>0&&x.prevented>0,()=>x.turns<=12,()=>x.total>=3&&x.survivors===x.total,()=>x.skillBlocks>=3&&x.healing>0,()=>x.turns<=18&&x.healing>0&&x.prevented>0,()=>x.total>=3&&x.survivors===x.total&&x.skillBlocks>=5,()=>x.total>=3&&x.survivors===x.total&&x.turns<=18][id]?.()??false;
 export function applyCampaign(s,result){
   if(result.applied||result.run!==(s.campaignRuns??0))throw Error('巡回結果は反映済みか古い結果です');
   if(!MISSIONS[result.mission]||result.mission>(s.campaignCleared??0))throw Error('巡回結果が不正です');
@@ -361,4 +363,12 @@ export function restore(raw,now=Date.now()){
   const s=validateSave(raw), before=s.cash;
   tick(s,(now-s.lastSeen)/1000);s.lastSeen=now;
   return {state:s,offline:s.cash-before};
+}
+
+// Navigation only: never promises farmable rewards after one-time rewards are exhausted.
+export function materialRoutes(s){
+ const cleared=s.campaignCleared??0,medals=s.campaignMedals??0;
+ const first=MISSIONS[cleared];
+ const optional=MISSIONS.find(m=>m.id<cleared&&!(medals&(1<<m.id)));
+ return [...(first?[{mission:first.id,dust:first.dust,kind:'first'}]:[]),...(optional?[{mission:optional.id,dust:120,kind:'objective'}]:[])];
 }

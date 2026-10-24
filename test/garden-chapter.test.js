@@ -4,7 +4,7 @@ import * as G from '../src/game.js';
 import {startPendingBattle,advancePendingBattle,pendingBattleToken,restoreBattleSave,receipt} from '../src/session.js';
 test('six stages connect starter rewards to training without summons and never repay clears',()=>{
  const s=G.initialState();const rank=s.rank;
- for(let id=0;id<G.MISSIONS.length;id++){
+ for(let id=0;id<6;id++){
   assert.throws(()=>G.campaignBattle(s,id+1));
   const r=G.campaignBattle(s,id);assert.equal(r.win,true,`stage ${id}`);G.applyCampaign(s,r);
   for(let round=0;round<3;round++)for(const hero of s.team)if(s.dust>=s.levels[hero]*30)G.levelUp(s,hero);
@@ -29,7 +29,7 @@ test('old completed chapter and medals remain, new pending stages resume and rew
   while(s.pendingBattle){const token=pendingBattleToken(s),before=structuredClone(s);assert.throws(()=>advancePendingBattle({setItem(){throw Error('full');}},s,token));assert.deepEqual(s,before);s=advancePendingBattle(store,s,token).state;const raw=JSON.parse(JSON.stringify(s));s=restoreBattleSave(raw,raw.lastSeen).state;}
   assert.equal(s.campaignCleared,id+1);
  }
- assert.equal(s.campaignRuns,3);assert.equal(s.campaignMedals&7,7);assert.throws(()=>G.validateSave({...s,campaignCleared:7}));assert.throws(()=>G.validateSave({...s,campaignMedals:64}));
+ assert.equal(s.campaignRuns,3);assert.equal(s.campaignMedals&7,7);assert.throws(()=>G.validateSave({...s,campaignCleared:G.MISSIONS.length+1}));assert.throws(()=>G.validateSave({...s,campaignMedals:1<<G.MISSIONS.length}));
  assert.equal(G.MISSIONS.length,G.OBJECTIVES.length);
 });
 test('new final stage defeat consumes nothing; staggered objective receipt survives reload',()=>{

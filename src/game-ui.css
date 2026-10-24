@@ -198,3 +198,5 @@ body .training-modal .growth-feedback{border-left-color:#18779d;animation:growth
 @keyframes growth-settle{from{transform:translateY(3px)}to{transform:none}}
 body.soft .growth-feedback,body.quick .growth-feedback{animation:none}
 @media(prefers-reduced-motion:reduce){body .training-modal .growth-feedback{animation:none}}
+
+.material-guide{padding:12px;border:1px solid #91afc4;border-radius:14px;background:#e1eff8;color:#203d59;margin:12px 0}.material-guide button{margin:6px 0;white-space:normal;line-height:1.6}.material-guide small{display:block;font-size:13px;color:inherit}.material-guide p{font-size:14px}
