@@ -23,7 +23,7 @@ test('召喚の選択・提供割合・不足時を実操作で確認する',asy
   const game=new AstralPage(page);await game.moveToPage(data,{gems:3000});await game.openPage('summon');
   const execute=page.locator('[data-action="summon"]');
   await execute.hover();
-  expect(await execute.evaluate(e=>getComputedStyle(e).backgroundImage)).toContain('summon-gold.png');
+  expect(await execute.evaluate(e=>getComputedStyle(e).backgroundImage)).toContain('summon-gold.webp');
   await stateShot(game,'summon',info,'[data-banner="standard"]');
   const canvas=page.locator('#game-stage canvas');
   const pickup=await canvas.screenshot();

@@ -47,7 +47,7 @@ test('normal navigation, resize and summon reveal never use camera flashes or re
     constructor(){
       this.scale={width:390,height:844,on:(event,fn)=>{resized=fn;}};
       this.textures={get:()=>({getSourceImage:()=>({width:2048,height:683}),add(){}})};
-      this.load={image(){},on(){}};
+      this.load={image(){},on(){},once(){},start(){}};
       this.add=new Proxy({},{get:()=>object});
       this.tweens={add(){},killAll(){}};
       this.time={delayedCall:(ms,fn)=>tasks.push(fn),removeAllEvents:()=>{tasks.length=0;}};
