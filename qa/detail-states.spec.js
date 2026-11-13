@@ -39,16 +39,18 @@ test('召喚の選択・提供割合・不足時を実操作で確認する',asy
   expect((await game.savedState()).gems).toBe(3000);expect(game.errors).toEqual([]);
   if(info.project.name==='laptop'){
     await page.keyboard.press('Escape');
-    await page.setViewportSize({width:651,height:720});
     const confirm=page.locator('[data-action="summon"]');
-    expect(await confirm.evaluate(button=>{
+    for(const [width,height] of [[651,720],[1001,720],[1101,900]]){
+      await page.setViewportSize({width,height});
+      expect(await confirm.evaluate(button=>{
       const style=getComputedStyle(button);
       const text=document.createRange();
       text.selectNodeContents(button.querySelector('span'));
       return text.getClientRects().length===1&&text.getBoundingClientRect().width<=
         button.clientWidth-parseFloat(style.paddingLeft)-parseFloat(style.paddingRight)+1;
-    })).toBe(true);
-    await game.screenshot('summon-insufficient','tablet');
+      })).toBe(true);
+      await game.screenshot('summon-insufficient',String(width));
+    }
   }
 });
 test('投資上限では操作を無効にし理由を示す',async({page},info)=>{
