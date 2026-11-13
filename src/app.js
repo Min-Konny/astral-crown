@@ -67,6 +67,7 @@ function levelControl(id){
   return '<button class="level-control wide" data-level="'+id+'" data-level-current="'+i.level+'" '+(i.reason?'disabled':'')+'>Lv.'+i.level+(i.level>=50?' / 50 · 上限':(' → '+(i.level+1)))+'<small>'+ (i.level>=50?'通常レベルは最大です':('必要素材 '+fmt(i.cost)+' / 所持 '+fmt(state.dust)+(i.reason?' · '+i.reason:' · 育成する')) )+'</small></button>';
 }
 let trainingReturnId=null;
+let trainingReturnFromShowcase=false;
 const trainingTripKey=(preview?'preview-':'')+'astral-crown-training-trip';
 function trainingTrip(){
  try{const r=JSON.parse(sessionStorage.getItem(trainingTripKey));return r&&r.season===state.season&&G.byId(r.id)&&state.counts[r.id]>0&&Number.isInteger(r.mission)&&G.MISSIONS[r.mission]&&r.mission<=state.campaignCleared?r:null;}catch{return null;}
@@ -111,21 +112,62 @@ document.addEventListener('load',e=>{if(e.target.matches?.('img[data-hero-art]')
 document.addEventListener('error',e=>{if(e.target.matches?.('img[data-hero-art]')){e.target.parentElement.classList.remove('has-dedicated-art');e.target.remove();}},true);
 
 function badge(c){return `<span class="rarity" style="color:${G.RARITIES[c.rarity].color}">${c.rarity}</span>`;}
+// UI-only highlight for the collection showcase. Never saved; economy and team stay in state.
+let selectedId=null;
+const ELEMENT_KEY={'水':'water','炎':'fire','森':'forest'};
+const SHOWCASE_ART={luna:'./assets/redesign/lune-summon.png'};
+function collectionPortrait(id){
+  return `<img class="collection-portrait" src="./assets/redesign/portrait-${id}.webp" alt="" decoding="async">`;
+}
+function growState(c){
+  const n=state.counts[c.id]??0,owned=n>0,stage=G.promotionStage(state,c.id),ready=owned&&G.promotion(n).stage>stage;
+  const level=owned&&G.isHero(c)&&!G.levelInfo(state,c.id).reason,skill=owned&&!G.trainingInfo(state,c.id).reason;
+  return {n,owned,stage,ready,grow:ready||level||skill,label:ready?'昇格可能':level||skill?'強化可能':''};
+}
+function cardFace(c,extra=''){
+  const g=growState(c),hero=G.isHero(c),slot=state.team.indexOf(c.id);
+  return `<span class="card-frame tier-${Math.min(g.stage,5)} rarity-${c.rarity.toLowerCase()} element-${ELEMENT_KEY[c.element]??'none'}" style="--rarity:${G.RARITIES[c.rarity].color}">${collectionPortrait(c.id)}<span class="card-rarity">${c.rarity}</span>${slot>=0?`<span class="card-flag team-flag">編成中</span>`:''}${g.label?`<span class="card-flag grow-flag">${g.label}</span>`:''}${extra}<span class="card-name"><i class="element-mark" aria-hidden="true">${c.element}</i><b>${c.name}</b><small>${!g.owned?'未所持':hero?`Lv.${state.levels[c.id]}`:`+${pct(G.bonusFor(state,c))}%`}</small></span></span>`;
+}
 function party(){
-  return `<div class="party">${state.team.map((id,i)=>{const c=G.byId(id),s=G.stats(state,c);return `<div class="party-card">${crest(c)}<div>${badge(c)} <span class="muted">Lv.${state.levels[id]}</span><h3>${c.name}</h3><small>${i<2?'前衛':'後衛'} · ${c.element} / ${c.role}</small><p>ATK ${fmt(s.atk)} <span class="muted"> · ${G.awakening(state,c)}凸</span></p></div></div>`;}).join('')}${state.team.length<4?'<button class="party-empty" data-page="collection">＋<small>仲間を編成</small></button>':''}</div>`;
+  const slots=[0,1,2,3].map(i=>{
+    const id=state.team[i],pos=i<2?'前衛':'後衛';
+    if(!id)return `<div class="party-slot empty"><span class="slot-label">${pos}</span><button class="party-empty" data-filter="heroes">＋<small>仲間を編成</small></button></div>`;
+    const c=G.byId(id),label=growState(c).label;
+    return `<div class="party-slot"><span class="slot-label">${pos}</span><button class="party-card ${selectedId===id?'selected-card':''}" data-select="${id}" aria-pressed="${selectedId===id}" aria-label="${pos} ${c.name}（${c.rarity}）${label?'・'+label:''}の詳細を表示">${cardFace(c)}</button></div>`;
+  });
+  return `<div class="party">${slots.join('')}</div>`;
+}
+function showcase(c){
+  if(!c)return '';
+  const g=growState(c),hero=G.isHero(c),r=G.RARITIES[c.rarity],equipped=state.team.includes(c.id),slot=state.team.indexOf(c.id),s=hero?G.stats(state,c):null,next=G.PROMOTION_THRESHOLDS[g.stage];
+  const art=SHOWCASE_ART[c.id];
+  return `<aside class="collection-showcase rarity-${c.rarity.toLowerCase()} element-${ELEMENT_KEY[c.element]??'none'} ${g.owned?'':'unowned'} ${art?'has-full-art':''}" aria-label="${c.name}の詳細" tabindex="-1">
+  <div class="showcase-art" aria-hidden="true">${art?`<img src="${art}" alt="" decoding="async">`:collectionPortrait(c.id)}</div>
+  <div class="showcase-info">
+   <div class="showcase-name"><span class="card-rarity" style="--rarity:${r.color}">${c.rarity}</span><div><small>${c.title} · <span style="white-space:nowrap">${c.element} / ${c.role}</span></small><h2>${c.name}</h2></div></div>
+   <p class="showcase-level">${!g.owned?'未所持 · 召喚で仲間にしよう':hero?`<b>Lv. ${state.levels[c.id]}</b><span>${G.awakening(state,c)} / ${r.cap}凸</span>`:`<span>全員の攻撃</span><b>+${pct(G.bonusFor(state,c))}%</b>`}</p>
+   <dl class="showcase-stats">${hero?`<div><dt>HP</dt><dd>${fmt(s.hp)}</dd></div><div><dt>攻撃</dt><dd>${fmt(s.atk)}</dd></div>`:`<div><dt>上限</dt><dd>${fmt(r.cap)}枚</dd></div>`}<div><dt>所持</dt><dd>${fmt(g.n)}枚 · 第${g.stage}段階</dd></div></dl>
+   <p class="showcase-note">${hero?(equipped?`編成中・${slot<2?'前衛':'後衛'} ${slot+1}番目`:g.owned?'未編成・編成すると戦闘に参加':'編成するには入手が必要'):'編成不要・手動昇格で全員を強化'}${next?` · 次の昇格まで ${fmt(Math.max(0,next-g.n))}枚`:' · 最終段階'}</p>
+   <button class="primary wide showcase-train" data-training="${c.id}" ${g.owned?'':'disabled'}>${!g.owned?'未所持':g.ready?'昇格可能 · 育成する':'育成する'}</button>
+   ${hero?`<div class="showcase-team"><button data-team="${c.id}" ${g.owned?'':'disabled'} class="${equipped?'equipped':''}" aria-pressed="${equipped}">${equipped?'編成中 · 外す':'編成する'}</button>${equipped?`<button class="forward" data-forward="${c.id}" aria-label="${c.name}を前へ" ${slot===0?'disabled':''}>← 前へ</button>`:''}</div>`:''}
+  </div></aside>`;
 }
 function collection(){
   const chars=G.collectionCandidates(state,filter);
-  return heading('LEGACY ARCHIVE','継承図鑑','主役を育てる。無数の出会いを、全員の力に変える。',`<span class="tag">全体攻撃 +${pct(G.collectionBonus(state))}%</span>`)+`
-  <section class="panel formation"><div class="section-title"><h2>出撃編成 <small>${state.team.length} / 4</small></h2><span class="muted">左から前衛2人 → 後衛2人</span></div>${party()}</section>
-  <div class="tabs">${[['all','すべて'],['heroes','主力キャラ'],['legacy','全体強化 C / UC'],['promotion','昇格可能'],['training','鍛錬可能']].map(([id,label])=>`<button class="${filter===id?'selected':''}" data-filter="${id}">${label}</button>`).join('')}</div>
+  if(!G.byId(selectedId))selectedId=state.team[0]??G.CHARACTERS.find(c=>state.counts[c.id])?.id??G.CHARACTERS[0].id;
+  const owned=G.CHARACTERS.filter(c=>state.counts[c.id]>0).length;
+  return `<section class="astral-collection">
+  <div class="collection-title"><span class="title-crest" aria-hidden="true">☾</span><div><div class="eyebrow">LEGACY ARCHIVE</div><h1>継承図鑑</h1></div><span class="tag">全体攻撃 +${pct(G.collectionBonus(state))}%</span></div>
+  <div class="collection-layout"><div class="collection-main">
+  <section class="formation" aria-label="出撃編成"><div class="section-title"><h2>出撃編成 <small>${state.team.length} / 4</small></h2><span>左から前衛2人 → 後衛2人</span></div>${party()}</section>
   ${mission>=0?`<button class="primary wide" data-return-patrol>庭園「${G.MISSIONS[mission].name}」へ戻る</button>`:''}
-  ${!chars.length?'<section class="panel"><p>今の条件に合う仲間はいません。絞り込みは育成後も保持されます。</p><button data-filter="all">すべての仲間を表示</button></section>':''}
+  <section class="roster" aria-label="仲間一覧"><div class="roster-bar"><div class="tabs">${[['all','すべて'],['heroes','主力キャラ'],['legacy','全体強化 C / UC'],['promotion','昇格可能'],['training','鍛錬可能']].map(([id,label])=>`<button class="${filter===id?'selected':''}" data-filter="${id}" aria-pressed="${filter===id}">${label}</button>`).join('')}</div><span class="roster-count">所持 <b>${owned}</b> / ${G.CHARACTERS.length}</span></div>
+  ${!chars.length?'<div class="roster-empty"><p>今の条件に合う仲間はいません。絞り込みは育成後も保持されます。</p><button data-filter="all">すべての仲間を表示</button></div>':''}
   <div class="character-grid">${chars.map(c=>{
-    const n=state.counts[c.id],hero=G.isHero(c),r=G.RARITIES[c.rarity],owned=n>0;
-    const stage=G.promotionStage(state,c.id),next=G.PROMOTION_THRESHOLDS[stage],ready=G.promotion(n).stage>stage;
-    return `<article class="panel character-card compact-card tier-${Math.min(stage,5)} ${owned?'':'unowned'}" style="--rarity:${r.color}"><div class="card-top">${badge(c)}<span>${c.element} / ${c.role}</span></div><button class="portrait-open" data-training="${c.id}" ${owned?'':'disabled'} aria-label="${c.name}の育成を開く">${crest(c)}</button><small>${c.title}</small><h2>${c.name}</h2><div class="card-summary">${hero?`Lv.${state.levels[c.id]} <span>${G.awakening(state,c)} / ${r.cap}凸</span>`:`全員の攻撃 <strong>+${pct(G.bonusFor(state,c))}%</strong>`}</div><p class="owned-count">所持 ${fmt(n)}枚 <span>第${stage}段階</span></p><button class="wide ${ready?'primary':''}" data-training="${c.id}" ${owned?'':'disabled'}>${!owned?'未所持':ready?'昇格可能 · 育成へ':'育成する'}</button>${hero?`<div class="button-row"><button data-team="${c.id}" ${!owned?'disabled':''} class="${state.team.includes(c.id)?'equipped':''}">${state.team.includes(c.id)?'編成中 · 外す':'編成する'}</button>${state.team.includes(c.id)?`<button class="forward" data-forward="${c.id}" aria-label="${c.name}を前へ" ${state.team.indexOf(c.id)===0?'disabled':''}>←</button>`:''}</div>${owned?`<details class="card-details"><summary>レベル強化・スキル</summary><p>${G.SKILLS[c.id]?.description}</p>${levelControl(c.id)}</details>`:''}`:`<div class="progress"><i style="width:${Math.min(100,n/r.cap*100)}%"></i></div><p class="muted">${fmt(n)} / ${fmt(r.cap)}枚<br>編成不要・手動昇格で全員を強化</p>`}<small class="next-promotion">${next?`次の昇格まで ${fmt(Math.max(0,next-n))}枚`:'最終段階'}</small></article>`;
-  }).join('')}</div>`;
+    const g=growState(c);
+    return `<article class="roster-card ${g.owned?'':'unowned'} ${selectedId===c.id?'selected-card':''}"><button class="roster-art" data-select="${c.id}" aria-pressed="${selectedId===c.id}" aria-label="${c.name}（${c.rarity}）${state.team.includes(c.id)?'・編成中':' '}${g.label?'・'+g.label:' '}の詳細を表示">${cardFace(c)}</button><button aria-label="${c.name}：${!g.owned?'未所持':g.ready?'昇格へ':'育成'}" class="roster-train ${g.ready?'ready':''}" data-training="${c.id}" ${g.owned?'':'disabled'}>${!g.owned?'未所持':g.ready?'昇格へ':'育成'}</button></article>`;
+  }).join('')}</div></section>
+  </div>${showcase(G.byId(selectedId))}</div></section>`;
 }
 
 function titleSummary(){
@@ -162,10 +204,15 @@ $('#modal').addEventListener('cancel',()=>{clearTimeout(timer);dismissReceipt();
 $('#modal').addEventListener('close',()=>{
   if($('#modal').open)return; // A replacement dialog may already be open.
   if(trainingReturnId&&page==='collection'){
-    const target=$(`[data-training="${trainingReturnId}"]:not(:disabled)`)||$('[data-filter="all"]')||$('nav [data-page="collection"]');
+    const scope=trainingReturnFromShowcase?'.collection-showcase':'.roster';
+    const target=$(`${scope} [data-training="${trainingReturnId}"]:not(:disabled)`)||
+      $(`[data-training="${trainingReturnId}"]:not(:disabled)`)||
+      $(`.roster [data-filter="${filter}"]`)||$('nav [data-page="collection"]');
+    target?.scrollIntoView({block:'nearest',behavior:'instant'});
     target?.focus({preventScroll:true});
   }
   trainingReturnId=null;
+  trainingReturnFromShowcase=false;
 });
 function checkout(id){
   const base=G.PACKS.find(p=>p.id===id),p={...base,price:base.price*packQuantity,gems:base.gems*packQuantity,name:base.name+' ×'+fmt(packQuantity)};
@@ -221,12 +268,12 @@ document.addEventListener('click',e=>{
   run(()=>{
     if(b.dataset.skillMode){state=changeBattleMode(storage,state,b.dataset.skillMode);render();return;}
     if(b.dataset.continueRank){state=continueRanking(storage,state,b.dataset.continueRank);resumeBattle();return;}
-    if(b.dataset.page){if(!['home','earn','shop','summon','collection','arena'].includes(b.dataset.page))return;closeModal();page=b.dataset.page;render();window.scrollTo({top:0});return;}
+    if(b.dataset.page){if(!['home','earn','shop','summon','collection','arena'].includes(b.dataset.page))return;closeModal();page=b.dataset.page;render();$('#main').scrollTop=0;window.scrollTo({top:0});return;}
     if(b.hasAttribute('data-return-patrol')){closeModal();page='arena';render();window.scrollTo({top:0});return;}
     if(b.dataset.retryPatrol!==undefined||b.dataset.nextPatrol!==undefined){const next=b.dataset.nextPatrol!==undefined;const target=patrolDestination(state,Number(next?b.dataset.nextPatrol:b.dataset.retryPatrol),next?'next':'retry',Number(b.dataset.patrolRun));if(target===null)return;mission=target;page='arena';playBattle();return;}
     if(b.dataset.tryUpgrade){
       const id=b.dataset.tryUpgrade,c=G.byId(id);if(!c||!state.counts[id])return;
-      if(G.isHero(c)&&!state.team.includes(id)){trainingReturnId=null;closeModal();page='collection';filter='heroes';render();const target=$('[data-team="'+id+'"]');target?.scrollIntoView({block:'center',behavior:'instant'});target?.focus({preventScroll:true});return;}
+      if(G.isHero(c)&&!state.team.includes(id)){trainingReturnId=null;closeModal();page='collection';filter='heroes';selectedId=id;render();const target=$('[data-team="'+id+'"]');target?.scrollIntoView({block:'center',behavior:'instant'});target?.focus({preventScroll:true});return;}
       const target=mission>=0&&mission<=state.campaignCleared?mission:Math.min(state.campaignCleared,G.MISSIONS.length-1);
       sessionStorage.setItem(trainingTripKey,JSON.stringify({id,mission:target,season:state.season}));closeModal();mission=target;page='arena';render();window.scrollTo({top:0});return;
     }
@@ -238,7 +285,13 @@ document.addEventListener('click',e=>{
     }
     if(b.hasAttribute('data-training-back')){const r=trainingTrip();if(!r)return;closeModal();page='collection';render();trainingDialog(r.id);return;}
     if(b.hasAttribute('data-adjust-patrol')){mission=state.presentation?.result?.mission??mission;closeModal();page='collection';render();return;}
-    if(b.dataset.training){closeModal();page='collection';render();trainingDialog(b.dataset.training);return;}
+    if(b.dataset.training){
+      const fromShowcase=!!b.closest('.collection-showcase')||
+        (!!b.closest('#modal')&&trainingReturnId===b.dataset.training&&trainingReturnFromShowcase);
+      closeModal();page='collection';render();
+      trainingReturnFromShowcase=fromShowcase;
+      trainingDialog(b.dataset.training);return;
+    }
     if(b.dataset.promote){const r=commit('promotion',s=>G.promote(s,b.dataset.promote));render();promotionResult(r);return;}
     if(b.dataset.trainSkill){state=trainTransaction(storage,state,s=>G.trainSkill(s,b.dataset.trainSkill));render();trainingDialog(b.dataset.trainSkill);return;}
     if(b.dataset.focus){state=trainTransaction(storage,state,s=>G.chooseFocus(s,b.dataset.focusId,b.dataset.focus));render();trainingDialog(b.dataset.focusId);return;}
@@ -246,7 +299,18 @@ document.addEventListener('click',e=>{
     if(b.dataset.banner){banner=b.dataset.banner;render();$(`[data-banner="${banner}"]`)?.focus({preventScroll:true});return;}
     if(b.dataset.count){count=Number(b.dataset.count);render();$(`[data-count="${count}"]`)?.focus({preventScroll:true});return;}
     if(b.dataset.mission!==undefined){mission=Number(b.dataset.mission);page='arena';render();return;}
-    if(b.dataset.filter){filter=b.dataset.filter;render();return;}
+    if(b.dataset.select){
+      const fromParty=!!b.closest('.party');selectedId=b.dataset.select;render();
+      const panel=$('.collection-showcase');
+      const main=$('#main');
+      const bounds=panel.getBoundingClientRect(),viewport=main.getBoundingClientRect();
+      if(e.detail===0||matchMedia('(max-width:1100px)').matches||bounds.top<viewport.top||bounds.bottom>viewport.bottom){
+        panel?.scrollIntoView({block:'start',behavior:'instant'});
+        panel?.focus({preventScroll:true});
+      }else $(`${fromParty?'.party':'.roster'} [data-select="${selectedId}"]`)?.focus({preventScroll:true});
+      return;
+    }
+    if(b.dataset.filter){filter=b.dataset.filter;render();$(`.roster [data-filter="${filter}"]`)?.focus({preventScroll:true});return;}
     if(b.dataset.quantity){packQuantity=Number(b.dataset.quantity);render();return;}
     if(b.dataset.pack){checkout(b.dataset.pack);return;}
     if(b.dataset.confirmPack){purchase(b.dataset.confirmPack);return;}
@@ -258,8 +322,8 @@ document.addEventListener('click',e=>{
       if(inDetail){const currentStats=G.stats(state,G.byId(b.dataset.level));trainingDialog(b.dataset.level,`✓ Lv.${previousLevel} → ${state.levels[b.dataset.level]}・保存済み<br>攻撃 ${fmt(previousStats.atk)} → ${fmt(currentStats.atk)} / HP ${fmt(previousStats.hp)} → ${fmt(currentStats.hp)}`);$('#modal').scrollTop=scroll;const next=$('#modal [data-level]');if(!next.disabled)next.focus({preventScroll:true});else $('#modal .modal-close')?.focus({preventScroll:true});}
       sound();return;
     }
-    if(b.dataset.team){G.toggleTeam(state,b.dataset.team);save();render();return;}
-    if(b.dataset.forward){G.moveForward(state,b.dataset.forward);save();render();return;}
+    if(b.dataset.team){const id=b.dataset.team;G.toggleTeam(state,id);save();render();$(`[data-team="${id}"]`)?.focus({preventScroll:true});return;}
+    if(b.dataset.forward){const id=b.dataset.forward;G.moveForward(state,id);save();render();const f=$(`[data-forward="${id}"]`);(f&&!f.disabled?f:$(`[data-team="${id}"]`))?.focus({preventScroll:true});return;}
     const actions={
       close:closeModal,
       work:()=>{commitResources(G.work);wallet();const feedback=$('#work-feedback');if(feedback){feedback.textContent='+¥ '+fmt(300*(1+state.seals*.25));feedback.classList.remove('earned');void feedback.offsetWidth;feedback.classList.add('earned');}sound();},
