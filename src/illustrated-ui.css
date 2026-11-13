@@ -795,3 +795,9 @@ body.royal[data-page=collection] #main .astral-collection .collection-showcase{s
 @media(max-width:650px){
   body.royal[data-page=collection] #main .astral-collection .party .card-name .element-mark{bottom:24px;left:auto;right:5px}
 }
+
+body.royal[data-page=collection] #main .astral-collection button:is(.selected-card,.roster-art[aria-pressed=true]):hover .card-frame{box-shadow:0 0 0 3px #62e6dc,0 0 18px #62e6dccc,0 6px 12px #050b2299}
+@media(min-width:651px){
+  body.royal[data-page=collection] #main{position:fixed;inset:84px 0 112px;margin:0 auto;width:100%;height:auto;min-height:0;padding:0 4% 24px;scroll-padding-top:8px}
+  body.royal[data-page=collection] #main .astral-collection .collection-title{margin-bottom:10px}
+}

@@ -132,8 +132,8 @@ function party(){
   const slots=[0,1,2,3].map(i=>{
     const id=state.team[i],pos=i<2?'前衛':'後衛';
     if(!id)return `<div class="party-slot empty"><span class="slot-label">${pos}</span><button class="party-empty" data-filter="heroes">＋<small>仲間を編成</small></button></div>`;
-    const c=G.byId(id);
-    return `<div class="party-slot"><span class="slot-label">${pos}</span><button class="party-card ${selectedId===id?'selected-card':''}" data-select="${id}" aria-pressed="${selectedId===id}" aria-label="${pos} ${c.name}を表示">${cardFace(c)}</button></div>`;
+    const c=G.byId(id),label=growState(c).label;
+    return `<div class="party-slot"><span class="slot-label">${pos}</span><button class="party-card ${selectedId===id?'selected-card':''}" data-select="${id}" aria-pressed="${selectedId===id}" aria-label="${pos} ${c.name}（${c.rarity}）${label?'・'+label:''}の詳細を表示">${cardFace(c)}</button></div>`;
   });
   return `<div class="party">${slots.join('')}</div>`;
 }

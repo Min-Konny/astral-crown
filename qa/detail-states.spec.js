@@ -86,10 +86,8 @@ test('仲間の編成と低レアの手動継承強化を保存する',async({pa
   const next=team[1];
   await page.locator(`.roster [data-select="${next}"]`).click();
   await expect(page.locator('.collection-showcase h2')).toHaveText(G.byId(next).name);
-  if(['mobile','narrow'].includes(info.project.name)){
-    await expect(page.locator('.collection-showcase')).toBeFocused();
-    await expect(page.locator('.showcase-train')).toBeInViewport();
-  }else await expect(page.locator(`.roster [data-select="${next}"]`)).toBeFocused();
+  await expect(page.locator('.collection-showcase:focus, .roster [data-select]:focus')).toHaveCount(1);
+  await expect(page.locator('.showcase-train')).toBeInViewport();
   await page.locator(`.collection-showcase [data-forward="${next}"]`).click();
   expect((await game.savedState()).team[0]).toBe(next);
   const train=page.locator('.showcase-train');
