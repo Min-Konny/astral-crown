@@ -115,7 +115,7 @@ function badge(c){return `<span class="rarity" style="color:${G.RARITIES[c.rarit
 // UI-only highlight for the collection showcase. Never saved; economy and team stay in state.
 let selectedId=null;
 const ELEMENT_KEY={'水':'water','炎':'fire','森':'forest'};
-const SHOWCASE_ART={luna:'./assets/redesign/lune-summon.png'};
+const SHOWCASE_ART={luna:'./assets/redesign/lune-summon.webp'};
 function collectionPortrait(id){
   return `<img class="collection-portrait" src="./assets/redesign/portrait-${id}.webp" alt="" decoding="async">`;
 }

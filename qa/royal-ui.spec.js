@@ -104,3 +104,23 @@ test('ホームの新しい入口から召喚・庭園・ショップ・設備�
   await expect(page.locator('.home-badge')).toHaveCount(0);
   expect(game.errors).toEqual([]);expect(game.failedAssets).toEqual([]);
 });
+
+test('狭い幅から広げても背景がビューポートに追従する',async({page},info)=>{
+  test.skip(info.project.name!=='desktop','PC幅から縮めて戻す流れだけを確認する');
+  const game=new AstralPage(page);await game.moveToPage(data);
+  for(const size of [{width:375,height:667},{width:1440,height:900}]){
+    await page.setViewportSize(size);
+    await expect.poll(()=>page.locator('#game-stage canvas').evaluate(c=>[c.clientWidth,c.clientHeight])).toEqual([size.width,size.height]);
+  }
+  expect(game.errors).toEqual([]);
+});
+
+test('上部の星晶石の「+」からショップへ移動できる',async({page},info)=>{
+  const game=new AstralPage(page);await game.moveToPage(data);
+  const add=page.locator('.wallet .gem-add');
+  if(info.project.name==='narrow'){await expect(add).toBeHidden();return;}
+  await expect(add).toBeVisible();await add.click();
+  await expect(page.locator('nav [data-page="shop"]')).toHaveAttribute('aria-current','page');
+  await expect(add).toBeHidden();
+  expect(game.errors).toEqual([]);
+});

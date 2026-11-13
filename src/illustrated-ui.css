@@ -1,7 +1,7 @@
 /* GPT Image artwork supplies the frames and icons; live values remain accessible HTML. */
 body.royal[data-page] header{background:none;border:0;border-radius:0;box-shadow:none;backdrop-filter:none;gap:8px;padding:0;height:68px;top:5px;left:2%;right:2%;width:96%}
 body.royal[data-page=home] header{left:auto;width:64%}
-body.royal[data-page] .season,body.royal[data-page] .wallet>div{background:url('../assets/redesign/hud-plate.png') center/100% 210% no-repeat;border:0;box-shadow:none;min-width:0;height:58px;padding:8px 23px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:1px;text-align:center}
+body.royal[data-page] .season,body.royal[data-page] .wallet>div{background:url('../assets/redesign/hud-plate.webp') center/100% 100% no-repeat;border:0;box-shadow:none;min-width:0;height:58px;padding:8px 23px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:1px;text-align:center}
 body.royal[data-page] .season{flex:0 0 170px;letter-spacing:1px}
 body.royal[data-page] .season strong{font:24px Georgia,serif;line-height:1;color:#fff1d0}.season strong em{font:10px var(--serif);margin-left:4px}
 body.royal[data-page] .season small{font-size:8px;letter-spacing:1px;line-height:1.1}
@@ -9,29 +9,29 @@ body.royal[data-page] .wallet{flex:1;display:flex;gap:5px;width:auto;min-width:0
 body.royal[data-page] .wallet>div{flex:1;padding:9px 18px}
 body.royal[data-page] .wallet strong{font:clamp(16px,1.7vw,26px) Georgia,serif;white-space:nowrap;line-height:1.15;color:#fff5dc}
 body.royal[data-page] .wallet small{font-size:9px;white-space:nowrap;color:#e7d1a6}
-body.royal[data-page] #settings{flex:0 0 43px;background:url('../assets/redesign/hud-plate.png') center/100% 210% no-repeat;border:0;border-radius:0;box-shadow:none;color:#ffe6ac;height:45px}
+body.royal[data-page] #settings{flex:0 0 43px;background:url('../assets/redesign/hud-plate.webp') center/100% 100% no-repeat;border:0;border-radius:0;box-shadow:none;color:#ffe6ac;height:45px}
 body.royal[data-page] .sidebar{bottom:6px;left:2%;width:96%;height:88px;border:0;border-radius:0;padding:0;background:transparent;box-shadow:none;backdrop-filter:none;overflow:visible}
 body.royal[data-page] .sidebar nav{width:100%;gap:0;align-items:end;overflow:visible}
-body.royal[data-page] .sidebar nav button{height:75px;position:relative;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:0;padding:0 8px 11px;border:0!important;border-radius:0;overflow:visible;background:url('../assets/redesign/hud-plate.png') center/100% 210% no-repeat!important;box-shadow:none!important;color:#fff0d4!important;font:22px var(--serif);text-shadow:0 2px 3px #070b19;transition:filter .15s}
-body.royal[data-page] .sidebar nav button.active{background:url('../assets/redesign/nav-active.png') center/100% 100% no-repeat!important;border:0!important;filter:drop-shadow(0 0 7px #52eddd66)}
+body.royal[data-page] .sidebar nav button{height:75px;position:relative;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:0;padding:0 8px 11px;border:0!important;border-radius:0;overflow:visible;background:url('../assets/redesign/hud-plate.webp') center/100% 100% no-repeat!important;box-shadow:none!important;color:#fff0d4!important;font:22px var(--serif);text-shadow:0 2px 3px #070b19;transition:filter .15s}
+body.royal[data-page] .sidebar nav button.active{background:url('../assets/redesign/nav-active.webp') center/100% 100% no-repeat!important;border:0!important;filter:drop-shadow(0 0 7px #52eddd66)}
 body.royal[data-page] .sidebar nav button:hover{filter:brightness(1.2)}
 body.royal[data-page] .sidebar nav button small{display:none}
-body.royal[data-page] .sidebar nav button .painted-nav-icon{position:absolute;top:-34px;width:76px;height:76px;display:block;background-image:url('../assets/redesign/nav-icons.png');background-size:600% 190%;background-repeat:no-repeat;background-position:0% 50%;filter:drop-shadow(0 3px 3px #080c20aa);pointer-events:none}
+body.royal[data-page] .sidebar nav button .painted-nav-icon{position:absolute;top:-34px;width:76px;height:76px;display:block;background-image:url('../assets/redesign/nav-icons.webp');background-size:600% 190%;background-repeat:no-repeat;background-position:0% 50%;filter:drop-shadow(0 3px 3px #080c20aa);pointer-events:none}
 body.royal[data-page] .sidebar nav [data-page=earn] .painted-nav-icon{background-position:20% 50%}
 body.royal[data-page] .sidebar nav [data-page=summon] .painted-nav-icon{background-position:40% 50%}
 body.royal[data-page] .sidebar nav [data-page=collection] .painted-nav-icon{background-position:60% 50%}
 body.royal[data-page] .sidebar nav [data-page=arena] .painted-nav-icon{background-position:80% 50%}
 body.royal[data-page] .sidebar nav [data-page=shop] .painted-nav-icon{background-position:100% 50%}
 body.royal[data-page] footer{bottom:114px;background:none}
-body.royal[data-page=summon] .pull-options button,body.royal[data-page=summon] .summon-footnotes button,body.royal[data-page=summon] .pity-jewel{background:url('../assets/redesign/hud-plate.png') center/100% 210% no-repeat!important;border:0!important;border-radius:0;box-shadow:none;color:#fff0d4;padding-left:15px;padding-right:15px}
-body.royal[data-page=summon] .pull-options button.selected{background:url('../assets/redesign/nav-active.png') center/100% 100% no-repeat!important;color:#fff8dc!important}
+body.royal[data-page=summon] .pull-options button,body.royal[data-page=summon] .summon-footnotes button,body.royal[data-page=summon] .pity-jewel{background:none!important;border-width:0!important;border-style:solid!important;border-color:transparent!important;border-radius:0;box-shadow:none;color:#fff0d4;padding-left:15px;padding-right:15px}
+body.royal[data-page=summon] .pull-options button.selected{background:none!important;box-shadow:none!important;color:#fff8dc!important}
 @media(max-width:1000px){body.royal[data-page=home] header{width:68%}body.royal[data-page] .season{flex-basis:125px}body.royal[data-page=home] .season{display:none}body.royal[data-page] .wallet>div{padding-left:12px;padding-right:12px}body.royal[data-page] .sidebar nav button{font-size:18px}}
 @media(max-width:650px){body.royal[data-page] header,body.royal[data-page=home] header{width:98%;left:1%;right:1%;height:54px;top:3px;gap:2px}body.royal[data-page] .season{display:none}body.royal[data-page] .wallet{gap:0}body.royal[data-page] .wallet>div{height:49px;padding:7px 9px}body.royal[data-page] .wallet strong{font-size:15px}body.royal[data-page] .wallet small{font-size:7px}body.royal[data-page] .wallet em{display:none}body.royal[data-page] #settings{flex-basis:30px;width:30px;height:38px}body.royal[data-page] #settings .ui-icon{width:19px}body.royal[data-page] .sidebar{left:1%;width:98%;bottom:5px;height:65px}body.royal[data-page] .sidebar nav button{height:54px;padding:0 2px 9px;font-size:12px}body.royal[data-page] .sidebar nav button .painted-nav-icon{width:43px;height:43px;top:-20px}body.royal[data-page] footer{bottom:81px}body.royal[data-page=summon] .pull-options button{padding-left:6px;padding-right:6px}}
 /* A continuous illustrated rail keeps the artwork, rather than individual frames, prominent. */
-body.royal[data-page] .sidebar{left:3%;width:94%;bottom:6px;height:65px;background:url('../assets/redesign/hud-plate.png') center/100% 210% no-repeat;padding:0 2%;filter:drop-shadow(0 3px 5px #070e23aa)}
+body.royal[data-page] .sidebar{left:3%;width:94%;bottom:6px;height:65px;background:url('../assets/redesign/hud-plate.webp') center/100% 100% no-repeat;padding:0 2%;filter:drop-shadow(0 3px 5px #070e23aa)}
 body.royal[data-page] .sidebar nav button{height:65px;background:transparent!important;font-size:21px;padding-bottom:8px}
 body.royal[data-page] .sidebar nav button:not(.active)::after{content:'';position:absolute;right:0;bottom:12px;height:25px;width:1px;background:linear-gradient(transparent,#d4b77999,transparent);pointer-events:none}
-body.royal[data-page] .sidebar nav button.active{background:url('../assets/redesign/nav-active.png') center/100% 100% no-repeat!important;filter:drop-shadow(0 0 4px #55dbd64d)}
+body.royal[data-page] .sidebar nav button.active{background:url('../assets/redesign/nav-active.webp') center/100% 100% no-repeat!important;filter:drop-shadow(0 0 4px #55dbd64d)}
 body.royal[data-page] .sidebar nav button .painted-nav-icon{width:70px;height:70px;top:-36px}
 body.royal[data-page] .sidebar nav button[data-page=home]{order:0}
 body.royal[data-page] .sidebar nav button[data-page=earn]{order:1}
@@ -44,10 +44,10 @@ body.royal[data-page=home] header{width:64%}
 body.royal[data-page] .season{flex-basis:125px;height:43px;padding:5px 15px;gap:2px}
 body.royal[data-page] .season strong{font-size:21px}
 body.royal[data-page] .season small{font-size:7px}
-body.royal[data-page] .wallet{height:43px;background:url('../assets/redesign/hud-plate.png') center/100% 210% no-repeat;padding:0 12px;gap:0}
+body.royal[data-page] .wallet{height:43px;background:url('../assets/redesign/hud-plate.webp') center/100% 100% no-repeat;padding:0 12px;gap:0}
 body.royal[data-page] .wallet>div{position:relative;height:43px;padding:4px 12px 4px 42px;background:none;align-items:flex-end;gap:1px}
 body.royal[data-page] .wallet>div+div{border-left:1px solid #dfc39433}
-body.royal[data-page] .wallet>div::before{content:'';position:absolute;left:9px;top:7px;width:30px;height:30px;background:url('../assets/redesign/nav-icons.png') 20% 50%/600% 190% no-repeat;pointer-events:none}
+body.royal[data-page] .wallet>div::before{content:'';position:absolute;left:9px;top:7px;width:30px;height:30px;background:url('../assets/redesign/nav-icons.webp') 20% 50%/600% 190% no-repeat;pointer-events:none}
 body.royal[data-page] .wallet>div:nth-child(2)::before{background-position:40% 50%}
 body.royal[data-page] .wallet>div:nth-child(3)::before{background-position:40% 50%;filter:hue-rotate(30deg);transform:scale(.8)}
 body.royal[data-page] .wallet strong{font-size:clamp(16px,1.55vw,24px);line-height:1.05}
@@ -67,7 +67,7 @@ body.royal[data-page] .wallet strong{line-height:1.1}
 body.royal[data-page] header,body.royal[data-page=home] header{width:min(850px,66%);height:53px;gap:5px}
 body.royal[data-page] .season{height:48px;flex-basis:118px}
 body.royal[data-page] .wallet{background:none;padding:0;height:48px;gap:5px}
-body.royal[data-page] .wallet>div{background:url('../assets/redesign/hud-plate.png') center/100% 200% no-repeat;height:48px;padding:6px 15px 6px 34px;border:0}
+body.royal[data-page] .wallet>div{background:url('../assets/redesign/hud-plate.webp') center/100% 100% no-repeat;height:48px;padding:6px 15px 6px 34px;border:0}
 body.royal[data-page] .wallet>div+div{border:0}
 body.royal[data-page] .wallet>div::before{left:12px;top:12px;width:24px;height:24px}
 body.royal[data-page] .wallet strong{font-size:20px;letter-spacing:0}
@@ -107,7 +107,7 @@ body.royal[data-page=summon] .summon-ui::before{inset:0;background:linear-gradie
 body.royal[data-page=summon] .summon-description{border:0}
 body.royal[data-page] .sidebar nav button .painted-nav-icon{pointer-events:auto;cursor:pointer}
 body.royal[data-page] .sidebar nav button.active,body.royal[data-page] .sidebar nav button.active:hover{background:transparent!important;filter:none;isolation:isolate}
-body.royal[data-page] .sidebar nav button.active::before{content:'';display:block;position:absolute;inset:0;width:auto;height:auto;background:url('../assets/redesign/nav-active.png') center/100% 100% no-repeat;filter:brightness(.78) saturate(1.25);z-index:-1;pointer-events:none}
+body.royal[data-page] .sidebar nav button.active::before{content:'';display:block;position:absolute;inset:0;width:auto;height:auto;background:url('../assets/redesign/nav-active.webp') center/100% 100% no-repeat;filter:brightness(.78) saturate(1.25);z-index:-1;pointer-events:none}
 body.royal[data-page] .sidebar nav button.active:hover::before{filter:brightness(.88) saturate(1.25)}
 /* UI 01/12 Home — reference composition: large Lune, illustrated banners, treasure income plaque and gold CTA.
    Scoped to .festival-home so other screens keep their own layout. Live values stay HTML. */
@@ -138,27 +138,28 @@ body.royal[data-page=home] .festival-home .home-badge{position:absolute;top:-3px
 /* Illustrated banners with the painted gold frame. */
 body.royal[data-page=home] .festival-home .home-banners{position:absolute;top:84px;right:1.4%;left:auto;bottom:auto;width:330px;display:grid;gap:12px;z-index:2}
 body.royal[data-page=home] .festival-home .home-banners .home-banner{position:relative;isolation:isolate;overflow:hidden;height:118px;min-height:0;margin:0;padding:30px 42% 12px 24px;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:2px;text-align:left;border:0;border-radius:6px;box-shadow:0 6px 16px #0a142f88;color:#fff6e2;text-shadow:0 1px 2px #0a0f26,0 0 8px #0a0f26;filter:none;transform:none}
-/* banner-frame.png (2172×724) is drawn as a nine-slice so its corner ornaments keep their native proportions at every box size.
+/* banner-frame.webp (2172×724) is drawn as a nine-slice so its corner ornaments keep their native proportions at every box size.
    --fw is the reference width the corners are scaled from (box width, capped by height so the slices never overlap). */
-body.royal[data-page=home] .festival-home :is(.home-banners .home-banner,.home-economy)::after{content:"";position:absolute;inset:0;background:none;border:0 solid transparent;border-image-source:url('../assets/redesign/banner-frame.png');border-image-slice:410 360 250 360;border-image-width:calc(var(--fw)*.18876) calc(var(--fw)*.16575) calc(var(--fw)*.1151) calc(var(--fw)*.16575);border-image-repeat:stretch;z-index:3;pointer-events:none;font-size:0;color:transparent}
+body.royal[data-page=home] .festival-home :is(.home-banners .home-banner,.home-economy)::after{content:"";position:absolute;inset:0;background:none;border:0 solid transparent;border-image-source:url('../assets/redesign/banner-frame.webp');border-image-slice:410 360 250 360;border-image-width:calc(var(--fw)*.18876) calc(var(--fw)*.16575) calc(var(--fw)*.1151) calc(var(--fw)*.16575);border-image-repeat:stretch;z-index:3;pointer-events:none;font-size:0;color:transparent}
 body.royal[data-page=home] .festival-home .home-banners{--fw:330px}
 body.royal[data-page=home] .festival-home .home-economy{--fw:380px}
 body.royal[data-page=home] .festival-home .home-banner .banner-ribbon{position:absolute;top:13px;left:18px;z-index:2;padding:1px 12px 1px 9px;font:600 10px/1.6 var(--serif);letter-spacing:.08em;color:#fff3d8;background:linear-gradient(90deg,#8a2f6b,#4a2a6b);border:1px solid #f0d08e;border-radius:3px 12px 12px 3px;box-shadow:0 2px 4px #0a0f2688;white-space:nowrap}
 body.royal[data-page=home] .festival-home .home-banner strong{position:relative;z-index:2;display:block;margin:8px 0 0;font:500 26px/1.15 var(--serif);letter-spacing:.06em;color:#fffaf0;white-space:nowrap;text-shadow:0 0 10px #f7d98a88,0 2px 3px #0a0f26}
 body.royal[data-page=home] .festival-home .home-banner small{position:relative;z-index:2;display:block;margin:0;font:11px/1.35 var(--serif);color:#f6e6c2;white-space:nowrap}
 body.royal[data-page=home] .festival-home .home-banners .moon-banner{background:linear-gradient(90deg,#26174af2,#2d1c52c4 48%,#2d1c5200 82%),url('../assets/redesign/observatory.webp') 50% 35%/cover}
-body.royal[data-page=home] .festival-home .moon-banner .banner-portrait{position:absolute;z-index:0;left:auto;right:-4px;top:-16px;width:52%;height:auto;max-width:none;pointer-events:none;-webkit-mask-image:linear-gradient(90deg,transparent,#000 28%);mask-image:linear-gradient(90deg,transparent,#000 28%)}
-body.royal[data-page=home] .festival-home .home-banners .garden-banner{background:linear-gradient(90deg,#103229f2,#16413ab8 46%,#16413a00 80%),url('../assets/garden.png') 62% 28%/220%}
+/* The pickup banner shows Lune's face from the summon artwork (#25); sizes are relative to the banner so every breakpoint keeps the same crop. */
+body.royal[data-page=home] .festival-home .moon-banner .banner-portrait{position:absolute;z-index:0;left:auto;right:-15%;top:-10%;width:auto;height:190%;max-width:none;pointer-events:none;-webkit-mask-image:linear-gradient(90deg,transparent,#000 38%);mask-image:linear-gradient(90deg,transparent,#000 38%)}
+body.royal[data-page=home] .festival-home .home-banners .garden-banner{background:linear-gradient(90deg,#103229f2,#16413ab8 46%,#16413a00 80%),url('../assets/garden.webp') 62% 28%/220%}
 body.royal[data-page=home] .festival-home .garden-banner .banner-ribbon{background:linear-gradient(90deg,#2f7050,#1d4a3f)}
-body.royal[data-page=home] .festival-home .garden-banner .banner-party{position:absolute;z-index:0;top:6px;right:8px;bottom:5px;width:50%;background:url('../assets/party.png') 100% 100%/auto 100% no-repeat;filter:drop-shadow(0 3px 3px #08201acc);pointer-events:none}
+body.royal[data-page=home] .festival-home .garden-banner .banner-party{position:absolute;z-index:0;top:6px;right:8px;bottom:5px;width:50%;background:url('../assets/party.webp') 100% 100%/auto 100% no-repeat;filter:drop-shadow(0 3px 3px #08201acc);pointer-events:none}
 body.royal[data-page=home] .festival-home .home-banners .jewel-banner{background:radial-gradient(circle at 78% 52%,#73e6ff66,transparent 42%),linear-gradient(90deg,#10294af5,#14406a 55%,#1b5c80)}
 body.royal[data-page=home] .festival-home .jewel-banner .banner-ribbon{background:linear-gradient(90deg,#1f708b,#23477a)}
 body.royal[data-page=home] .festival-home .jewel-banner .banner-pack{position:absolute;z-index:0;left:auto;right:5%;top:50%;width:38%;height:auto;max-width:none;transform:translateY(-50%);pointer-events:none;filter:drop-shadow(0 4px 8px #04122acc)}
 body.royal[data-page=home] .festival-home .home-banners .home-banner:hover:not(:disabled){filter:brightness(1.1) saturate(1.05);color:#fff8e8;transform:translateY(-1px)}
 /* Treasure income plaque. */
 body.royal[data-page=home] .festival-home .home-economy{position:absolute;left:1.8%;right:auto;top:auto;bottom:118px;width:380px;max-width:calc(100% - 3.6%);min-width:0;height:170px;margin:0;padding:0;overflow:hidden;isolation:isolate;border:0;border-radius:6px;background:#162a4c;box-shadow:0 8px 18px #0a142f99;color:#fff2d4;z-index:2}
-body.royal[data-page=home] .festival-home .home-economy .estate-art{position:absolute;inset:0;z-index:0;background:linear-gradient(90deg,#16294a00 16%,#16294acc 48%,#142645f5 60%),url('../assets/garden.png') 100% 30%/290% no-repeat}
-body.royal[data-page=home] .festival-home .home-economy .income-chest{position:absolute;z-index:1;left:44px;right:auto;top:auto;bottom:10px;width:124px;height:124px;opacity:1;background:url('../assets/redesign/nav-icons.png') 20% 50%/600% 190% no-repeat;filter:drop-shadow(0 0 10px #ffe39a99) drop-shadow(0 4px 4px #0a142f);pointer-events:none}
+body.royal[data-page=home] .festival-home .home-economy .estate-art{position:absolute;inset:0;z-index:0;background:linear-gradient(90deg,#16294a00 16%,#16294acc 48%,#142645f5 60%),url('../assets/garden.webp') 100% 30%/290% no-repeat}
+body.royal[data-page=home] .festival-home .home-economy .income-chest{position:absolute;z-index:1;left:44px;right:auto;top:auto;bottom:10px;width:124px;height:124px;opacity:1;background:url('../assets/redesign/nav-icons.webp') 20% 50%/600% 190% no-repeat;filter:drop-shadow(0 0 10px #ffe39a99) drop-shadow(0 4px 4px #0a142f);pointer-events:none}
 body.royal[data-page=home] .festival-home .home-economy .income-copy{position:absolute;z-index:2;top:0;bottom:0;right:0;left:auto;width:54%;margin:0;padding:20px 24px 18px 2px;display:flex;flex-direction:column;justify-content:center;align-items:stretch;gap:2px;text-align:center;text-shadow:0 1px 3px #071026}
 body.royal[data-page=home] .festival-home .home-economy h2{margin:0;font:500 22px/1.2 var(--serif);letter-spacing:.14em;color:#ffe9b8}
 body.royal[data-page=home] .festival-home .home-economy strong{display:block;margin:2px 0 0;font:400 21px/1.2 Georgia,serif;color:#fff8e6;white-space:nowrap}
@@ -174,12 +175,12 @@ body.royal[data-page=home] .festival-home .character-line>span{display:block;fon
 body.royal[data-page=home] .festival-home .character-line p{margin:2px 0 0;font:500 17px/1.55 var(--serif);color:#2c3346;white-space:nowrap}
 /* Gold-framed adventure CTA and arena pill. */
 body.royal[data-page=home] .festival-home .home-cta{position:absolute;right:1.4%;left:auto;top:auto;bottom:118px;width:330px;display:flex;flex-direction:column;align-items:stretch;gap:12px;z-index:2}
-/* The primary CTA uses the star-crested, scroll-cornered nav-active.png plaque at its native 3:1 ratio (never stretched),
+/* The primary CTA uses the star-crested, scroll-cornered nav-active.webp plaque at its native 3:1 ratio (never stretched),
    so it reads as a different, more ornate shape than the rectangular event banners. Garden art shows through its glass. */
-body.royal[data-page=home] .festival-home .home-cta .adventure-launch,body.royal[data-page=home] .festival-home .home-cta .adventure-launch:hover:not(:disabled){background:url('../assets/redesign/nav-active.png') center/100% 100% no-repeat}
+body.royal[data-page=home] .festival-home .home-cta .adventure-launch,body.royal[data-page=home] .festival-home .home-cta .adventure-launch:hover:not(:disabled){background:url('../assets/redesign/nav-active.webp') center/100% 100% no-repeat}
 body.royal[data-page=home] .festival-home .home-cta .adventure-launch{position:relative;isolation:isolate;overflow:visible;aspect-ratio:3/1;width:auto;height:auto;min-height:0;margin:0 -16px;padding:8.6% 14% 6.4%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;text-align:center;border:0;border-radius:0;box-shadow:none;color:#fff6dc;transform:none;filter:drop-shadow(0 0 10px #ffe2a055) drop-shadow(0 6px 8px #0a142fa6)}
 body.royal[data-page=home] .festival-home .home-cta .adventure-launch:hover:not(:disabled){filter:brightness(1.12) drop-shadow(0 0 14px #ffe2a088) drop-shadow(0 6px 8px #0a142fa6);color:#fffaf0}
-body.royal[data-page=home] .festival-home .home-cta .adventure-launch::before{content:"";position:absolute;inset:25.5% 12% 18.5%;z-index:-1;background:linear-gradient(0deg,#052a33b3,#052a3326 55%,#052a3366),url('../assets/garden.png') 62% 26%/cover no-repeat;opacity:.82;-webkit-mask-image:linear-gradient(90deg,transparent,#000 14%,#000 86%,transparent);mask-image:linear-gradient(90deg,transparent,#000 14%,#000 86%,transparent);pointer-events:none}
+body.royal[data-page=home] .festival-home .home-cta .adventure-launch::before{content:"";position:absolute;inset:25.5% 12% 18.5%;z-index:-1;background:linear-gradient(0deg,#052a33b3,#052a3326 55%,#052a3366),url('../assets/garden.webp') 62% 26%/cover no-repeat;opacity:.82;-webkit-mask-image:linear-gradient(90deg,transparent,#000 14%,#000 86%,transparent);mask-image:linear-gradient(90deg,transparent,#000 14%,#000 86%,transparent);pointer-events:none}
 body.royal[data-page=home] .festival-home .home-cta .adventure-launch::after{content:none}
 body.royal[data-page=home] .festival-home .home-cta .adventure-launch small{display:none}
 body.royal[data-page=home] .festival-home .home-cta .adventure-launch b{display:block;margin:0;padding-left:.14em;font:500 42px/1.02 var(--serif);letter-spacing:.14em;color:#fffaf0;text-shadow:0 0 2px #6b4a1c,0 2px 0 #6b4a1c,0 0 14px #ffe7a6aa,0 4px 10px #071026;transform:none}
@@ -187,7 +188,7 @@ body.royal[data-page=home] .festival-home .home-cta .adventure-launch span{displ
 body.royal[data-page=home] .festival-home .home-cta .arena-shortcut,body.royal[data-page=home] .festival-home .home-cta .arena-shortcut:hover:not(:disabled){background:linear-gradient(#7d4b60,#4a2b45 55%,#341f37)}
 body.royal[data-page=home] .festival-home .home-cta .arena-shortcut{position:relative;height:52px;min-height:0;margin:0 30px;padding:4px 18px;display:flex;align-items:center;justify-content:center;gap:10px;border:2px solid #f0d08e;border-radius:28px;box-shadow:0 0 0 2px #5f4120,inset 0 1px #ffd9e855,inset 0 0 10px #00000055,0 4px 8px #0a142f88;color:#fff0d4;text-shadow:0 1px 2px #1a0d18;transform:none;filter:none;font:500 16px var(--serif)}
 body.royal[data-page=home] .festival-home .home-cta .arena-shortcut:hover:not(:disabled){filter:brightness(1.15);color:#fff8e6;border-color:#ffe2a0}
-body.royal[data-page=home] .festival-home .home-cta .arena-crest{flex:0 0 40px;width:40px;height:40px;background:url('../assets/redesign/nav-icons.png') 80% 50%/600% 190% no-repeat;filter:drop-shadow(0 2px 2px #1a0d18)}
+body.royal[data-page=home] .festival-home .home-cta .arena-crest{flex:0 0 40px;width:40px;height:40px;background:url('../assets/redesign/nav-icons.webp') 80% 50%/600% 190% no-repeat;filter:drop-shadow(0 2px 2px #1a0d18)}
 body.royal[data-page=home] .festival-home .home-cta .arena-shortcut b{margin:0;font:500 23px/1 var(--serif);letter-spacing:.12em;color:#fff3d8;transform:none}
 body.royal[data-page=home] .festival-home .home-cta .arena-shortcut small{display:inline-block;margin:0;font:11px/1.2 var(--serif)!important;letter-spacing:0;color:#f6dca6!important;white-space:nowrap;transform:none}
 body.royal[data-page=home] .festival-home :is(.home-medal,.home-banner,.adventure-launch,.arena-shortcut,.home-economy button):focus-visible{outline:3px solid #ffe08a;outline-offset:4px}
@@ -208,7 +209,7 @@ body.soft[data-page=home] .festival-home :is(.home-medal,.home-banner,.adventure
   body.royal[data-page=home] .festival-home .home-banners .home-banner{height:94px;padding:26px 42% 9px 20px}
   body.royal[data-page=home] .festival-home .home-banner .banner-ribbon{top:9px;left:15px}
   body.royal[data-page=home] .festival-home .home-banner strong{font-size:22px;margin-top:4px}
-  body.royal[data-page=home] .festival-home .moon-banner .banner-portrait{top:-12px;width:48%}
+  body.royal[data-page=home] .festival-home .moon-banner .banner-portrait{right:-18%}
   body.royal[data-page=home] .festival-home .home-economy{bottom:112px;width:350px;height:148px}
   body.royal[data-page=home] .festival-home .home-economy .income-chest{left:40px;bottom:10px;width:104px;height:104px}
   body.royal[data-page=home] .festival-home .home-economy .income-copy{padding:16px 22px 14px 2px}
@@ -264,9 +265,9 @@ body.soft[data-page=home] .festival-home :is(.home-medal,.home-banner,.adventure
   body.royal[data-page=home] .festival-home .home-banner small{margin-top:1px;font-size:10px;line-height:1.25;white-space:normal;color:#fff3d8;text-shadow:0 1px 2px #050a1c,0 0 4px #050a1c,0 0 8px #050a1c}
   /* Text column gets an opaque dark field; the art stays on the right third and fades out before the copy. */
   body.royal[data-page=home] .festival-home .home-banners .moon-banner{background:linear-gradient(90deg,#1b1036fa,#22164af2 56%,#2d1c5233 80%,#2d1c5200),url('../assets/redesign/observatory.webp') 50% 35%/cover}
-  body.royal[data-page=home] .festival-home .home-banners .garden-banner{background:linear-gradient(90deg,#0a2620fa,#0e3129f2 56%,#16413a33 82%,#16413a00),url('../assets/garden.png') 62% 28%/220%}
+  body.royal[data-page=home] .festival-home .home-banners .garden-banner{background:linear-gradient(90deg,#0a2620fa,#0e3129f2 56%,#16413a33 82%,#16413a00),url('../assets/garden.webp') 62% 28%/220%}
   body.royal[data-page=home] .festival-home .home-banners .jewel-banner{background:radial-gradient(circle at 84% 52%,#73e6ff55,transparent 36%),linear-gradient(90deg,#0b1f3dfa,#10325af2 56%,#1b5c80)}
-  body.royal[data-page=home] .festival-home .moon-banner .banner-portrait{top:-6px;right:-6px;width:50%;-webkit-mask-image:linear-gradient(90deg,transparent,#000 40%);mask-image:linear-gradient(90deg,transparent,#000 40%)}
+  body.royal[data-page=home] .festival-home .moon-banner .banner-portrait{right:-34%;-webkit-mask-image:linear-gradient(90deg,transparent,#000 46%);mask-image:linear-gradient(90deg,transparent,#000 46%)}
   body.royal[data-page=home] .festival-home .garden-banner .banner-party{width:38%;top:4px;right:5px;bottom:3px;-webkit-mask-image:linear-gradient(90deg,transparent,#000 30%);mask-image:linear-gradient(90deg,transparent,#000 30%)}
   body.royal[data-page=home] .festival-home .jewel-banner .banner-pack{width:32%;right:3%}
   body.royal[data-page=home] .festival-home .character-line{left:4%;bottom:304px;max-width:64%;padding:7px 16px 8px;border-radius:20px}
@@ -282,7 +283,7 @@ body.soft[data-page=home] .festival-home :is(.home-medal,.home-banner,.adventure
   body.royal[data-page=home] .festival-home .home-cta .arena-shortcut b{font-size:17px;letter-spacing:.06em;align-self:end}
   body.royal[data-page=home] .festival-home .home-cta .arena-shortcut small{font-size:9px!important;align-self:start}
   body.royal[data-page=home] .festival-home .home-economy{left:3%;right:3%;width:auto;max-width:none;bottom:104px;height:100px;--fw:min(94vw,329px)}
-  body.royal[data-page=home] .festival-home .home-economy .estate-art{background:linear-gradient(90deg,#16294a10 6%,#16294ad0 30%,#142645f2 44%),url('../assets/garden.png') 100% 30%/auto 300% no-repeat}
+  body.royal[data-page=home] .festival-home .home-economy .estate-art{background:linear-gradient(90deg,#16294a10 6%,#16294ad0 30%,#142645f2 44%),url('../assets/garden.webp') 100% 30%/auto 300% no-repeat}
   body.royal[data-page=home] .festival-home .home-economy .income-chest{left:6px;bottom:4px;width:82px;height:82px}
   body.royal[data-page=home] .festival-home .home-economy .income-copy{left:88px;right:12px;width:auto;padding:8px 2px;display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"title action" "value action" "note action";align-content:center;align-items:center;column-gap:8px;row-gap:0;text-align:left}
   body.royal[data-page=home] .festival-home .home-economy h2{grid-area:title;font-size:15px;letter-spacing:.1em}
@@ -325,7 +326,7 @@ body.royal[data-page=summon] .astral-summon :is(.summon-banner,.summon-shop-bann
 body.royal[data-page=summon] .astral-summon .summon-banner .banner-art{position:absolute;z-index:0;max-width:none;pointer-events:none}
 body.royal[data-page=summon] .astral-summon .pickup-banner{background:radial-gradient(circle at 30% 30%,#8ea7ff55,transparent 60%),url('../assets/redesign/observatory.webp') 50% 30%/cover!important}
 body.royal[data-page=summon] .astral-summon .pickup-banner .banner-art{width:190%;left:-62%;top:-27%}
-body.royal[data-page=summon] .astral-summon .standard-banner{background:linear-gradient(0deg,#10284066,transparent),url('../assets/garden.png') 50% 40%/cover!important}
+body.royal[data-page=summon] .astral-summon .standard-banner{background:linear-gradient(0deg,#10284066,transparent),url('../assets/garden.webp') 50% 40%/cover!important}
 body.royal[data-page=summon] .astral-summon .standard-banner .banner-art{width:116%;left:-9%;top:2%}
 body.royal[data-page=summon] .astral-summon .summon-banner>span{padding:1px 8px;border-radius:3px;background:linear-gradient(90deg,transparent,#7a5a2acc 30%,#7a5a2acc);font:600 12px var(--serif);letter-spacing:.08em;color:#fff1c8}
 body.royal[data-page=summon] .astral-summon .summon-banner strong{font:700 23px/1.25 var(--serif);letter-spacing:.06em;color:#fff6e2;text-shadow:0 0 2px #2b1b3a,0 2px 4px #070b22,0 0 10px #ffd98a66}
@@ -369,8 +370,8 @@ body.royal[data-page=summon] .astral-summon .summon-dock .pull-options button:ho
 body.royal[data-page=summon] .astral-summon .summon-dock>.summon-confirm{grid-area:confirm;width:100%;min-height:112px;padding:29px clamp(20px,3vw,44px) 17px;gap:2px;container-type:inline-size}
 body.royal[data-page=summon] .astral-summon .summon-dock>.summon-confirm>span{font-weight:700;font-size:clamp(18px,14cqw,30px);line-height:1.14}
 body.royal[data-page=summon] .astral-summon .summon-dock>.summon-confirm>small{margin:0;font-size:clamp(11px,8cqw,15px);line-height:1.1}
-body.royal[data-page=summon] .astral-summon .summon-dock>.summon-confirm:hover:not(:disabled){background:url('../assets/redesign/summon-gold.png') center/100% 100% no-repeat}
-body.royal[data-page=summon] .astral-summon .summon-dock>.summon-confirm:disabled{background:url('../assets/redesign/summon-gold.png') center/100% 100% no-repeat;filter:grayscale(.75) brightness(.72) drop-shadow(0 5px 7px #080b25aa);cursor:not-allowed}
+body.royal[data-page=summon] .astral-summon .summon-dock>.summon-confirm:hover:not(:disabled){background:url('../assets/redesign/summon-gold.webp') center/100% 100% no-repeat}
+body.royal[data-page=summon] .astral-summon .summon-dock>.summon-confirm:disabled{background:url('../assets/redesign/summon-gold.webp') center/100% 100% no-repeat;filter:grayscale(.75) brightness(.72) drop-shadow(0 5px 7px #080b25aa);cursor:not-allowed}
 body.royal[data-page=summon] .astral-summon .summon-dock>.summon-confirm:disabled>span{color:#2a2228}
 body.royal[data-page=summon] .astral-summon .summon-shortage{grid-area:short;margin:2px 0 0;text-align:right;font:600 13px var(--serif);color:#ffdca3;text-shadow:0 1px 3px #060a20}
 body.royal[data-page=summon] .astral-summon .summon-footnotes{grid-area:notes;margin-top:6px}
@@ -870,7 +871,7 @@ body.royal[data-page=shop] .exchange-shop{position:relative;display:grid;grid-te
 /* Title plaque */
 body.royal[data-page=shop] .exchange-title{grid-column:2;grid-row:1;position:relative;display:flex;justify-content:center;align-items:center;margin:0 0 12px}
 body.royal[data-page=shop] .exchange-title::before{content:'';position:absolute;left:4%;right:4%;top:50%;height:2px;background:linear-gradient(90deg,transparent,#d9b86f 22%,#fff0c0 50%,#d9b86f 78%,transparent);box-shadow:0 0 8px #f5d68a88;pointer-events:none}
-body.royal[data-page=shop] .exchange-title h1{position:relative;margin:0;min-width:min(520px,100%);height:76px;padding:0 64px;display:flex;align-items:center;justify-content:center;gap:16px;background:url('../assets/redesign/hud-plate.png') center/100% 205% no-repeat;font:600 38px/1 var(--serif);letter-spacing:.14em;color:#fff1cc;text-shadow:0 2px 0 #6b4b18,0 0 14px #ffd98a66,0 3px 10px #000a;white-space:nowrap}
+body.royal[data-page=shop] .exchange-title h1{position:relative;margin:0;min-width:min(520px,100%);height:76px;padding:0 64px;display:flex;align-items:center;justify-content:center;gap:16px;background:url('../assets/redesign/hud-plate.webp') center/100% 100% no-repeat;font:600 38px/1 var(--serif);letter-spacing:.14em;color:#fff1cc;text-shadow:0 2px 0 #6b4b18,0 0 14px #ffd98a66,0 3px 10px #000a;white-space:nowrap}
 body.royal[data-page=shop] .exchange-title h1::before,body.royal[data-page=shop] .exchange-title h1::after{font:24px Georgia,serif;color:#f3cf7a;text-shadow:0 0 8px #ffd98a99;letter-spacing:0}
 body.royal[data-page=shop] .exchange-title h1::before{content:'✦'}
 body.royal[data-page=shop] .exchange-title h1::after{content:'☾'}
@@ -907,20 +908,20 @@ body.royal[data-page=shop] .is-premium .exchange-pedestal{border-top-color:#ffe6
 body.royal[data-page=shop] .exchange-name{position:relative;margin:0 auto 8px;max-width:100%;width:fit-content;padding:6px 24px;background:linear-gradient(#fdf6e3,#e5d0a0);clip-path:polygon(0 50%,12px 0,calc(100% - 12px) 0,100% 50%,calc(100% - 12px) 100%,12px 100%);font:700 16px/1.35 var(--serif);color:#33261a;letter-spacing:.04em}
 body.royal[data-page=shop] .exchange-gems{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:2px 8px;font:400 clamp(22px,2.15vw,32px)/1.15 Georgia,serif;color:#fff6dc;text-shadow:0 2px 5px #000c,0 0 10px #8fe3ff44;overflow-wrap:anywhere}
 body.royal[data-page=shop] .exchange-gems small{font:600 15px var(--serif);color:#f2dfb4}
-body.royal[data-page=shop] .exchange-gem{flex:0 0 auto;width:30px;height:30px;background:url('../assets/redesign/nav-icons.png') 40% 50%/600% 190% no-repeat;filter:drop-shadow(0 0 4px #8fe3ff99)}
+body.royal[data-page=shop] .exchange-gem{flex:0 0 auto;width:30px;height:30px;background:url('../assets/redesign/nav-icons.webp') 40% 50%/600% 190% no-repeat;filter:drop-shadow(0 0 4px #8fe3ff99)}
 body.royal[data-page=shop] .exchange-note{margin:4px 0 10px;font-size:11px;line-height:1.5;color:#dccfb2}
-body.royal[data-page=shop] .exchange-shop button.exchange-buy{position:relative;width:100%;min-height:72px;margin:0;padding:16px 22px 8px;display:flex;align-items:center;justify-content:center;gap:10px;border:0;border-radius:0;background:url('../assets/redesign/nav-active.png') center/100% 100% no-repeat;box-shadow:none;color:#fff6df;text-shadow:0 2px 3px #04262c;transition:filter .15s,transform .15s}
+body.royal[data-page=shop] .exchange-shop button.exchange-buy{position:relative;width:100%;min-height:72px;margin:0;padding:16px 22px 8px;display:flex;align-items:center;justify-content:center;gap:10px;border:0;border-radius:0;background:url('../assets/redesign/nav-active.webp') center/100% 100% no-repeat;box-shadow:none;color:#fff6df;text-shadow:0 2px 3px #04262c;transition:filter .15s,transform .15s}
 body.royal[data-page=shop] .exchange-shop button.exchange-buy>span{display:flex;flex-direction:column;align-items:center;min-width:0;font:clamp(18px,1.7vw,25px)/1.1 Georgia,serif;overflow-wrap:anywhere}
 body.royal[data-page=shop] .exchange-shop button.exchange-buy small{display:block;margin-top:4px;font:600 10px "Yu Gothic UI","Yu Gothic",sans-serif;letter-spacing:.12em;color:#d9fbf6}
 body.royal[data-page=shop] .exchange-coin{flex:0 0 auto;width:26px;height:26px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff6c8,#f2c955 45%,#a5741d 100%);box-shadow:inset 0 0 0 2px #c99a3a,inset 0 0 0 3px #ffe9a6,0 2px 3px #0008}
 body.royal[data-page=shop] .exchange-coin::before{content:'★';display:block;text-align:center;font:13px/26px Georgia,serif;color:#9a6a17;text-shadow:0 1px #fff4c4}
-body.royal[data-page=shop] .exchange-shop button.exchange-buy:hover:not(:disabled){background:url('../assets/redesign/nav-active.png') center/100% 100% no-repeat;color:#fffaf0;filter:brightness(1.14) saturate(1.1) drop-shadow(0 0 8px #5fe6e888);transform:translateY(-1px)}
+body.royal[data-page=shop] .exchange-shop button.exchange-buy:hover:not(:disabled){background:url('../assets/redesign/nav-active.webp') center/100% 100% no-repeat;color:#fffaf0;filter:brightness(1.14) saturate(1.1) drop-shadow(0 0 8px #5fe6e888);transform:translateY(-1px)}
 body.royal[data-page=shop] .exchange-shop button.exchange-buy:active:not(:disabled){transform:translateY(1px);filter:brightness(.95)}
 body.royal[data-page=shop] .exchange-shop button.exchange-buy:focus-visible{outline:3px solid #ffe08a;outline-offset:3px}
 body.royal[data-page=shop] .exchange-unit{display:block;margin-top:6px;font-size:10px;line-height:1.5;color:#c9bc9f}
 /* Supporter crest panel (lives over the host's skirt on desktop) */
 body.royal[data-page=shop] .exchange-supporter{grid-column:1;grid-row:1/3;align-self:end;position:relative;z-index:3;margin:0 7% 4px 2%;padding:30px 22px 10px;border-radius:6px;background:radial-gradient(ellipse at 50% 0,#5b4a9a55,transparent 70%),linear-gradient(#2a2358f2,#16133cf5);box-shadow:0 14px 30px #000a,inset 0 0 0 1px #e2c27c55;color:#f6ead0}
-body.royal[data-page=shop] .exchange-supporter::after{content:'';position:absolute;inset:-9px -12px;background:url('../assets/redesign/banner-frame.png') center/100% 100% no-repeat;pointer-events:none;z-index:2}
+body.royal[data-page=shop] .exchange-supporter::after{content:'';position:absolute;inset:-9px -12px;background:url('../assets/redesign/banner-frame.webp') center/100% 100% no-repeat;pointer-events:none;z-index:2}
 body.royal[data-page=shop] .exchange-plaque{position:absolute;z-index:3;top:-15px;left:50%;transform:translateX(-50%);padding:5px 26px;white-space:nowrap;background:linear-gradient(#fdf6e3,#e3cd9c);clip-path:polygon(0 50%,12px 0,calc(100% - 12px) 0,100% 50%,calc(100% - 12px) 100%,12px 100%);font:700 14px/1.4 var(--serif);letter-spacing:.08em;color:#33261a}
 body.royal[data-page=shop] .exchange-spent{display:flex;align-items:center;gap:14px}
 body.royal[data-page=shop] .exchange-medal{flex:0 0 auto;width:52px;height:52px;display:grid;place-items:center;border-radius:50%;background:radial-gradient(circle at 50% 40%,#2e3a7a,#141a44 70%);box-shadow:inset 0 0 0 3px #e6c574,inset 0 0 0 5px #8a6326,0 0 0 2px #f4dc9f55,0 4px 8px #000a;color:#f5d98e}
@@ -1030,3 +1031,82 @@ body.royal[data-page=shop] .exchange-shop button.exchange-buy{min-height:80px;pa
   body.royal[data-page=shop] .exchange-medium .exchange-art{height:94%}
   body.royal[data-page=shop] .exchange-large .exchange-art{height:100%}
 }
+/* Nine-slice plates (#21). hud-plate.webp is cropped to the plate itself (1086×169): the pointed
+   end caps (105px of the source) keep their proportions and only the straight middle stretches.
+   --cap is the drawn cap width, about 0.62 × the element height (less on small buttons so the
+   label keeps its room). The selected count uses the same plate with a teal interior. */
+body.royal[data-page] :is(.sidebar,.season,.wallet>div,#settings),
+body.royal[data-page=summon] :is(.pull-options button,.summon-footnotes button,.pity-jewel){background-image:none;border-style:solid;border-color:transparent;border-width:0;border-image:url('../assets/redesign/hud-plate.webp') 30 105 fill/17.75% var(--cap,38px)/0 stretch}
+body.royal[data-page=summon] .pull-options button.selected{border-image-source:url('../assets/redesign/hud-plate-active.webp')}
+body.royal[data-page] .sidebar{--cap:40px}
+body.royal[data-page] #settings{--cap:22px}
+body.royal[data-page=summon] .pity-jewel{--cap:30px}
+body.royal[data-page=summon] .pull-options button{--cap:24px}
+body.royal[data-page=summon] .summon-footnotes button{--cap:20px}
+@media(max-width:650px){
+  body.royal[data-page] .wallet>div{--cap:26px}
+  body.royal[data-page] .sidebar{--cap:33px}
+  body.royal[data-page] #settings{--cap:16px}
+  body.royal[data-page=summon] .pity-jewel{--cap:21px}
+  body.royal[data-page=summon] .pull-options button{--cap:19px}
+  body.royal[data-page=summon] .summon-footnotes button{--cap:17px}
+}
+/* Short phones (#19). The mobile layouts stack their controls from the bottom of a fixed
+   minimum height, so on a 667px-tall screen the fixed navigation covered the income panel
+   and the summon button. Below 760px the page is exactly one screen tall and secondary copy
+   steps aside; nothing needs scrolling. Verified down to 640px tall. */
+@media(max-width:650px) and (max-height:759px){
+  body.royal[data-page=home] #main,body.royal[data-page=home] .festival-home,
+  body.royal[data-page=summon] #main,body.royal[data-page=summon] .astral-summon{min-height:100dvh}
+}
+@media(min-width:361px) and (max-width:650px) and (max-height:759px){
+  body.royal[data-page=summon] .astral-summon :is(.summon-signature,.summon-description p,.pull-label){display:none}
+}
+@media(max-width:650px) and (max-height:699px){
+  body.royal[data-page=home] .festival-home .character-line{display:none}
+  body.royal[data-page=summon] .astral-summon :is(.summon-signature,.summon-description p,.banner-rates,.pull-label){display:none}
+  body.royal[data-page=summon] .astral-summon .summon-dock>.summon-confirm{width:min(100%,245px);min-height:88px;padding:19px 24px 11px}
+  body.royal[data-page=summon] .astral-summon .summon-confirm>span{font-size:22px}
+  body.royal[data-page=summon] .astral-summon .summon-confirm>small{font-size:12px}
+}
+@media(max-width:650px) and (max-height:659px){
+  body.royal[data-page=home] .festival-home .home-banners .jewel-banner{display:none}
+  body.royal[data-page=summon] .astral-summon .summon-description .pickup-label{display:none}
+}
+/* Phone legibility and touch targets (#28): no label below 10px (9px for the price inside the
+   narrowest count buttons), and every control answers on at least 44px without changing its art. */
+@media(max-width:650px){
+  body.royal[data-page] .wallet small{font-size:10px}
+  body.royal[data-page=home] .festival-home .home-tools .home-medal small,
+  body.royal[data-page=home] .festival-home .home-banner .banner-ribbon,
+  body.royal[data-page=home] .festival-home .character-line>span,
+  body.royal[data-page=home] .festival-home .home-economy strong small,
+  body.royal[data-page=summon] .astral-summon .summon-banner>span,
+  body.royal[data-page=summon] .astral-summon .banner-rates,
+  body.royal[data-page=summon] .astral-summon .pull-options button b small,
+  body.royal[data-page=summon] .astral-summon .pull-options button em{font-size:10px}
+  body.royal[data-page=home] .festival-home .home-cta .arena-shortcut small{font-size:10px!important}
+  body.royal[data-page=summon] .astral-summon .chapter-top>span{visibility:hidden}
+  body.royal[data-page] #settings,body.royal[data-page=summon] .astral-summon .summon-footnotes button{position:relative}
+  body.royal[data-page] #settings::after,body.royal[data-page=summon] .astral-summon .summon-footnotes button::after{content:'';position:absolute;inset:-5px}
+}
+@media(min-width:361px) and (max-width:650px){
+  body.royal[data-page=summon] .astral-summon.is-standard .summon-description h2{font-size:clamp(22px,7.4vw,30px);white-space:nowrap}
+}
+@media(max-width:360px){
+  body.royal[data-page=summon] .astral-summon .pull-options button em{font-size:9px}
+}
+/* Star-crystal shortcut (#32): a small gold "+" on the crystal counter opens the shop from any
+   screen. It hides on the shop itself and on the narrowest phones, where the counter has no room. */
+body.royal[data-page] .wallet .gem-add{position:absolute;right:13px;top:50%;width:26px;height:26px;min-height:0;margin-top:-13px;padding:0 0 2px;display:grid;place-items:center;border:1px solid #fff0bd;border-radius:50%;background:radial-gradient(circle at 35% 28%,#fff6d2,#e6bd66 55%,#a8782c);box-shadow:0 0 0 1px #6f4f22,0 2px 4px #060a1ccc;color:#3a2912;font:700 20px/1 Georgia,serif;text-shadow:0 1px #fff3c8}
+body.royal[data-page] .wallet .gem-add::after{content:'';position:absolute;inset:-9px}
+body.royal[data-page] .wallet .gem-add:hover:not(:disabled){background:radial-gradient(circle at 35% 28%,#fffbe8,#f1cf80 55%,#b98a3a);color:#3a2912;filter:brightness(1.08)}
+body.royal[data-page] .wallet .gem-add:active:not(:disabled){transform:translateY(1px)}
+body.royal[data-page=shop] .wallet .gem-add{display:none}
+@media(min-width:651px){body.royal[data-page] .wallet>.wallet-gems{padding-right:44px}}
+@media(max-width:650px){
+  body.royal[data-page] .wallet .gem-add{right:5px;width:20px;height:20px;margin-top:-10px;font-size:16px}
+  body.royal[data-page] .wallet .gem-add::after{inset:-12px}
+  body.royal[data-page] .wallet>.wallet-gems{padding-right:25px}
+}
+@media(max-width:360px){body.royal[data-page] .wallet .gem-add{display:none}body.royal[data-page] .wallet>.wallet-gems{padding-right:7px}}
