@@ -79,8 +79,9 @@ function createPhaserStage(parent, onError) {
       const hero=s.add.image(w*(mobile?.60:(mode==='home'?.52:.56)),h*(mobile?.82:.94),mode==='summon'?'lune-summon':'court').setOrigin(.5,1);
       const scale=h*(mode==='home'?(mobile?.89:1.08):(mobile?.76:.84))/hero.height;hero.setScale(scale);
       if(mode==='summon'){
-        const scale=mobile?Math.min(h*.40/hero.height,w*1.22/hero.width):Math.min(h/hero.height,w*.76/hero.width);
-        hero.setScale(scale).setPosition(w*(mobile?.65:.64),h*(mobile?.59:.99));
+        const compact=w<=1000;
+        const scale=compact?Math.min(h*.40/hero.height,w*1.22/hero.width):Math.min(h/hero.height,w*.76/hero.width);
+        hero.setScale(scale).setPosition(w*(mobile?.65:compact?.70:.64),h*(mobile?.59:compact?.55:.99));
       }
       // Home: a large, waist-up Lune like the reference composition. On phones she sits
       // between the medallion column and the banner column so her face stays clear.
