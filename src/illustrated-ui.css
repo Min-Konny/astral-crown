@@ -109,3 +109,203 @@ body.royal[data-page] .sidebar nav button .painted-nav-icon{pointer-events:auto;
 body.royal[data-page] .sidebar nav button.active,body.royal[data-page] .sidebar nav button.active:hover{background:transparent!important;filter:none;isolation:isolate}
 body.royal[data-page] .sidebar nav button.active::before{content:'';display:block;position:absolute;inset:0;width:auto;height:auto;background:url('../assets/redesign/nav-active.png') center/100% 100% no-repeat;filter:brightness(.78) saturate(1.25);z-index:-1;pointer-events:none}
 body.royal[data-page] .sidebar nav button.active:hover::before{filter:brightness(.88) saturate(1.25)}
+/* UI 01/12 Home — reference composition: large Lune, illustrated banners, treasure income plaque and gold CTA.
+   Scoped to .festival-home so other screens keep their own layout. Live values stay HTML. */
+body.royal[data-page=home] .festival-home::before{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,#0e1d3a59,transparent 15%),linear-gradient(0deg,#0c1834b8,#0c183440 19%,transparent 34%)}
+body.royal[data-page=home] .festival-home .chapter{position:absolute;top:10px;left:1.6%;right:auto;bottom:auto;max-width:36%;margin:0;padding:0;background:none;border:0;border-radius:0;box-shadow:none;filter:none;display:flex;align-items:center;gap:12px;text-shadow:none;z-index:2}
+body.royal[data-page=home] .festival-home .royal-emblem{position:relative;isolation:isolate;flex:0 0 auto;width:70px;height:94px;padding:0;border:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;color:#f4d68f;background:linear-gradient(160deg,#fff1c2,#d2a557 42%,#7a5321);clip-path:polygon(8% 0,92% 0,100% 8%,100% 72%,50% 100%,0 72%,0 8%);filter:drop-shadow(0 4px 6px #0b1634aa)}
+body.royal[data-page=home] .festival-home .royal-emblem::before{content:"";position:absolute;inset:4px;z-index:-1;clip-path:polygon(8% 0,92% 0,100% 8%,100% 72%,50% 100%,0 72%,0 8%);background:radial-gradient(circle at 50% 30%,#3d5d9e,#1a2b5c 58%,#0e1838)}
+body.royal[data-page=home] .festival-home .royal-emblem .ui-icon{width:40px;height:40px;stroke-width:1.5;filter:drop-shadow(0 1px 1px #050b1d)}
+body.royal[data-page=home] .festival-home .royal-emblem span{font:16px/1 Georgia,serif;color:#a9f1ff;letter-spacing:0;margin:2px 0 8px;text-shadow:0 0 6px #7fe6ff}
+body.royal[data-page=home] .festival-home .home-logo{display:flex;flex-direction:column;align-items:center;min-width:0}
+body.royal[data-page=home] .festival-home .home-logo>span{display:block;font:400 clamp(26px,2.6vw,40px)/1.05 Georgia,"Times New Roman",serif;letter-spacing:.04em;white-space:nowrap;color:#f3d68f;background:linear-gradient(180deg,#fffbea 12%,#f3d68f 55%,#bf8c42 92%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 2px 0 #3b2a17) drop-shadow(0 3px 6px #0c1734aa)}
+body.royal[data-page=home] .festival-home .home-logo>span i{font-style:normal;font-size:.68em;margin:0 .08em;vertical-align:.2em}
+body.royal[data-page=home] .festival-home .home-logo h1{display:flex;align-items:center;gap:8px;margin:5px 0 0;padding:0;font:500 15px/1.2 var(--serif);letter-spacing:.36em;color:#fff3d6;text-shadow:0 1px 3px #0b1634,0 0 8px #0b1634}
+body.royal[data-page=home] .festival-home .home-logo h1::before,body.royal[data-page=home] .festival-home .home-logo h1::after{content:"";width:22px;height:1px;background:linear-gradient(90deg,transparent,#f3d68f);box-shadow:0 1px 1px #0b1634}
+body.royal[data-page=home] .festival-home .home-logo h1::after{transform:scaleX(-1)}
+/* Gold medallions (mail / collection / facility). */
+body.royal[data-page=home] .festival-home .home-tools{position:absolute;top:128px;left:1.8%;right:auto;bottom:auto;max-width:none;display:flex;flex-direction:column;gap:16px;z-index:2}
+body.royal[data-page=home] .festival-home .home-tools .home-medal{position:relative;width:86px;height:86px;min-width:0;min-height:0;margin:0;padding:6px 4px 8px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;text-align:center;background:radial-gradient(circle at 50% 32%,#3d5f93,#1b2d5a 58%,#0f1a3a);border:3px solid #edcd86;box-shadow:0 0 0 2px #6f4f22,0 0 0 4px #f6dfa466,inset 0 0 0 2px #0d1834,inset 0 0 16px #8ec5ff40,0 6px 12px #091331aa;color:#fff1d2;font:15px/1.15 var(--serif);text-shadow:0 1px 2px #050b1d;backdrop-filter:none;filter:none;transform:none}
+body.royal[data-page=home] .festival-home .home-tools .home-medal::before{content:"";position:absolute;top:-8px;left:50%;width:12px;height:12px;margin-left:-6px;transform:rotate(45deg);background:linear-gradient(135deg,#d2fcff,#3fb8c9);border:2px solid #f2d796;box-shadow:0 0 6px #8ff3ff99;font-size:0;color:transparent;text-shadow:none}
+body.royal[data-page=home] .festival-home .home-tools .medal-face{display:block;line-height:0}
+body.royal[data-page=home] .festival-home .home-tools .medal-face .ui-icon{width:32px;height:32px;color:#ffe2a3;stroke-width:1.6;filter:drop-shadow(0 2px 2px #050b1d)}
+body.royal[data-page=home] .festival-home .home-tools .medal-label{display:block;font:inherit;color:inherit;white-space:nowrap;letter-spacing:.04em}
+body.royal[data-page=home] .festival-home .home-tools .home-medal small{display:block;margin:0;font:10px/1.1 Georgia,serif;color:#f3d796;letter-spacing:0}
+body.royal[data-page=home] .festival-home .home-tools .home-medal:hover:not(:disabled){background:radial-gradient(circle at 50% 32%,#5480bb,#24396d 58%,#13214a);color:#fff8e4;border-color:#ffe2a0;transform:translateY(-2px)}
+body.royal[data-page=home] .festival-home .home-tools .home-medal:disabled{background:radial-gradient(circle at 50% 32%,#4a5568,#283246 58%,#1a2132);border-color:#b9a77c;color:#cfcabd;filter:saturate(.6);opacity:1;cursor:default}
+body.royal[data-page=home] .festival-home .home-tools .home-medal:disabled .ui-icon{color:#d4c8a8}
+body.royal[data-page=home] .festival-home .home-badge{position:absolute;top:-3px;right:-3px;width:24px;height:24px;display:grid;place-items:center;border-radius:50%;background:linear-gradient(#ef6f67,#a1263a);border:2px solid #ffe6bb;color:#fff;font:bold 15px/1 Georgia,serif;font-style:normal;box-shadow:0 2px 4px #102239}
+/* Illustrated banners with the painted gold frame. */
+body.royal[data-page=home] .festival-home .home-banners{position:absolute;top:84px;right:1.4%;left:auto;bottom:auto;width:330px;display:grid;gap:12px;z-index:2}
+body.royal[data-page=home] .festival-home .home-banners .home-banner{position:relative;isolation:isolate;overflow:hidden;height:118px;min-height:0;margin:0;padding:30px 42% 12px 24px;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:2px;text-align:left;border:0;border-radius:6px;box-shadow:0 6px 16px #0a142f88;color:#fff6e2;text-shadow:0 1px 2px #0a0f26,0 0 8px #0a0f26;filter:none;transform:none}
+/* banner-frame.png (2172×724) is drawn as a nine-slice so its corner ornaments keep their native proportions at every box size.
+   --fw is the reference width the corners are scaled from (box width, capped by height so the slices never overlap). */
+body.royal[data-page=home] .festival-home :is(.home-banners .home-banner,.home-economy)::after{content:"";position:absolute;inset:0;background:none;border:0 solid transparent;border-image-source:url('../assets/redesign/banner-frame.png');border-image-slice:410 360 250 360;border-image-width:calc(var(--fw)*.18876) calc(var(--fw)*.16575) calc(var(--fw)*.1151) calc(var(--fw)*.16575);border-image-repeat:stretch;z-index:3;pointer-events:none;font-size:0;color:transparent}
+body.royal[data-page=home] .festival-home .home-banners{--fw:330px}
+body.royal[data-page=home] .festival-home .home-economy{--fw:380px}
+body.royal[data-page=home] .festival-home .home-banner .banner-ribbon{position:absolute;top:13px;left:18px;z-index:2;padding:1px 12px 1px 9px;font:600 10px/1.6 var(--serif);letter-spacing:.08em;color:#fff3d8;background:linear-gradient(90deg,#8a2f6b,#4a2a6b);border:1px solid #f0d08e;border-radius:3px 12px 12px 3px;box-shadow:0 2px 4px #0a0f2688;white-space:nowrap}
+body.royal[data-page=home] .festival-home .home-banner strong{position:relative;z-index:2;display:block;margin:8px 0 0;font:500 26px/1.15 var(--serif);letter-spacing:.06em;color:#fffaf0;white-space:nowrap;text-shadow:0 0 10px #f7d98a88,0 2px 3px #0a0f26}
+body.royal[data-page=home] .festival-home .home-banner small{position:relative;z-index:2;display:block;margin:0;font:11px/1.35 var(--serif);color:#f6e6c2;white-space:nowrap}
+body.royal[data-page=home] .festival-home .home-banners .moon-banner{background:linear-gradient(90deg,#26174af2,#2d1c52c4 48%,#2d1c5200 82%),url('../assets/redesign/observatory.webp') 50% 35%/cover}
+body.royal[data-page=home] .festival-home .moon-banner .banner-portrait{position:absolute;z-index:0;left:auto;right:-4px;top:-16px;width:52%;height:auto;max-width:none;pointer-events:none;-webkit-mask-image:linear-gradient(90deg,transparent,#000 28%);mask-image:linear-gradient(90deg,transparent,#000 28%)}
+body.royal[data-page=home] .festival-home .home-banners .garden-banner{background:linear-gradient(90deg,#103229f2,#16413ab8 46%,#16413a00 80%),url('../assets/garden.png') 62% 28%/220%}
+body.royal[data-page=home] .festival-home .garden-banner .banner-ribbon{background:linear-gradient(90deg,#2f7050,#1d4a3f)}
+body.royal[data-page=home] .festival-home .garden-banner .banner-party{position:absolute;z-index:0;top:6px;right:8px;bottom:5px;width:50%;background:url('../assets/party.png') 100% 100%/auto 100% no-repeat;filter:drop-shadow(0 3px 3px #08201acc);pointer-events:none}
+body.royal[data-page=home] .festival-home .home-banners .jewel-banner{background:radial-gradient(circle at 78% 52%,#73e6ff66,transparent 42%),linear-gradient(90deg,#10294af5,#14406a 55%,#1b5c80)}
+body.royal[data-page=home] .festival-home .jewel-banner .banner-ribbon{background:linear-gradient(90deg,#1f708b,#23477a)}
+body.royal[data-page=home] .festival-home .jewel-banner .banner-pack{position:absolute;z-index:0;left:auto;right:5%;top:50%;width:38%;height:auto;max-width:none;transform:translateY(-50%);pointer-events:none;filter:drop-shadow(0 4px 8px #04122acc)}
+body.royal[data-page=home] .festival-home .home-banners .home-banner:hover:not(:disabled){filter:brightness(1.1) saturate(1.05);color:#fff8e8;transform:translateY(-1px)}
+/* Treasure income plaque. */
+body.royal[data-page=home] .festival-home .home-economy{position:absolute;left:1.8%;right:auto;top:auto;bottom:118px;width:380px;max-width:calc(100% - 3.6%);min-width:0;height:170px;margin:0;padding:0;overflow:hidden;isolation:isolate;border:0;border-radius:6px;background:#162a4c;box-shadow:0 8px 18px #0a142f99;color:#fff2d4;z-index:2}
+body.royal[data-page=home] .festival-home .home-economy .estate-art{position:absolute;inset:0;z-index:0;background:linear-gradient(90deg,#16294a00 16%,#16294acc 48%,#142645f5 60%),url('../assets/garden.png') 100% 30%/290% no-repeat}
+body.royal[data-page=home] .festival-home .home-economy .income-chest{position:absolute;z-index:1;left:44px;right:auto;top:auto;bottom:10px;width:124px;height:124px;opacity:1;background:url('../assets/redesign/nav-icons.png') 20% 50%/600% 190% no-repeat;filter:drop-shadow(0 0 10px #ffe39a99) drop-shadow(0 4px 4px #0a142f);pointer-events:none}
+body.royal[data-page=home] .festival-home .home-economy .income-copy{position:absolute;z-index:2;top:0;bottom:0;right:0;left:auto;width:54%;margin:0;padding:20px 24px 18px 2px;display:flex;flex-direction:column;justify-content:center;align-items:stretch;gap:2px;text-align:center;text-shadow:0 1px 3px #071026}
+body.royal[data-page=home] .festival-home .home-economy h2{margin:0;font:500 22px/1.2 var(--serif);letter-spacing:.14em;color:#ffe9b8}
+body.royal[data-page=home] .festival-home .home-economy strong{display:block;margin:2px 0 0;font:400 21px/1.2 Georgia,serif;color:#fff8e6;white-space:nowrap}
+body.royal[data-page=home] .festival-home .home-economy strong small{font:11px var(--serif);color:#e8dcc0}
+body.royal[data-page=home] .festival-home .home-economy .income-copy>small{display:block;margin:0 0 6px;font-size:10px;line-height:1.4;color:#dfe3d8}
+body.royal[data-page=home] .festival-home .home-economy button{width:100%;min-height:38px;margin:0;padding:4px 10px;display:inline-flex;align-items:center;justify-content:center;gap:6px;border:2px solid #efd08e;border-radius:22px;background:linear-gradient(#3aa0a8,#17606c);box-shadow:inset 0 1px #c9fff6aa,0 0 0 1px #6f4f22,0 3px 6px #04122a99;color:#fff5dc;font:500 14px/1.2 var(--serif);text-shadow:0 1px 2px #062a30;white-space:nowrap}
+body.royal[data-page=home] .festival-home .home-economy button .ui-icon{width:16px;height:16px}
+body.royal[data-page=home] .festival-home .home-economy button:hover:not(:disabled){background:linear-gradient(#4cb7be,#1e7682);color:#fff;border-color:#ffe2a0}
+/* Lune's greeting bubble. */
+body.royal[data-page=home] .festival-home .character-line{position:absolute;left:calc(1.8% + 400px);right:auto;top:auto;bottom:250px;width:max-content;max-width:330px;margin:0;padding:11px 26px 12px 24px;background:linear-gradient(#fffef9f2,#f7f0e1f2);border:2px solid #e2c98f;border-radius:28px;box-shadow:0 0 0 1px #fff8,0 6px 16px #0a142f55;color:#2c3346;text-align:left;filter:none;z-index:2}
+body.royal[data-page=home] .festival-home .character-line::after{content:"";position:absolute;right:-11px;top:50%;width:16px;height:16px;margin-top:-8px;background:#f9f4e8;border-top:2px solid #e2c98f;border-right:2px solid #e2c98f;border-radius:0 4px 0 0;transform:rotate(45deg)}
+body.royal[data-page=home] .festival-home .character-line>span{display:block;font:10px/1.4 var(--serif);letter-spacing:.12em;color:#7f6438}
+body.royal[data-page=home] .festival-home .character-line p{margin:2px 0 0;font:500 17px/1.55 var(--serif);color:#2c3346;white-space:nowrap}
+/* Gold-framed adventure CTA and arena pill. */
+body.royal[data-page=home] .festival-home .home-cta{position:absolute;right:1.4%;left:auto;top:auto;bottom:118px;width:330px;display:flex;flex-direction:column;align-items:stretch;gap:12px;z-index:2}
+/* The primary CTA uses the star-crested, scroll-cornered nav-active.png plaque at its native 3:1 ratio (never stretched),
+   so it reads as a different, more ornate shape than the rectangular event banners. Garden art shows through its glass. */
+body.royal[data-page=home] .festival-home .home-cta .adventure-launch,body.royal[data-page=home] .festival-home .home-cta .adventure-launch:hover:not(:disabled){background:url('../assets/redesign/nav-active.png') center/100% 100% no-repeat}
+body.royal[data-page=home] .festival-home .home-cta .adventure-launch{position:relative;isolation:isolate;overflow:visible;aspect-ratio:3/1;width:auto;height:auto;min-height:0;margin:0 -16px;padding:8.6% 14% 6.4%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;text-align:center;border:0;border-radius:0;box-shadow:none;color:#fff6dc;transform:none;filter:drop-shadow(0 0 10px #ffe2a055) drop-shadow(0 6px 8px #0a142fa6)}
+body.royal[data-page=home] .festival-home .home-cta .adventure-launch:hover:not(:disabled){filter:brightness(1.12) drop-shadow(0 0 14px #ffe2a088) drop-shadow(0 6px 8px #0a142fa6);color:#fffaf0}
+body.royal[data-page=home] .festival-home .home-cta .adventure-launch::before{content:"";position:absolute;inset:25.5% 12% 18.5%;z-index:-1;background:linear-gradient(0deg,#052a33b3,#052a3326 55%,#052a3366),url('../assets/garden.png') 62% 26%/cover no-repeat;opacity:.82;-webkit-mask-image:linear-gradient(90deg,transparent,#000 14%,#000 86%,transparent);mask-image:linear-gradient(90deg,transparent,#000 14%,#000 86%,transparent);pointer-events:none}
+body.royal[data-page=home] .festival-home .home-cta .adventure-launch::after{content:none}
+body.royal[data-page=home] .festival-home .home-cta .adventure-launch small{display:none}
+body.royal[data-page=home] .festival-home .home-cta .adventure-launch b{display:block;margin:0;padding-left:.14em;font:500 42px/1.02 var(--serif);letter-spacing:.14em;color:#fffaf0;text-shadow:0 0 2px #6b4a1c,0 2px 0 #6b4a1c,0 0 14px #ffe7a6aa,0 4px 10px #071026;transform:none}
+body.royal[data-page=home] .festival-home .home-cta .adventure-launch span{display:block;margin:2px 0 0;font:12px/1.3 var(--serif)!important;letter-spacing:.08em;color:#f3ead4!important;text-shadow:0 1px 2px #041d24,0 0 6px #041d24;transform:none}
+body.royal[data-page=home] .festival-home .home-cta .arena-shortcut,body.royal[data-page=home] .festival-home .home-cta .arena-shortcut:hover:not(:disabled){background:linear-gradient(#7d4b60,#4a2b45 55%,#341f37)}
+body.royal[data-page=home] .festival-home .home-cta .arena-shortcut{position:relative;height:52px;min-height:0;margin:0 30px;padding:4px 18px;display:flex;align-items:center;justify-content:center;gap:10px;border:2px solid #f0d08e;border-radius:28px;box-shadow:0 0 0 2px #5f4120,inset 0 1px #ffd9e855,inset 0 0 10px #00000055,0 4px 8px #0a142f88;color:#fff0d4;text-shadow:0 1px 2px #1a0d18;transform:none;filter:none;font:500 16px var(--serif)}
+body.royal[data-page=home] .festival-home .home-cta .arena-shortcut:hover:not(:disabled){filter:brightness(1.15);color:#fff8e6;border-color:#ffe2a0}
+body.royal[data-page=home] .festival-home .home-cta .arena-crest{flex:0 0 40px;width:40px;height:40px;background:url('../assets/redesign/nav-icons.png') 80% 50%/600% 190% no-repeat;filter:drop-shadow(0 2px 2px #1a0d18)}
+body.royal[data-page=home] .festival-home .home-cta .arena-shortcut b{margin:0;font:500 23px/1 var(--serif);letter-spacing:.12em;color:#fff3d8;transform:none}
+body.royal[data-page=home] .festival-home .home-cta .arena-shortcut small{display:inline-block;margin:0;font:11px/1.2 var(--serif)!important;letter-spacing:0;color:#f6dca6!important;white-space:nowrap;transform:none}
+body.royal[data-page=home] .festival-home :is(.home-medal,.home-banner,.adventure-launch,.arena-shortcut,.home-economy button):focus-visible{outline:3px solid #ffe08a;outline-offset:4px}
+body.royal[data-page=home] .festival-home :is(.home-medal,.home-banner,.adventure-launch,.arena-shortcut,.home-economy button):active:not(:disabled){transform:translateY(2px) scale(.98)}
+body.soft[data-page=home] .festival-home :is(.home-medal,.home-banner,.adventure-launch,.arena-shortcut,.home-economy button):is(:hover,:active),body.quick[data-page=home] .festival-home :is(.home-medal,.home-banner,.adventure-launch,.arena-shortcut,.home-economy button):is(:hover,:active){transform:none!important}
+@media(prefers-reduced-motion:reduce){body.royal[data-page=home] .festival-home :is(.home-medal,.home-banner,.adventure-launch,.arena-shortcut,.home-economy button):is(:hover,:active){transform:none!important}}
+/* Short desktop windows (1280×720). */
+@media(min-width:651px) and (max-height:800px){
+  body.royal[data-page=home] .festival-home .royal-emblem{width:58px;height:78px}
+  body.royal[data-page=home] .festival-home .royal-emblem .ui-icon{width:32px;height:32px}
+  body.royal[data-page=home] .festival-home .home-logo>span{font-size:clamp(24px,2.4vw,34px)}
+  body.royal[data-page=home] .festival-home .home-logo h1{font-size:13px}
+  body.royal[data-page=home] .festival-home .home-tools{top:108px;gap:12px}
+  body.royal[data-page=home] .festival-home .home-tools .home-medal{width:72px;height:72px;font-size:13px;padding:4px 3px 6px}
+  body.royal[data-page=home] .festival-home .home-tools .medal-face .ui-icon{width:26px;height:26px}
+  body.royal[data-page=home] .festival-home .home-tools .home-medal small{font-size:9px}
+  body.royal[data-page=home] .festival-home .home-banners{top:80px;gap:8px;width:300px}
+  body.royal[data-page=home] .festival-home .home-banners .home-banner{height:94px;padding:26px 42% 9px 20px}
+  body.royal[data-page=home] .festival-home .home-banner .banner-ribbon{top:9px;left:15px}
+  body.royal[data-page=home] .festival-home .home-banner strong{font-size:22px;margin-top:4px}
+  body.royal[data-page=home] .festival-home .moon-banner .banner-portrait{top:-12px;width:48%}
+  body.royal[data-page=home] .festival-home .home-economy{bottom:112px;width:350px;height:148px}
+  body.royal[data-page=home] .festival-home .home-economy .income-chest{left:40px;bottom:10px;width:104px;height:104px}
+  body.royal[data-page=home] .festival-home .home-economy .income-copy{padding:16px 22px 14px 2px}
+  body.royal[data-page=home] .festival-home .home-economy h2{font-size:19px}
+  body.royal[data-page=home] .festival-home .home-economy strong{font-size:19px}
+  body.royal[data-page=home] .festival-home .home-economy button{min-height:34px;font-size:13px}
+  body.royal[data-page=home] .festival-home .home-cta{bottom:112px;width:300px;gap:10px}
+  body.royal[data-page=home] .festival-home .home-banners{--fw:300px}
+  body.royal[data-page=home] .festival-home .home-economy{--fw:350px}
+  body.royal[data-page=home] .festival-home .home-cta .adventure-launch b{font-size:36px}
+  body.royal[data-page=home] .festival-home .home-cta .adventure-launch span{font-size:11px!important}
+  body.royal[data-page=home] .festival-home .home-cta .arena-shortcut{height:46px}
+  body.royal[data-page=home] .festival-home .home-cta .arena-shortcut b{font-size:20px}
+  body.royal[data-page=home] .festival-home .home-cta .arena-crest{flex-basis:34px;width:34px;height:34px}
+  body.royal[data-page=home] .festival-home .character-line{left:calc(1.8% + 370px);bottom:220px}
+  body.royal[data-page=home] .festival-home .character-line p{font-size:15px}
+}
+/* Tablet widths: logo drops under the HUD so neither is clipped. */
+@media(min-width:651px) and (max-width:1100px){
+  body.royal[data-page=home] .festival-home .chapter{top:80px;max-width:60%}
+  body.royal[data-page=home] .festival-home .royal-emblem{width:52px;height:70px}
+  body.royal[data-page=home] .festival-home .royal-emblem .ui-icon{width:28px;height:28px}
+  body.royal[data-page=home] .festival-home .home-logo>span{font-size:24px}
+  body.royal[data-page=home] .festival-home .home-logo h1{font-size:12px}
+  body.royal[data-page=home] .festival-home .home-tools{top:170px}
+  body.royal[data-page=home] .festival-home .home-banners{width:270px;--fw:270px}
+  body.royal[data-page=home] .festival-home .home-economy{width:320px;--fw:320px}
+  body.royal[data-page=home] .festival-home .home-cta .adventure-launch b{font-size:34px}
+  body.royal[data-page=home] .festival-home .home-cta .adventure-launch span{font-size:11px!important}
+  body.royal[data-page=home] .festival-home .home-cta{width:280px}
+  body.royal[data-page=home] .festival-home .character-line{left:calc(1.8% + 330px);bottom:330px}
+}
+/* Phones: medallions left, banners right, Lune between them; income and CTA rows above the nav. */
+@media(max-width:650px){
+  body.royal[data-page=home] .festival-home .chapter{top:56px;left:3%;max-width:72%;gap:8px}
+  body.royal[data-page=home] .festival-home .royal-emblem{width:40px;height:54px}
+  body.royal[data-page=home] .festival-home .royal-emblem::before{inset:3px}
+  body.royal[data-page=home] .festival-home .royal-emblem .ui-icon{width:22px;height:22px}
+  body.royal[data-page=home] .festival-home .royal-emblem span{font-size:10px;margin:1px 0 5px}
+  body.royal[data-page=home] .festival-home .home-logo>span{font-size:21px}
+  body.royal[data-page=home] .festival-home .home-logo h1{font-size:10px;letter-spacing:.3em;margin-top:3px;gap:5px}
+  body.royal[data-page=home] .festival-home .home-logo h1::before,body.royal[data-page=home] .festival-home .home-logo h1::after{width:12px}
+  body.royal[data-page=home] .festival-home .home-tools{top:124px;left:3%;gap:12px}
+  body.royal[data-page=home] .festival-home .home-tools .home-medal{width:60px;height:60px;padding:3px 2px 5px;font-size:11px;border-width:2px;box-shadow:0 0 0 2px #6f4f22,0 0 0 3px #f6dfa466,inset 0 0 12px #8ec5ff40,0 4px 8px #091331aa}
+  body.royal[data-page=home] .festival-home .home-tools .home-medal::before{top:-6px;width:9px;height:9px;margin-left:-5px}
+  body.royal[data-page=home] .festival-home .home-tools .medal-face .ui-icon{width:21px;height:21px}
+  body.royal[data-page=home] .festival-home .home-tools .home-medal small{font-size:8px}
+  body.royal[data-page=home] .festival-home .home-badge{width:19px;height:19px;font-size:12px;top:-4px;right:-4px}
+  body.royal[data-page=home] .festival-home .home-banners{top:118px;right:3%;width:42%;gap:7px;--fw:42vw}
+  body.royal[data-page=home] .festival-home .home-banners .home-banner{height:auto;min-height:72px;padding:22px 30% 9px 11px;border-radius:4px}
+  body.royal[data-page=home] .festival-home .home-banner .banner-ribbon{top:6px;left:9px;padding:0 7px 0 6px;font-size:9px;line-height:1.5}
+  body.royal[data-page=home] .festival-home .home-banner strong{margin-top:4px;font-size:16px;letter-spacing:.02em}
+  body.royal[data-page=home] .festival-home .home-banner small{margin-top:1px;font-size:10px;line-height:1.25;white-space:normal;color:#fff3d8;text-shadow:0 1px 2px #050a1c,0 0 4px #050a1c,0 0 8px #050a1c}
+  /* Text column gets an opaque dark field; the art stays on the right third and fades out before the copy. */
+  body.royal[data-page=home] .festival-home .home-banners .moon-banner{background:linear-gradient(90deg,#1b1036fa,#22164af2 56%,#2d1c5233 80%,#2d1c5200),url('../assets/redesign/observatory.webp') 50% 35%/cover}
+  body.royal[data-page=home] .festival-home .home-banners .garden-banner{background:linear-gradient(90deg,#0a2620fa,#0e3129f2 56%,#16413a33 82%,#16413a00),url('../assets/garden.png') 62% 28%/220%}
+  body.royal[data-page=home] .festival-home .home-banners .jewel-banner{background:radial-gradient(circle at 84% 52%,#73e6ff55,transparent 36%),linear-gradient(90deg,#0b1f3dfa,#10325af2 56%,#1b5c80)}
+  body.royal[data-page=home] .festival-home .moon-banner .banner-portrait{top:-6px;right:-6px;width:50%;-webkit-mask-image:linear-gradient(90deg,transparent,#000 40%);mask-image:linear-gradient(90deg,transparent,#000 40%)}
+  body.royal[data-page=home] .festival-home .garden-banner .banner-party{width:38%;top:4px;right:5px;bottom:3px;-webkit-mask-image:linear-gradient(90deg,transparent,#000 30%);mask-image:linear-gradient(90deg,transparent,#000 30%)}
+  body.royal[data-page=home] .festival-home .jewel-banner .banner-pack{width:32%;right:3%}
+  body.royal[data-page=home] .festival-home .character-line{left:4%;bottom:304px;max-width:64%;padding:7px 16px 8px;border-radius:20px}
+  body.royal[data-page=home] .festival-home .character-line::after{width:12px;height:12px;margin-top:-6px;right:-8px}
+  body.royal[data-page=home] .festival-home .character-line>span{font-size:9px}
+  body.royal[data-page=home] .festival-home .character-line p{font-size:13px;white-space:normal}
+  body.royal[data-page=home] .festival-home .home-cta{left:3%;right:3%;width:auto;bottom:214px;flex-direction:row;align-items:center;gap:10px}
+  body.royal[data-page=home] .festival-home .home-cta .adventure-launch{flex:1.8 1 0;min-width:0;height:auto;margin:0 -4px}
+  body.royal[data-page=home] .festival-home .home-cta .adventure-launch b{font-size:27px;line-height:1;letter-spacing:.08em;padding-left:.08em}
+  body.royal[data-page=home] .festival-home .home-cta .adventure-launch span{margin-top:1px;font-size:10px!important;line-height:1.2!important;letter-spacing:0;white-space:nowrap}
+  body.royal[data-page=home] .festival-home .home-cta .arena-shortcut{flex:1 1 0;min-width:0;height:60px;margin:0;padding:4px 8px;display:grid;grid-template-columns:auto auto;grid-template-rows:auto auto;column-gap:5px;row-gap:1px;align-content:center;justify-content:center;border-radius:20px}
+  body.royal[data-page=home] .festival-home .home-cta .arena-crest{grid-row:1/3;flex:none;width:30px;height:30px;align-self:center}
+  body.royal[data-page=home] .festival-home .home-cta .arena-shortcut b{font-size:17px;letter-spacing:.06em;align-self:end}
+  body.royal[data-page=home] .festival-home .home-cta .arena-shortcut small{font-size:9px!important;align-self:start}
+  body.royal[data-page=home] .festival-home .home-economy{left:3%;right:3%;width:auto;max-width:none;bottom:104px;height:100px;--fw:min(94vw,329px)}
+  body.royal[data-page=home] .festival-home .home-economy .estate-art{background:linear-gradient(90deg,#16294a10 6%,#16294ad0 30%,#142645f2 44%),url('../assets/garden.png') 100% 30%/auto 300% no-repeat}
+  body.royal[data-page=home] .festival-home .home-economy .income-chest{left:6px;bottom:4px;width:82px;height:82px}
+  body.royal[data-page=home] .festival-home .home-economy .income-copy{left:88px;right:12px;width:auto;padding:8px 2px;display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"title action" "value action" "note action";align-content:center;align-items:center;column-gap:8px;row-gap:0;text-align:left}
+  body.royal[data-page=home] .festival-home .home-economy h2{grid-area:title;font-size:15px;letter-spacing:.1em}
+  body.royal[data-page=home] .festival-home .home-economy strong{grid-area:value;margin:0;font-size:17px}
+  body.royal[data-page=home] .festival-home .home-economy strong small{font-size:9px}
+  body.royal[data-page=home] .festival-home .home-economy .income-copy>small{grid-area:note;margin:0;font-size:10px;line-height:1.3;color:#eef0e6}
+  body.royal[data-page=home] .festival-home .home-economy button{grid-area:action;width:auto;min-height:44px;padding:4px 12px;font-size:12px}
+  /* The idle-income toast moves over the decorative logo band so it never covers the income plaque, CTA or nav.
+     It stays pointer-events:none (royal-ui.css), so nothing underneath is blocked while it is visible. */
+  body.royal[data-page=home] #toast{top:52px;bottom:auto;max-width:calc(100% - 24px);padding:9px 16px;font-size:13px;line-height:1.5;text-align:center;box-shadow:0 0 0 1px #6f4f22,0 8px 18px #050b1dcc;transform:translate(-50%,-8px)}
+  body.royal[data-page=home] #toast.visible{transform:translate(-50%,0)}
+}
+@media(max-width:360px){
+  body.royal[data-page=home] .festival-home .home-logo>span{font-size:18px}
+  body.royal[data-page=home] .festival-home .home-banner strong{font-size:15px}
+  body.royal[data-page=home] .festival-home .home-cta .adventure-launch b{font-size:23px}
+  body.royal[data-page=home] .festival-home .home-cta .arena-shortcut b{font-size:15px}
+  body.royal[data-page=home] .festival-home .home-economy .income-chest{width:70px;height:70px;bottom:10px}
+  body.royal[data-page=home] .festival-home .home-economy .income-copy{left:74px;right:10px;column-gap:6px}
+  body.royal[data-page=home] .festival-home .home-economy strong{font-size:15px}
+  body.royal[data-page=home] .festival-home .home-economy button{padding:4px 8px;font-size:11px}
+  body.royal[data-page=home] .festival-home .home-banners{gap:5px}
+  body.royal[data-page=home] .festival-home .character-line{bottom:292px;max-width:none;width:max-content;padding:6px 14px 7px}
+  body.royal[data-page=home] .festival-home .character-line p{font-size:12px;white-space:nowrap}
+  body.royal[data-page=home] #toast{font-size:12px;padding:8px 12px}
+}
