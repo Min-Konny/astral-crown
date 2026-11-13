@@ -21,6 +21,9 @@ function owned(){
 }
 test('召喚の選択・提供割合・不足時を実操作で確認する',async({page},info)=>{
   const game=new AstralPage(page);await game.moveToPage(data,{gems:3000});await game.openPage('summon');
+  const execute=page.locator('[data-action="summon"]');
+  await execute.hover();
+  expect(await execute.evaluate(e=>getComputedStyle(e).backgroundImage)).toContain('summon-gold.png');
   await stateShot(game,'summon',info,'[data-banner="standard"]');
   const canvas=page.locator('#game-stage canvas');
   const pickup=await canvas.screenshot();
@@ -37,6 +40,15 @@ test('召喚の選択・提供割合・不足時を実操作で確認する',asy
   await page.locator('[data-action="rates"]').click();await expect(page.locator('#modal')).toBeVisible();
   await game.screenshot('summon-rates',info.project.name);
   expect((await game.savedState()).gems).toBe(3000);expect(game.errors).toEqual([]);
+  if(info.project.name==='mobile'){
+    await page.keyboard.press('Escape');
+    await page.setViewportSize({width:390,height:640});
+    const description=await page.locator('.summon-description').boundingBox();
+    const dock=await page.locator('.summon-dock').boundingBox();
+    expect(dock.y).toBeGreaterThan(description.y+description.height);
+    await page.locator('[data-action="rates"]').click();
+    await expect(page.locator('#modal')).toBeVisible();
+  }
   if(info.project.name==='laptop'){
     await page.keyboard.press('Escape');
     const confirm=page.locator('[data-action="summon"]');
