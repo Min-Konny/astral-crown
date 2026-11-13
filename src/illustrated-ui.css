@@ -291,6 +291,12 @@ body.soft[data-page=home] .festival-home :is(.home-medal,.home-banner,.adventure
   body.royal[data-page=home] .festival-home .home-economy .income-copy>small{grid-area:note;margin:0;font-size:10px;line-height:1.3;color:#eef0e6}
   body.royal[data-page=home] .festival-home .home-economy button{grid-area:action;width:auto;min-height:44px;padding:4px 12px;font-size:12px}
 }
+@media(min-width:361px) and (max-width:650px){
+  body.royal[data-page=summon] .astral-summon.is-standard .summon-description{max-width:48%}
+  body.royal[data-page=summon] .astral-summon.is-standard .summon-description h2{font-size:clamp(24px,6vw,36px)}
+  body.royal[data-page=summon] .astral-summon.is-standard .summon-signature{display:none}
+  body.royal[data-page=summon] .astral-summon.is-standard .summon-description p{display:none}
+}
 @media(max-width:360px){
   body.royal[data-page=home] .festival-home .home-logo>span{font-size:18px}
   body.royal[data-page=home] .festival-home .home-banner strong{font-size:15px}
@@ -308,3 +314,202 @@ body.soft[data-page=home] .festival-home :is(.home-medal,.home-banner,.adventure
 body.royal[data-page=home] .character-line:has(.home-notice:not([hidden])) .home-greeting{display:none}
 body.royal[data-page=home] .festival-home .character-line .home-notice{white-space:normal;overflow-wrap:anywhere;font-size:13px;line-height:1.5}
 body.royal[data-page=home] .character-line .home-notice[hidden]{display:none}
+/* UI 02/12 Summon — reference composition: illustrated banner rail, gold title block with pity beside it,
+   large Lune with open hand, and a count-selection plate group separated from the gold execute button.
+   Scoped to .astral-summon; prices, pity and balances stay live HTML. */
+body.royal[data-page=summon] .astral-summon::before{inset:0;background:linear-gradient(90deg,#090e2ce6 0%,#0b1234b3 24%,#0c143840 44%,transparent 58%),linear-gradient(0deg,#0a1434d9,#0a143466 16%,transparent 32%)}
+body.royal[data-page=summon] .astral-summon .summon-banners{left:1.6%;top:150px;width:228px;gap:14px;z-index:1}
+body.royal[data-page=summon] .astral-summon :is(.summon-banner,.summon-shop-banner){height:128px;min-height:0;padding:0 22px 15px;justify-content:flex-end;align-items:flex-end;text-align:right;overflow:hidden}
+body.royal[data-page=summon] .astral-summon :is(.summon-banner,.summon-shop-banner)::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(0deg,#0a0d2ef0 0%,#0d1238b3 34%,transparent 62%),linear-gradient(270deg,#0d123899,transparent 55%)}
+body.royal[data-page=summon] .astral-summon :is(.summon-banner,.summon-shop-banner)>:is(span,strong,small){position:relative;z-index:2}
+body.royal[data-page=summon] .astral-summon .summon-banner .banner-art{position:absolute;z-index:0;max-width:none;pointer-events:none}
+body.royal[data-page=summon] .astral-summon .pickup-banner{background:radial-gradient(circle at 30% 30%,#8ea7ff55,transparent 60%),url('../assets/redesign/observatory.webp') 50% 30%/cover!important}
+body.royal[data-page=summon] .astral-summon .pickup-banner .banner-art{width:190%;left:-62%;top:-27%}
+body.royal[data-page=summon] .astral-summon .standard-banner{background:linear-gradient(0deg,#10284066,transparent),url('../assets/garden.png') 50% 40%/cover!important}
+body.royal[data-page=summon] .astral-summon .standard-banner .banner-art{width:116%;left:-9%;top:2%}
+body.royal[data-page=summon] .astral-summon .summon-banner>span{padding:1px 8px;border-radius:3px;background:linear-gradient(90deg,transparent,#7a5a2acc 30%,#7a5a2acc);font:600 12px var(--serif);letter-spacing:.08em;color:#fff1c8}
+body.royal[data-page=summon] .astral-summon .summon-banner strong{font:700 23px/1.25 var(--serif);letter-spacing:.06em;color:#fff6e2;text-shadow:0 0 2px #2b1b3a,0 2px 4px #070b22,0 0 10px #ffd98a66}
+body.royal[data-page=summon] .astral-summon .summon-banner:not(.selected){filter:saturate(.7) brightness(.78)}
+body.royal[data-page=summon] .astral-summon .summon-banner.selected{box-shadow:0 0 0 2px #ffe3a1,0 0 22px #ffd77acc!important}
+body.royal[data-page=summon] .astral-summon .summon-banner:hover:not(.selected){filter:saturate(.95) brightness(1)}
+body.royal[data-page=summon] .astral-summon .summon-shop-banner{height:104px;align-items:flex-start;text-align:left;padding:0 18px 14px}
+body.royal[data-page=summon] .astral-summon .summon-shop-banner span{font:700 19px var(--serif);color:#fff3d8}
+body.royal[data-page=summon] .astral-summon .summon-shop-banner small{margin-top:3px;font-size:11px;color:#f0e4c4}
+body.royal[data-page=summon] .astral-summon .chapter{left:calc(1.6% + 256px);top:136px;width:auto;max-width:none;padding:0;background:none;border:0;box-shadow:none;text-shadow:none;z-index:1}
+body.royal[data-page=summon] .astral-summon .chapter-top{display:flex;align-items:center;gap:18px}
+body.royal[data-page=summon] .astral-summon .chapter-top>span{font:11px Georgia,serif;letter-spacing:.32em;color:#cdd6f2;text-shadow:0 1px 3px #050a22}
+body.royal[data-page=summon] .astral-summon .chapter h1{margin:2px 0 0;padding:0;border:0;font:700 66px/1.12 var(--serif);letter-spacing:.06em;color:transparent;background:linear-gradient(180deg,#fffdf4 18%,#f6dc9c 58%,#c99647 92%);-webkit-background-clip:text;background-clip:text;text-shadow:none;filter:drop-shadow(0 2px 0 #3a2442) drop-shadow(0 0 12px #f5d48a55)}
+body.royal[data-page=summon] .astral-summon .pity-jewel{position:relative;top:auto;left:auto;display:inline-flex;align-items:baseline;gap:6px;padding:7px 28px 12px;font:600 15px var(--serif);color:#fff0d4;text-shadow:0 1px 2px #060a1e;white-space:nowrap}
+body.royal[data-page=summon] .astral-summon .pity-jewel strong{margin:0 2px;font:700 30px/1 Georgia,serif;color:#ffe29a;text-shadow:0 0 8px #ffd06e88,0 2px 2px #1b1022}
+body.royal[data-page=summon] .astral-summon .pity-gauge{position:absolute;left:30px;right:30px;bottom:7px;height:3px;border-radius:3px;background:#ffffff26;overflow:hidden}
+body.royal[data-page=summon] .astral-summon .pity-gauge b{display:block;height:100%;background:linear-gradient(90deg,#63e3dc,#ffe29a)}
+body.royal[data-page=summon] .astral-summon .summon-description{left:calc(1.6% + 256px);top:286px;max-width:440px;padding:0;background:none;text-shadow:none;z-index:1}
+body.royal[data-page=summon] .astral-summon .pickup-label{font:600 22px var(--serif);letter-spacing:.16em;color:#f6e2ae;text-shadow:0 2px 6px #070b26}
+body.royal[data-page=summon] .astral-summon .summon-description h2{margin:4px 0 0;font:700 110px/1.04 var(--serif);letter-spacing:.04em;color:transparent;background:linear-gradient(180deg,#ffffff 15%,#f8e6bb 55%,#d6a95a 95%);-webkit-background-clip:text;background-clip:text;text-shadow:none;filter:drop-shadow(0 3px 0 #3a2442) drop-shadow(0 0 16px #e8c4ff66)}
+body.royal[data-page=summon] .astral-summon.is-standard .summon-description h2{font-size:76px;margin:10px 0 12px}
+body.royal[data-page=summon] .astral-summon .summon-signature{margin:-14px 0 8px 150px;font:italic 32px Georgia,serif;letter-spacing:.1em;color:#eadbbb;text-shadow:0 2px 6px #070b26}
+body.royal[data-page=summon] .astral-summon .hero-rarity{gap:18px}
+body.royal[data-page=summon] .astral-summon .hero-rarity b{font:italic 700 50px/1.1 Georgia,serif;color:transparent;background:linear-gradient(180deg,#fff6d5,#f2c766 55%,#b9822f);-webkit-background-clip:text;background-clip:text;text-shadow:none;filter:drop-shadow(0 2px 0 #3d2a1b) drop-shadow(0 0 10px #f6c96b66)}
+body.royal[data-page=summon] .astral-summon .hero-rarity span{padding:6px 16px;border:1px solid #e3c98a;border-radius:24px;background:#132447cc;box-shadow:inset 0 0 8px #6fb6ff44;font:600 16px var(--serif);color:#e4f2ff}
+body.royal[data-page=summon] .astral-summon .summon-description p{margin:12px 0 6px;font:600 25px/1.5 var(--serif);letter-spacing:.06em;color:#fff7e8;text-shadow:0 2px 6px #070b26,0 0 12px #0b1236}
+body.royal[data-page=summon] .astral-summon .banner-rates{font-size:12px;color:#dfe2f2;text-shadow:0 1px 3px #070b26}
+/* Dock: selection plates on the left, the gold execute plate on the right (stacked on phones). */
+body.royal[data-page=summon] .astral-summon .summon-dock{left:auto;right:2.4%;bottom:136px;width:min(560px,44vw);max-width:none;padding:0;background:none;border:0;box-shadow:none;display:grid;grid-template-columns:minmax(0,212px) minmax(0,1fr);grid-template-areas:"label confirm" "options confirm" "short short" "notes notes";column-gap:14px;row-gap:6px;align-items:center;z-index:2}
+body.royal[data-page=summon] .astral-summon .pull-label{grid-area:label;align-self:end;justify-self:start;padding:4px 8px;background:#111a36;border:1px solid #9f814b;border-radius:4px;font:600 13px var(--serif);letter-spacing:.14em;color:#f4e5c0;text-shadow:0 1px 3px #060a20}
+body.royal[data-page=summon] .astral-summon .pull-label::before{content:"✧ "}
+body.royal[data-page=summon] .astral-summon .pull-options{grid-area:options;align-self:start;display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0}
+body.royal[data-page=summon] .astral-summon .summon-dock .pull-options button{min-height:56px;padding:6px 10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;line-height:1.1;color:#fff0d4;white-space:nowrap}
+body.royal[data-page=summon] .astral-summon .pull-options button b{font:700 20px Georgia,serif;letter-spacing:.02em}
+body.royal[data-page=summon] .astral-summon .pull-options button[data-count="10000"] b{font-size:18px}
+body.royal[data-page=summon] .astral-summon .pull-options button b small{margin-left:2px;font:600 11px var(--serif);color:inherit}
+body.royal[data-page=summon] .astral-summon .pull-options button em{font:11px Georgia,serif;font-style:normal;color:#cfe3ff}
+body.royal[data-page=summon] .astral-summon .summon-dock .pull-options button.selected{filter:drop-shadow(0 0 6px #ffe39acc)}
+body.royal[data-page=summon] .astral-summon .summon-dock .pull-options button.selected em{color:#fff4cf}
+body.royal[data-page=summon] .astral-summon .summon-dock .pull-options button:hover:not(:disabled):not(.selected),body.royal[data-page=summon] .astral-summon .summon-dock .summon-footnotes button:hover:not(:disabled){filter:brightness(1.25);color:#fff8e6}
+body.royal[data-page=summon] .astral-summon .summon-dock>.summon-confirm{grid-area:confirm;width:100%;min-height:112px;padding:29px clamp(20px,3vw,44px) 17px;gap:2px;container-type:inline-size}
+body.royal[data-page=summon] .astral-summon .summon-dock>.summon-confirm>span{font-weight:700;font-size:clamp(18px,14cqw,30px);line-height:1.14}
+body.royal[data-page=summon] .astral-summon .summon-dock>.summon-confirm>small{margin:0;font-size:clamp(11px,8cqw,15px);line-height:1.1}
+body.royal[data-page=summon] .astral-summon .summon-dock>.summon-confirm:hover:not(:disabled){background:url('../assets/redesign/summon-gold.png') center/100% 100% no-repeat}
+body.royal[data-page=summon] .astral-summon .summon-dock>.summon-confirm:disabled{background:url('../assets/redesign/summon-gold.png') center/100% 100% no-repeat;filter:grayscale(.75) brightness(.72) drop-shadow(0 5px 7px #080b25aa);cursor:not-allowed}
+body.royal[data-page=summon] .astral-summon .summon-dock>.summon-confirm:disabled>span{color:#2a2228}
+body.royal[data-page=summon] .astral-summon .summon-shortage{grid-area:short;margin:2px 0 0;text-align:right;font:600 13px var(--serif);color:#ffdca3;text-shadow:0 1px 3px #060a20}
+body.royal[data-page=summon] .astral-summon .summon-footnotes{grid-area:notes;margin-top:6px}
+body.royal[data-page=summon] .astral-summon .summon-footnotes button{min-height:40px;font-size:13px;color:#fff0d4}
+body.royal[data-page=summon] .astral-summon .summon-footnotes button.needed{filter:drop-shadow(0 0 7px #ffd77acc)}
+body.royal[data-page=summon] .astral-summon :is(.summon-banner,.summon-shop-banner,.summon-dock button):focus-visible{outline:3px solid #ffe08a;outline-offset:4px}
+body.royal[data-page=summon] .astral-summon :is(.summon-banner,.summon-shop-banner):active{transform:translateY(2px) scale(.98)}
+body.soft[data-page=summon] .astral-summon button:is(:hover,:active),body.quick[data-page=summon] .astral-summon button:is(:hover,:active){transform:none!important}
+@media(prefers-reduced-motion:reduce){body.royal[data-page=summon] .astral-summon button:is(:hover,:active){transform:none!important;transition:none}}
+/* Short desktop windows (1280×720). */
+@media(min-width:1001px) and (max-height:800px){
+  body.royal[data-page=summon] .astral-summon .summon-banners{top:112px;width:204px;gap:10px}
+  body.royal[data-page=summon] .astral-summon :is(.summon-banner,.summon-shop-banner){height:108px;padding-bottom:12px}
+  body.royal[data-page=summon] .astral-summon .summon-shop-banner{height:90px}
+  body.royal[data-page=summon] .astral-summon .summon-banner strong{font-size:20px}
+  body.royal[data-page=summon] .astral-summon :is(.chapter,.summon-description){left:calc(1.6% + 226px)}
+  body.royal[data-page=summon] .astral-summon .chapter{top:104px}
+  body.royal[data-page=summon] .astral-summon .chapter h1{font-size:50px}
+  body.royal[data-page=summon] .astral-summon .pity-jewel{font-size:13px;padding:6px 24px 11px}
+  body.royal[data-page=summon] .astral-summon .pity-jewel strong{font-size:25px}
+  body.royal[data-page=summon] .astral-summon .summon-description{top:218px;max-width:400px}
+  body.royal[data-page=summon] .astral-summon .pickup-label{font-size:18px}
+  body.royal[data-page=summon] .astral-summon .summon-description h2{font-size:84px}
+  body.royal[data-page=summon] .astral-summon.is-standard .summon-description h2{font-size:60px}
+  body.royal[data-page=summon] .astral-summon .summon-signature{font-size:26px;margin:-10px 0 4px 120px}
+  body.royal[data-page=summon] .astral-summon .hero-rarity b{font-size:40px}
+  body.royal[data-page=summon] .astral-summon .hero-rarity span{font-size:14px;padding:4px 13px}
+  body.royal[data-page=summon] .astral-summon .summon-description p{font-size:20px;margin:8px 0 4px}
+  body.royal[data-page=summon] .astral-summon .summon-dock{bottom:132px;width:min(500px,42vw);grid-template-columns:minmax(0,190px) minmax(0,1fr)}
+  body.royal[data-page=summon] .astral-summon .summon-dock .pull-options button{min-height:48px}
+  body.royal[data-page=summon] .astral-summon .summon-dock>.summon-confirm{padding-inline:34px}
+  body.royal[data-page=summon] .astral-summon .summon-dock>.summon-confirm>span{font-size:clamp(18px,14cqw,27px)}
+}
+/* Tablet widths. */
+@media(min-width:1001px) and (max-width:1100px){
+  body.royal[data-page=summon] .astral-summon .summon-banners{width:170px}
+  body.royal[data-page=summon] .astral-summon .summon-banner strong{font-size:17px}
+  body.royal[data-page=summon] .astral-summon :is(.chapter,.summon-description){left:calc(1.6% + 190px)}
+  body.royal[data-page=summon] .astral-summon .chapter h1{font-size:44px}
+  body.royal[data-page=summon] .astral-summon .summon-description h2{font-size:70px}
+  body.royal[data-page=summon] .astral-summon.is-standard .summon-description h2{font-size:50px}
+  body.royal[data-page=summon] .astral-summon .summon-description{max-width:330px}
+  body.royal[data-page=summon] .astral-summon .summon-dock{width:min(460px,70vw);grid-template-columns:minmax(0,170px) minmax(0,1fr)}
+}
+/* Phones: banner pair under the HUD, title + pity row, then the dock stacked above the nav. */
+@media(min-width:1001px) and (max-width:1200px){
+  body.royal[data-page=summon] .astral-summon .summon-description{max-width:300px}
+  body.royal[data-page=summon] .astral-summon .summon-description h2{font-size:84px}
+  body.royal[data-page=summon] .astral-summon.is-standard .summon-description h2{font-size:48px}
+  body.royal[data-page=summon] .astral-summon .summon-signature{margin:0 0 8px;font-size:22px}
+  body.royal[data-page=summon] .astral-summon .summon-description p{font-size:16px}
+  body.royal[data-page=summon] .astral-summon .standard-banner strong{font-size:15px}
+  body.royal[data-page=summon] .astral-summon .summon-dock{column-gap:26px}
+}
+@media(min-width:651px) and (max-width:1200px){
+  body.royal[data-page=summon] .wallet>div{padding-inline:8px}
+  body.royal[data-page=summon] .wallet>div::before{display:none}
+}
+@media(max-width:1000px){
+  body.royal[data-page=summon] #main,body.royal[data-page=summon] .astral-summon{min-height:810px}
+  body.royal[data-page=summon] .astral-summon::before{background:linear-gradient(90deg,#0a1234b3,#0a123440 60%,transparent 80%),linear-gradient(0deg,#0a1434f0,#0a1434a6 32%,transparent 50%)}
+  body.royal[data-page=summon] .astral-summon .summon-banners{top:64px;left:3%;right:3%;width:auto;grid-template-columns:1fr 1fr;gap:8px}
+  body.royal[data-page=summon] .astral-summon :is(.summon-banner,.summon-shop-banner){height:80px;padding:0 13px 9px}
+  body.royal[data-page=summon] .astral-summon .summon-shop-banner{display:none}
+  body.royal[data-page=summon] .astral-summon .summon-banner>span{font-size:9px;padding:0 6px}
+  body.royal[data-page=summon] .astral-summon .summon-banner strong{font-size:16px}
+  body.royal[data-page=summon] .astral-summon :is(.chapter,.summon-description){left:4%}
+  body.royal[data-page=summon] .astral-summon .chapter{top:152px;right:4%}
+  body.royal[data-page=summon] .astral-summon .chapter-top{justify-content:space-between;gap:8px}
+  body.royal[data-page=summon] .astral-summon .chapter-top>span{font-size:8px;letter-spacing:.2em}
+  body.royal[data-page=summon] .astral-summon .chapter h1{font-size:36px}
+  body.royal[data-page=summon] .astral-summon .pity-jewel{font-size:11px;padding:5px 16px 9px;gap:3px}
+  body.royal[data-page=summon] .astral-summon .pity-jewel strong{font-size:20px}
+  body.royal[data-page=summon] .astral-summon .pity-gauge{left:18px;right:18px;bottom:5px;height:2px}
+  body.royal[data-page=summon] .astral-summon .summon-description{top:238px;max-width:72%}
+  body.royal[data-page=summon] .astral-summon .pickup-label{font-size:13px}
+  body.royal[data-page=summon] .astral-summon .summon-description h2{font-size:52px;margin-top:2px}
+  body.royal[data-page=summon] .astral-summon.is-standard .summon-description h2{font-size:40px;margin:6px 0 8px}
+  body.royal[data-page=summon] .astral-summon .summon-signature{font-size:18px;margin:-7px 0 3px 74px}
+  body.royal[data-page=summon] .astral-summon .hero-rarity{gap:9px}
+  body.royal[data-page=summon] .astral-summon .hero-rarity b{font-size:28px}
+  body.royal[data-page=summon] .astral-summon .hero-rarity span{font-size:11px;padding:3px 10px}
+  body.royal[data-page=summon] .astral-summon .summon-description p{font-size:14px;margin:5px 0 2px}
+  body.royal[data-page=summon] .astral-summon .banner-rates{font-size:9px}
+  body.royal[data-page=summon] .astral-summon .summon-dock{left:4%;right:4%;bottom:104px;width:auto;grid-template-columns:minmax(0,1fr);grid-template-areas:"label" "options" "confirm" "short" "notes";row-gap:5px}
+  body.royal[data-page=summon] .astral-summon .pull-label{font-size:11px}
+  body.royal[data-page=summon] .astral-summon .pull-options{grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}
+  body.royal[data-page=summon] .astral-summon .summon-dock .pull-options button{min-height:48px;padding:4px 4px}
+  body.royal[data-page=summon] .astral-summon .pull-options button b,body.royal[data-page=summon] .astral-summon .pull-options button[data-count="10000"] b{font-size:15px}
+  body.royal[data-page=summon] .astral-summon .pull-options button b small{font-size:9px;margin-left:1px}
+  body.royal[data-page=summon] .astral-summon .pull-options button em{font-size:9px}
+  body.royal[data-page=summon] .astral-summon .summon-dock>.summon-confirm{justify-self:center;width:min(100%,300px);padding:26px 30px 16px}
+  body.royal[data-page=summon] .astral-summon .summon-dock>.summon-confirm>span{font-size:25px}
+  body.royal[data-page=summon] .astral-summon .summon-dock>.summon-confirm>small{font-size:13px}
+  body.royal[data-page=summon] .astral-summon .summon-shortage{text-align:center;font-size:11px}
+  body.royal[data-page=summon] .astral-summon .summon-footnotes{margin-top:2px}
+  body.royal[data-page=summon] .astral-summon .summon-footnotes button{min-height:36px;font-size:11px;padding:4px 12px}
+}
+@media(max-width:360px){
+  body.royal[data-page=summon] #main,body.royal[data-page=summon] .astral-summon{min-height:700px}
+  body.royal[data-page=summon] .astral-summon.is-standard :is(.summon-signature,.summon-description p){display:none}
+  body.royal[data-page=summon] .astral-summon.is-standard .summon-description h2{font-size:34px}
+  body.royal[data-page=summon] .astral-summon .summon-banners{top:60px}
+  body.royal[data-page=summon] .astral-summon :is(.summon-banner,.summon-shop-banner){height:70px;padding:0 10px 7px}
+  body.royal[data-page=summon] .astral-summon .summon-banner strong{font-size:14px}
+  body.royal[data-page=summon] .astral-summon .chapter{top:138px}
+  body.royal[data-page=summon] .astral-summon .chapter h1{font-size:29px}
+  body.royal[data-page=summon] .astral-summon .chapter-top>span{display:none}
+  body.royal[data-page=summon] .astral-summon .chapter-top{justify-content:flex-end;margin-bottom:-6px}
+  body.royal[data-page=summon] .astral-summon .pity-jewel{font-size:10px}
+  body.royal[data-page=summon] .astral-summon .pity-jewel strong{font-size:17px}
+  body.royal[data-page=summon] .astral-summon .summon-description{top:204px}
+  body.royal[data-page=summon] .astral-summon .pickup-label{font-size:12px}
+  body.royal[data-page=summon] .astral-summon .summon-description h2{font-size:42px}
+  body.royal[data-page=summon] .astral-summon.is-standard .summon-description h2{font-size:33px}
+  body.royal[data-page=summon] .astral-summon .summon-signature{font-size:15px;margin-left:60px}
+  body.royal[data-page=summon] .astral-summon .hero-rarity b{font-size:24px}
+  body.royal[data-page=summon] .astral-summon .summon-description p{font-size:12px}
+  body.royal[data-page=summon] .astral-summon .summon-dock .pull-options button{min-height:44px;padding:3px 2px}
+  body.royal[data-page=summon] .astral-summon .pull-options button b,body.royal[data-page=summon] .astral-summon .pull-options button[data-count="10000"] b{font-size:13px}
+  body.royal[data-page=summon] .astral-summon .pull-options button em{font-size:8px}
+  body.royal[data-page=summon] .astral-summon .summon-dock>.summon-confirm{width:min(100%,250px);padding:21px 24px 12px}
+  body.royal[data-page=summon] .astral-summon .summon-dock>.summon-confirm>span{font-size:21px}
+  body.royal[data-page=summon] .astral-summon .summon-dock>.summon-confirm>small{font-size:11px}
+  body.royal[data-page=summon] .astral-summon .summon-footnotes button{font-size:10px;padding:4px 9px;min-height:34px}
+}
+
+
+@media(min-width:651px) and (max-width:1000px){
+  body.royal[data-page=summon] #main,body.royal[data-page=summon] .astral-summon{min-height:720px}
+  body.royal[data-page=summon] .wallet strong{font-size:clamp(13px,2.1vw,17px)}
+  body.royal[data-page=summon] .astral-summon .summon-banners{top:74px}
+  body.royal[data-page=summon] .astral-summon .pickup-banner .banner-art{width:110%;left:-25%;top:-37%}
+  body.royal[data-page=summon] .astral-summon .chapter{top:157px}
+  body.royal[data-page=summon] .astral-summon .chapter h1{font-size:30px}
+  body.royal[data-page=summon] .astral-summon .summon-description{top:228px}
+  body.royal[data-page=summon] .astral-summon .summon-description h2,
+  body.royal[data-page=summon] .astral-summon.is-standard .summon-description h2{font-size:34px}
+  body.royal[data-page=summon] .astral-summon .summon-signature{margin:0 0 2px;font-size:14px}
+  body.royal[data-page=summon] .astral-summon .summon-description p{font-size:12px;margin:2px 0 0}
+  body.royal[data-page=summon] .astral-summon .summon-dock{width:min(380px,92%);left:auto;bottom:120px}
+}
