@@ -1,0 +1,88 @@
+import fs from 'node:fs/promises';
+import runtime from './runtime.cjs';
+import {AstralPage} from './pages/astral-page.js';
+import * as G from '../src/game.js';
+const {test,expect}=runtime;
+const data=JSON.parse(await fs.readFile(new URL('./data/royal-flow.json',import.meta.url),'utf8'));
+async function stateShot(game,name,info,selector){
+  const target=game.page.locator(selector).first();
+  await target.scrollIntoViewIfNeeded();await target.hover();
+  await game.screenshot(name+'-hover',info.project.name);
+  await game.page.keyboard.press('Tab');await target.focus();
+  await expect(target).toBeFocused();
+  await game.screenshot(name+'-focus',info.project.name);
+  expect(await game.hasOverflow()).toBe(false);
+}
+function owned(){
+  const s=G.initialState();
+  for(const c of G.CHARACTERS){s.counts[c.id]=c.id==='luna'?50:200;s.confirmedCounts[c.id]=1;s.promotions[c.id]=1;}
+  return {counts:s.counts,confirmedCounts:s.confirmedCounts,promotions:s.promotions,dust:10000};
+}
+test('召喚の選択・提供割合・不足時を実操作で確認する',async({page},info)=>{
+  const game=new AstralPage(page);await game.moveToPage(data,{gems:3000});await game.openPage('summon');
+  await stateShot(game,'summon',info,'[data-banner="standard"]');
+  await page.locator('[data-banner="standard"]').click();
+  await expect(page.locator('[data-banner="standard"]')).toHaveAttribute('aria-pressed','true');
+  await game.screenshot('summon-standard',info.project.name);
+  await page.locator('[data-count="10000"]').click();
+  await expect(page.locator('[data-count="10000"]')).toHaveAttribute('aria-pressed','true');
+  await game.screenshot('summon-insufficient',info.project.name);
+  await page.locator('[data-action="rates"]').click();await expect(page.locator('#modal')).toBeVisible();
+  await game.screenshot('summon-rates',info.project.name);
+  expect((await game.savedState()).gems).toBe(3000);expect(game.errors).toEqual([]);
+});
+test('仲間の編成と低レアの手動継承強化を保存する',async({page},info)=>{
+  const game=new AstralPage(page);await game.moveToPage(data,owned());await game.openPage('collection');
+  await stateShot(game,'collection',info,'[data-filter="legacy"]');
+  const team=(await game.savedState()).team;
+  await page.locator(`[data-team="${team[0]}"]`).click();
+  expect((await game.savedState()).team).not.toContain(team[0]);
+  await page.locator(`[data-team="${team[0]}"]`).click();expect((await game.savedState()).team).toContain(team[0]);
+  await page.locator('[data-filter="legacy"]').click();await game.screenshot('collection-legacy',info.project.name);
+  await page.locator('[data-training="guard"]').first().click();
+  await expect(page.locator('.training-view')).toContainText('編成');
+  await game.screenshot('inheritance',info.project.name);
+  const before=await game.savedState();expect(before.promotions.guard).toBe(1);
+  await stateShot(game,'inheritance',info,'[data-promote="guard"]');
+  await page.locator('[data-promote="guard"]').click();
+  await expect(page.locator('.promotion-view')).toBeVisible();
+  const after=await game.savedState();expect(after.promotions.guard).toBe(4);expect(after.counts.guard).toBe(before.counts.guard);
+  await game.screenshot('inheritance-promoted',info.project.name);
+  await page.locator('#modal [data-training="guard"]').click();
+  await expect(page.locator('[data-promote="guard"]')).toBeDisabled();
+  await game.screenshot('inheritance-disabled',info.project.name);
+  await page.reload();expect((await game.savedState()).promotions.guard).toBe(4);expect(game.errors).toEqual([]);
+});
+test('育成から庭園に出撃し結果から育成へ戻る',async({page},info)=>{
+  const game=new AstralPage(page);await game.moveToPage(data,owned());await game.openPage('collection');
+  const id=(await game.savedState()).team[0];
+  await page.locator(`[data-training="${id}"]`).first().click();
+  await game.screenshot('training-detail',info.project.name);
+  await stateShot(game,'training',info,`#modal [data-level="${id}"]`);
+  const before=await game.savedState();await page.locator(`#modal [data-level="${id}"]`).click();
+  expect((await game.savedState()).levels[id]).toBe(before.levels[id]+1);
+  await page.locator('[data-material-mission="0"]').click();
+  await expect(page.locator('.patrol')).toBeVisible();await game.screenshot('garden',info.project.name);
+  await stateShot(game,'garden',info,'[data-action="battle"]');
+  await page.locator('[data-action="battle"]').click();await expect(page.locator('.battle-result')).toBeVisible({timeout:20000});
+  await game.screenshot('garden-result',info.project.name);
+  await page.locator('#modal [data-training-back]').click();await expect(page.locator('.training-modal')).toBeVisible();
+  expect(await game.hasOverflow()).toBe(false);expect(game.errors).toEqual([]);
+});
+test('ショップ数量・購入方式・投資・転生取消の状態を確認する',async({page},info)=>{
+  const game=new AstralPage(page);await game.moveToPage(data,{rank:1,bestRank:1});await game.openPage('shop');
+  await stateShot(game,'shop',info,'[data-quantity="10"]');await page.locator('[data-quantity="10"]').click();
+  await expect(page.locator('[data-quantity="10"]')).toHaveAttribute('aria-pressed','true');
+  await game.screenshot('shop-selected',info.project.name);await page.locator('[data-pack="large"]').click();
+  await page.locator('input[value="credit"]').check();await game.screenshot('checkout-selected',info.project.name);
+  await stateShot(game,'checkout',info,'[data-confirm-pack]');
+  await page.locator('#modal .modal-close').click();
+  await game.openPage('earn');await stateShot(game,'earn',info,'[data-invest-button]');
+  await game.openPage('arena');await stateShot(game,'arena',info,'[data-action="battle"]');
+  await page.locator('[data-action="ascend"]').click();const before=await game.savedState();
+  await stateShot(game,'ascension',info,'[data-action="confirm-ascend"]');
+  await page.locator('#modal [data-action="close"]').last().click();expect((await game.savedState()).season).toBe(before.season);
+  expect(game.errors).toEqual([]);expect(game.failedAssets).toEqual([]);
+  expect(await page.evaluate(()=>localStorage.getItem('astral-crown-save-v1'))).toBeNull();
+});
+
