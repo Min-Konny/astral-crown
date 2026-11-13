@@ -92,7 +92,7 @@ try{
       if(previous.issue!==issue||previous.startingHead!==startingHead)throw Error('Resume source issue/base does not match.');
       const previousWork=await fs.realpath(path.join(previousDir,'work'));
       if(!previousWork.startsWith(previousDir+path.sep))throw Error('Invalid resume work path.');
-      const patch=(await run('git',['diff','--binary','--no-color','HEAD'],{cwd:previousWork})).stdout;
+      const patch=(await run('git',['diff','--binary','--no-color',previous.startingHead],{cwd:previousWork})).stdout;
       if(patch){const patchFile=path.join(runDir,'resume.patch');await fs.writeFile(patchFile,patch);await git(['apply',patchFile]);}
       for(const file of (await git(['ls-files','--others','--exclude-standard'],previousWork)).split('\n').filter(Boolean)){
         if(!allowedChange(file))throw Error('Resume contains an out-of-scope file.');
