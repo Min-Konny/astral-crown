@@ -825,3 +825,13 @@ body.royal[data-page=collection] #main .astral-collection button:is(.selected-ca
 
 body.royal[data-page=collection] #main .astral-collection .party .collection-portrait{object-position:center top}
 body.royal[data-page=collection] #main .astral-collection .showcase-name small{display:inline-block;padding:2px 5px;background:#09142bef;border-radius:3px;color:#f6ecd6}
+
+body.royal[data-page=collection] #main .astral-collection .roster .collection-portrait{object-position:center top}
+@media(min-width:1101px) and (max-height:800px){
+  body.royal[data-page=collection] #main .astral-collection .showcase-art .collection-portrait{height:55%}
+  body.royal[data-page=collection] #main .astral-collection .showcase-info{padding-top:22px;background:linear-gradient(0deg,#0a1530 75%,#0a1530d9)}
+}
+@media(max-width:650px){
+  body.royal[data-page=collection] #main .astral-collection .party .team-flag+.grow-flag{top:auto;bottom:4px;right:3px}
+  body.royal[data-page=collection] #main .astral-collection .party .card-name{padding-bottom:17px}
+}
