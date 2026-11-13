@@ -44,7 +44,32 @@ export function earnView(s,offline=0){
  return `<section class="earn-screen"><div class="page-heading"><div><div class="eyebrow">A LITTLE WORK. A GREATER WISH.</div><h1>おこづかいを稼ぐ</h1><p>いま石を買うか、投資してもっと稼ぐか。</p></div><span class="tag">継承倍率 ×${(1+s.seals*.25).toFixed(2)}</span></div><div class="earn-layout"><section class="income-stage"><div class="income-number"><span>毎秒のおこづかい</span><strong>${money(G.income(s))}<small> / 秒</small></strong><p>仕事も、放置も。すべて次の召喚につながる。</p></div><div class="work-action"><div id="work-feedback" aria-live="polite"></div><button class="primary work-button" data-action="work">${icon('earn')}<span>仕事する<small>+${money(300*(1+s.seals*.25))}</small></span></button></div><div class="offline-note">${icon('check')}<div>離れている間も収入が増えます<small>${offline>0?`今回の放置収入 ${money(offline)} · 反映済み`:'オフライン収入は最大8時間'}</small></div></div></section><aside class="investment-panel ornate-panel"><div class="eyebrow">INVEST IN TOMORROW</div><h2>収入設備 <small>Lv.${s.facility}${max?' / MAX':' → '+(s.facility+1)}</small></h2><div class="desk-illustration" aria-hidden="true"></div><dl class="investment-values"><div><dt>毎秒収入</dt><dd>${money(G.income(s))}${max?'':`<span>→ ${money(next)}</span>`}</dd></div><div><dt>投資額</dt><dd>${max?'最大レベル':money(cost)}</dd></div></dl><button class="primary wide" data-action="facility" data-invest-button ${max||s.cash<cost?'disabled':''}>${icon('up')} ${max?'設備は最大レベルです':'設備に投資する'}</button><p class="afford-note" data-invest-note></p><div class="investment-choice"><span>次のガチャを、今すぐ。</span><button data-page="shop">稼いだお金で課金へ ${icon('arrow')}</button></div></aside></div></section>`;
 }
 export function shopView(s,quantity,titles){
- return `<section class="royal-shop"><div class="page-heading"><div><div class="eyebrow">THE JOY OF SPENDING BIG</div><h1>星晶石を購入</h1><p>ゲームで稼いだお金で、思いきり課金する気分を。</p></div><span class="tag">追加の実課金なし</span></div><div class="shop-layout"><aside class="shop-host"><img src="./assets/redesign/luna-court.webp" alt="月冠の魔女 リュネ"/><div class="host-quote"><span>月冠の魔女 / リュネ</span><p>あなたの願いを、<br>星に変えましょう。</p></div></aside><div class="shop-products"><div class="shop-toolbar"><span>まとめて購入</span><div class="tabs pack-quantities">${[1,10,100,1000].map(n=>`<button data-quantity="${n}" aria-pressed="${quantity===n}" class="${quantity===n?'selected':''}">×${fmt(n)}</button>`).join('')}</div></div><div class="pack-grid">${G.PACKS.map((p,i)=>`<article class="panel pack ${i===2?'premium':''}"><span class="tag">${i===2?'PREMIUM PACK':i===1?'CRYSTAL BOX':'CRYSTAL POUCH'}</span>${gemArt(p.id)}<h2>${p.name}</h2><strong class="gem-count">${fmt(p.gems*quantity)}<small> 個</small></strong><p>${fmt(quantity)}パック · ${fmt(p.gems*quantity/300)}連分</p><button class="${i===2?'primary':''} wide" data-pack="${p.id}">${money(p.price*quantity)}<small>購入手続きへ</small></button><span class="pack-unit">1パック ${money(p.price)} / ${fmt(p.gems)}個</span></article>`).join('')}</div><p class="simulation-label">ゲーム内のおこづかいから支払います。実際の請求・決済情報の入力はありません。</p><div class="spender-summary"><div>${icon('crown')}<span>累計疑似課金額<strong>${money(s.spent)}</strong></span></div><button data-page="earn">おこづかいを稼ぐ ${icon('arrow')}</button></div><details class="spender-titles"><summary>支援者の称号を見る</summary>${titles}</details></div></div></section>`;
+ // Exchange-counter presentation: same packs, prices and actions as before.
+ return `<section class="royal-shop exchange-shop" aria-labelledby="exchange-title">
+ <div class="exchange-title"><h1 id="exchange-title">星晶石ショップ</h1></div>
+ <aside class="exchange-host" aria-label="ショップ店主">
+ <img class="exchange-host-art" src="./assets/redesign/luna-court.webp" alt="月冠の魔女 リュネ" decoding="async"/>
+ <p class="exchange-bubble"><b>ゲーム内残高で交換</b><small>実際の請求はありません</small></p>
+ </aside>
+ <div class="exchange-counter">
+ <div class="exchange-quantity" role="group" aria-label="まとめて購入"><span class="exchange-quantity-label">まとめて購入</span><div class="exchange-quantity-bar">${[1,10,100,1000].map(n=>`<button data-quantity="${n}" aria-pressed="${quantity===n}" class="${quantity===n?'selected':''}">×${fmt(n)}</button>`).join('')}</div></div>
+ <div class="exchange-shelf">${G.PACKS.map((p,i)=>`<article class="exchange-item exchange-${p.id}${i===2?' is-premium':''}" aria-label="${p.name}">
+ <div class="exchange-display" aria-hidden="true"><img class="exchange-art" src="./assets/redesign/pack-${p.id}.webp" alt="" decoding="async"/></div>
+ <div class="exchange-pedestal">
+ <h2 class="exchange-name"><span>${p.name}</span></h2>
+ <strong class="exchange-gems"><i class="exchange-gem" aria-hidden="true"></i>${fmt(p.gems*quantity)}<small> 個</small></strong>
+ <p class="exchange-note">${fmt(quantity)}パック · ${fmt(p.gems*quantity/300)}連分</p>
+ <button class="exchange-buy" data-pack="${p.id}"><i class="exchange-coin" aria-hidden="true"></i><span>${money(p.price*quantity)}<small>購入手続きへ</small></span></button>
+ <span class="exchange-unit">1パック ${money(p.price)} / ${fmt(p.gems)}個</span>
+ </div></article>`).join('')}</div>
+ </div>
+ <div class="exchange-supporter">
+ <span class="exchange-plaque">支援者の記章</span>
+ <div class="exchange-spent"><span class="exchange-medal" aria-hidden="true">${icon('crown')}</span><span>累計疑似課金額<strong>${money(s.spent)}</strong></span></div>
+ <button class="exchange-earn" data-page="earn">おこづかいを稼ぐ ${icon('arrow')}</button>
+ <details class="spender-titles exchange-titles"><summary>支援者の称号を見る</summary>${titles}</details>
+ </div>
+ </section>`;
 }
 export function ascensionView(s){
  const reward=G.ascensionReward(s),after=s.seals+reward;
