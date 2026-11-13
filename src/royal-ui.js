@@ -30,7 +30,7 @@ export function homeView(s){
  <button class="home-medal" data-page="earn"><span class="medal-face">${icon('up')}</span><span class="medal-label">設備強化</span><small>Lv.${s.facility}</small></button>
  </div>
  <div class="home-banners" aria-label="おすすめコンテンツ">
- <button class="home-banner moon-banner" data-page="summon"><span class="banner-ribbon">ピックアップ召喚</span><strong>月冠の契約</strong><small>月冠の魔女 リュネ</small><img class="banner-portrait" src="./assets/redesign/luna-court.webp" alt=""/></button>
+ <button class="home-banner moon-banner" data-page="summon"><span class="banner-ribbon">ピックアップ召喚</span><strong>月冠の契約</strong><small>月冠の魔女 リュネ</small><img class="banner-portrait" src="./assets/redesign/lune-summon.webp" alt=""/></button>
  <button class="home-banner garden-banner" data-mission="0"><span class="banner-ribbon">冒険 · 庭園巡回</span><strong>星降る庭園</strong><small>仲間と挑む、育成の旅</small><span class="banner-party" aria-hidden="true"></span></button>
  <button class="home-banner jewel-banner" data-page="shop"><span class="banner-ribbon">星晶石ショップ</span><strong>願いを星に</strong><small>稼いだお金で、召喚の準備</small><img class="banner-pack" src="./assets/redesign/pack-large.webp" alt=""/></button>
  </div>

@@ -1,7 +1,7 @@
 /* GPT Image artwork supplies the frames and icons; live values remain accessible HTML. */
 body.royal[data-page] header{background:none;border:0;border-radius:0;box-shadow:none;backdrop-filter:none;gap:8px;padding:0;height:68px;top:5px;left:2%;right:2%;width:96%}
 body.royal[data-page=home] header{left:auto;width:64%}
-body.royal[data-page] .season,body.royal[data-page] .wallet>div{background:url('../assets/redesign/hud-plate.webp') center/100% 210% no-repeat;border:0;box-shadow:none;min-width:0;height:58px;padding:8px 23px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:1px;text-align:center}
+body.royal[data-page] .season,body.royal[data-page] .wallet>div{background:url('../assets/redesign/hud-plate.webp') center/100% 100% no-repeat;border:0;box-shadow:none;min-width:0;height:58px;padding:8px 23px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:1px;text-align:center}
 body.royal[data-page] .season{flex:0 0 170px;letter-spacing:1px}
 body.royal[data-page] .season strong{font:24px Georgia,serif;line-height:1;color:#fff1d0}.season strong em{font:10px var(--serif);margin-left:4px}
 body.royal[data-page] .season small{font-size:8px;letter-spacing:1px;line-height:1.1}
@@ -9,10 +9,10 @@ body.royal[data-page] .wallet{flex:1;display:flex;gap:5px;width:auto;min-width:0
 body.royal[data-page] .wallet>div{flex:1;padding:9px 18px}
 body.royal[data-page] .wallet strong{font:clamp(16px,1.7vw,26px) Georgia,serif;white-space:nowrap;line-height:1.15;color:#fff5dc}
 body.royal[data-page] .wallet small{font-size:9px;white-space:nowrap;color:#e7d1a6}
-body.royal[data-page] #settings{flex:0 0 43px;background:url('../assets/redesign/hud-plate.webp') center/100% 210% no-repeat;border:0;border-radius:0;box-shadow:none;color:#ffe6ac;height:45px}
+body.royal[data-page] #settings{flex:0 0 43px;background:url('../assets/redesign/hud-plate.webp') center/100% 100% no-repeat;border:0;border-radius:0;box-shadow:none;color:#ffe6ac;height:45px}
 body.royal[data-page] .sidebar{bottom:6px;left:2%;width:96%;height:88px;border:0;border-radius:0;padding:0;background:transparent;box-shadow:none;backdrop-filter:none;overflow:visible}
 body.royal[data-page] .sidebar nav{width:100%;gap:0;align-items:end;overflow:visible}
-body.royal[data-page] .sidebar nav button{height:75px;position:relative;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:0;padding:0 8px 11px;border:0!important;border-radius:0;overflow:visible;background:url('../assets/redesign/hud-plate.webp') center/100% 210% no-repeat!important;box-shadow:none!important;color:#fff0d4!important;font:22px var(--serif);text-shadow:0 2px 3px #070b19;transition:filter .15s}
+body.royal[data-page] .sidebar nav button{height:75px;position:relative;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:0;padding:0 8px 11px;border:0!important;border-radius:0;overflow:visible;background:url('../assets/redesign/hud-plate.webp') center/100% 100% no-repeat!important;box-shadow:none!important;color:#fff0d4!important;font:22px var(--serif);text-shadow:0 2px 3px #070b19;transition:filter .15s}
 body.royal[data-page] .sidebar nav button.active{background:url('../assets/redesign/nav-active.webp') center/100% 100% no-repeat!important;border:0!important;filter:drop-shadow(0 0 7px #52eddd66)}
 body.royal[data-page] .sidebar nav button:hover{filter:brightness(1.2)}
 body.royal[data-page] .sidebar nav button small{display:none}
@@ -23,12 +23,12 @@ body.royal[data-page] .sidebar nav [data-page=collection] .painted-nav-icon{back
 body.royal[data-page] .sidebar nav [data-page=arena] .painted-nav-icon{background-position:80% 50%}
 body.royal[data-page] .sidebar nav [data-page=shop] .painted-nav-icon{background-position:100% 50%}
 body.royal[data-page] footer{bottom:114px;background:none}
-body.royal[data-page=summon] .pull-options button,body.royal[data-page=summon] .summon-footnotes button,body.royal[data-page=summon] .pity-jewel{background:url('../assets/redesign/hud-plate.webp') center/100% 210% no-repeat!important;border:0!important;border-radius:0;box-shadow:none;color:#fff0d4;padding-left:15px;padding-right:15px}
-body.royal[data-page=summon] .pull-options button.selected{background:url('../assets/redesign/nav-active.webp') center/100% 100% no-repeat!important;color:#fff8dc!important}
+body.royal[data-page=summon] .pull-options button,body.royal[data-page=summon] .summon-footnotes button,body.royal[data-page=summon] .pity-jewel{background:none!important;border-width:0!important;border-style:solid!important;border-color:transparent!important;border-radius:0;box-shadow:none;color:#fff0d4;padding-left:15px;padding-right:15px}
+body.royal[data-page=summon] .pull-options button.selected{background:none!important;box-shadow:none!important;color:#fff8dc!important}
 @media(max-width:1000px){body.royal[data-page=home] header{width:68%}body.royal[data-page] .season{flex-basis:125px}body.royal[data-page=home] .season{display:none}body.royal[data-page] .wallet>div{padding-left:12px;padding-right:12px}body.royal[data-page] .sidebar nav button{font-size:18px}}
 @media(max-width:650px){body.royal[data-page] header,body.royal[data-page=home] header{width:98%;left:1%;right:1%;height:54px;top:3px;gap:2px}body.royal[data-page] .season{display:none}body.royal[data-page] .wallet{gap:0}body.royal[data-page] .wallet>div{height:49px;padding:7px 9px}body.royal[data-page] .wallet strong{font-size:15px}body.royal[data-page] .wallet small{font-size:7px}body.royal[data-page] .wallet em{display:none}body.royal[data-page] #settings{flex-basis:30px;width:30px;height:38px}body.royal[data-page] #settings .ui-icon{width:19px}body.royal[data-page] .sidebar{left:1%;width:98%;bottom:5px;height:65px}body.royal[data-page] .sidebar nav button{height:54px;padding:0 2px 9px;font-size:12px}body.royal[data-page] .sidebar nav button .painted-nav-icon{width:43px;height:43px;top:-20px}body.royal[data-page] footer{bottom:81px}body.royal[data-page=summon] .pull-options button{padding-left:6px;padding-right:6px}}
 /* A continuous illustrated rail keeps the artwork, rather than individual frames, prominent. */
-body.royal[data-page] .sidebar{left:3%;width:94%;bottom:6px;height:65px;background:url('../assets/redesign/hud-plate.webp') center/100% 210% no-repeat;padding:0 2%;filter:drop-shadow(0 3px 5px #070e23aa)}
+body.royal[data-page] .sidebar{left:3%;width:94%;bottom:6px;height:65px;background:url('../assets/redesign/hud-plate.webp') center/100% 100% no-repeat;padding:0 2%;filter:drop-shadow(0 3px 5px #070e23aa)}
 body.royal[data-page] .sidebar nav button{height:65px;background:transparent!important;font-size:21px;padding-bottom:8px}
 body.royal[data-page] .sidebar nav button:not(.active)::after{content:'';position:absolute;right:0;bottom:12px;height:25px;width:1px;background:linear-gradient(transparent,#d4b77999,transparent);pointer-events:none}
 body.royal[data-page] .sidebar nav button.active{background:url('../assets/redesign/nav-active.webp') center/100% 100% no-repeat!important;filter:drop-shadow(0 0 4px #55dbd64d)}
@@ -44,7 +44,7 @@ body.royal[data-page=home] header{width:64%}
 body.royal[data-page] .season{flex-basis:125px;height:43px;padding:5px 15px;gap:2px}
 body.royal[data-page] .season strong{font-size:21px}
 body.royal[data-page] .season small{font-size:7px}
-body.royal[data-page] .wallet{height:43px;background:url('../assets/redesign/hud-plate.webp') center/100% 210% no-repeat;padding:0 12px;gap:0}
+body.royal[data-page] .wallet{height:43px;background:url('../assets/redesign/hud-plate.webp') center/100% 100% no-repeat;padding:0 12px;gap:0}
 body.royal[data-page] .wallet>div{position:relative;height:43px;padding:4px 12px 4px 42px;background:none;align-items:flex-end;gap:1px}
 body.royal[data-page] .wallet>div+div{border-left:1px solid #dfc39433}
 body.royal[data-page] .wallet>div::before{content:'';position:absolute;left:9px;top:7px;width:30px;height:30px;background:url('../assets/redesign/nav-icons.webp') 20% 50%/600% 190% no-repeat;pointer-events:none}
@@ -67,7 +67,7 @@ body.royal[data-page] .wallet strong{line-height:1.1}
 body.royal[data-page] header,body.royal[data-page=home] header{width:min(850px,66%);height:53px;gap:5px}
 body.royal[data-page] .season{height:48px;flex-basis:118px}
 body.royal[data-page] .wallet{background:none;padding:0;height:48px;gap:5px}
-body.royal[data-page] .wallet>div{background:url('../assets/redesign/hud-plate.webp') center/100% 200% no-repeat;height:48px;padding:6px 15px 6px 34px;border:0}
+body.royal[data-page] .wallet>div{background:url('../assets/redesign/hud-plate.webp') center/100% 100% no-repeat;height:48px;padding:6px 15px 6px 34px;border:0}
 body.royal[data-page] .wallet>div+div{border:0}
 body.royal[data-page] .wallet>div::before{left:12px;top:12px;width:24px;height:24px}
 body.royal[data-page] .wallet strong{font-size:20px;letter-spacing:0}
@@ -147,7 +147,8 @@ body.royal[data-page=home] .festival-home .home-banner .banner-ribbon{position:a
 body.royal[data-page=home] .festival-home .home-banner strong{position:relative;z-index:2;display:block;margin:8px 0 0;font:500 26px/1.15 var(--serif);letter-spacing:.06em;color:#fffaf0;white-space:nowrap;text-shadow:0 0 10px #f7d98a88,0 2px 3px #0a0f26}
 body.royal[data-page=home] .festival-home .home-banner small{position:relative;z-index:2;display:block;margin:0;font:11px/1.35 var(--serif);color:#f6e6c2;white-space:nowrap}
 body.royal[data-page=home] .festival-home .home-banners .moon-banner{background:linear-gradient(90deg,#26174af2,#2d1c52c4 48%,#2d1c5200 82%),url('../assets/redesign/observatory.webp') 50% 35%/cover}
-body.royal[data-page=home] .festival-home .moon-banner .banner-portrait{position:absolute;z-index:0;left:auto;right:-4px;top:-16px;width:52%;height:auto;max-width:none;pointer-events:none;-webkit-mask-image:linear-gradient(90deg,transparent,#000 28%);mask-image:linear-gradient(90deg,transparent,#000 28%)}
+/* The pickup banner shows Lune's face from the summon artwork (#25); sizes are relative to the banner so every breakpoint keeps the same crop. */
+body.royal[data-page=home] .festival-home .moon-banner .banner-portrait{position:absolute;z-index:0;left:auto;right:-15%;top:-10%;width:auto;height:190%;max-width:none;pointer-events:none;-webkit-mask-image:linear-gradient(90deg,transparent,#000 38%);mask-image:linear-gradient(90deg,transparent,#000 38%)}
 body.royal[data-page=home] .festival-home .home-banners .garden-banner{background:linear-gradient(90deg,#103229f2,#16413ab8 46%,#16413a00 80%),url('../assets/garden.webp') 62% 28%/220%}
 body.royal[data-page=home] .festival-home .garden-banner .banner-ribbon{background:linear-gradient(90deg,#2f7050,#1d4a3f)}
 body.royal[data-page=home] .festival-home .garden-banner .banner-party{position:absolute;z-index:0;top:6px;right:8px;bottom:5px;width:50%;background:url('../assets/party.webp') 100% 100%/auto 100% no-repeat;filter:drop-shadow(0 3px 3px #08201acc);pointer-events:none}
@@ -208,7 +209,7 @@ body.soft[data-page=home] .festival-home :is(.home-medal,.home-banner,.adventure
   body.royal[data-page=home] .festival-home .home-banners .home-banner{height:94px;padding:26px 42% 9px 20px}
   body.royal[data-page=home] .festival-home .home-banner .banner-ribbon{top:9px;left:15px}
   body.royal[data-page=home] .festival-home .home-banner strong{font-size:22px;margin-top:4px}
-  body.royal[data-page=home] .festival-home .moon-banner .banner-portrait{top:-12px;width:48%}
+  body.royal[data-page=home] .festival-home .moon-banner .banner-portrait{right:-18%}
   body.royal[data-page=home] .festival-home .home-economy{bottom:112px;width:350px;height:148px}
   body.royal[data-page=home] .festival-home .home-economy .income-chest{left:40px;bottom:10px;width:104px;height:104px}
   body.royal[data-page=home] .festival-home .home-economy .income-copy{padding:16px 22px 14px 2px}
@@ -266,7 +267,7 @@ body.soft[data-page=home] .festival-home :is(.home-medal,.home-banner,.adventure
   body.royal[data-page=home] .festival-home .home-banners .moon-banner{background:linear-gradient(90deg,#1b1036fa,#22164af2 56%,#2d1c5233 80%,#2d1c5200),url('../assets/redesign/observatory.webp') 50% 35%/cover}
   body.royal[data-page=home] .festival-home .home-banners .garden-banner{background:linear-gradient(90deg,#0a2620fa,#0e3129f2 56%,#16413a33 82%,#16413a00),url('../assets/garden.webp') 62% 28%/220%}
   body.royal[data-page=home] .festival-home .home-banners .jewel-banner{background:radial-gradient(circle at 84% 52%,#73e6ff55,transparent 36%),linear-gradient(90deg,#0b1f3dfa,#10325af2 56%,#1b5c80)}
-  body.royal[data-page=home] .festival-home .moon-banner .banner-portrait{top:-6px;right:-6px;width:50%;-webkit-mask-image:linear-gradient(90deg,transparent,#000 40%);mask-image:linear-gradient(90deg,transparent,#000 40%)}
+  body.royal[data-page=home] .festival-home .moon-banner .banner-portrait{right:-34%;-webkit-mask-image:linear-gradient(90deg,transparent,#000 46%);mask-image:linear-gradient(90deg,transparent,#000 46%)}
   body.royal[data-page=home] .festival-home .garden-banner .banner-party{width:38%;top:4px;right:5px;bottom:3px;-webkit-mask-image:linear-gradient(90deg,transparent,#000 30%);mask-image:linear-gradient(90deg,transparent,#000 30%)}
   body.royal[data-page=home] .festival-home .jewel-banner .banner-pack{width:32%;right:3%}
   body.royal[data-page=home] .festival-home .character-line{left:4%;bottom:304px;max-width:64%;padding:7px 16px 8px;border-radius:20px}
@@ -870,7 +871,7 @@ body.royal[data-page=shop] .exchange-shop{position:relative;display:grid;grid-te
 /* Title plaque */
 body.royal[data-page=shop] .exchange-title{grid-column:2;grid-row:1;position:relative;display:flex;justify-content:center;align-items:center;margin:0 0 12px}
 body.royal[data-page=shop] .exchange-title::before{content:'';position:absolute;left:4%;right:4%;top:50%;height:2px;background:linear-gradient(90deg,transparent,#d9b86f 22%,#fff0c0 50%,#d9b86f 78%,transparent);box-shadow:0 0 8px #f5d68a88;pointer-events:none}
-body.royal[data-page=shop] .exchange-title h1{position:relative;margin:0;min-width:min(520px,100%);height:76px;padding:0 64px;display:flex;align-items:center;justify-content:center;gap:16px;background:url('../assets/redesign/hud-plate.webp') center/100% 205% no-repeat;font:600 38px/1 var(--serif);letter-spacing:.14em;color:#fff1cc;text-shadow:0 2px 0 #6b4b18,0 0 14px #ffd98a66,0 3px 10px #000a;white-space:nowrap}
+body.royal[data-page=shop] .exchange-title h1{position:relative;margin:0;min-width:min(520px,100%);height:76px;padding:0 64px;display:flex;align-items:center;justify-content:center;gap:16px;background:url('../assets/redesign/hud-plate.webp') center/100% 100% no-repeat;font:600 38px/1 var(--serif);letter-spacing:.14em;color:#fff1cc;text-shadow:0 2px 0 #6b4b18,0 0 14px #ffd98a66,0 3px 10px #000a;white-space:nowrap}
 body.royal[data-page=shop] .exchange-title h1::before,body.royal[data-page=shop] .exchange-title h1::after{font:24px Georgia,serif;color:#f3cf7a;text-shadow:0 0 8px #ffd98a99;letter-spacing:0}
 body.royal[data-page=shop] .exchange-title h1::before{content:'✦'}
 body.royal[data-page=shop] .exchange-title h1::after{content:'☾'}
@@ -1029,4 +1030,24 @@ body.royal[data-page=shop] .exchange-shop button.exchange-buy{min-height:80px;pa
   body.royal[data-page=shop] .exchange-small .exchange-art{height:86%}
   body.royal[data-page=shop] .exchange-medium .exchange-art{height:94%}
   body.royal[data-page=shop] .exchange-large .exchange-art{height:100%}
+}
+/* Nine-slice plates (#21). hud-plate.webp is cropped to the plate itself (1086×169): the pointed
+   end caps (105px of the source) keep their proportions and only the straight middle stretches.
+   --cap is the drawn cap width, about 0.62 × the element height (less on small buttons so the
+   label keeps its room). The selected count uses the same plate with a teal interior. */
+body.royal[data-page] :is(.sidebar,.season,.wallet>div,#settings),
+body.royal[data-page=summon] :is(.pull-options button,.summon-footnotes button,.pity-jewel){background-image:none;border-style:solid;border-color:transparent;border-width:0;border-image:url('../assets/redesign/hud-plate.webp') 30 105 fill/17.75% var(--cap,38px)/0 stretch}
+body.royal[data-page=summon] .pull-options button.selected{border-image-source:url('../assets/redesign/hud-plate-active.webp')}
+body.royal[data-page] .sidebar{--cap:40px}
+body.royal[data-page] #settings{--cap:22px}
+body.royal[data-page=summon] .pity-jewel{--cap:30px}
+body.royal[data-page=summon] .pull-options button{--cap:24px}
+body.royal[data-page=summon] .summon-footnotes button{--cap:20px}
+@media(max-width:650px){
+  body.royal[data-page] .wallet>div{--cap:26px}
+  body.royal[data-page] .sidebar{--cap:33px}
+  body.royal[data-page] #settings{--cap:16px}
+  body.royal[data-page=summon] .pity-jewel{--cap:21px}
+  body.royal[data-page=summon] .pull-options button{--cap:19px}
+  body.royal[data-page=summon] .summon-footnotes button{--cap:17px}
 }
