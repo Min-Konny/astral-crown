@@ -126,7 +126,7 @@ function growState(c){
 }
 function cardFace(c,extra=''){
   const g=growState(c),hero=G.isHero(c),slot=state.team.indexOf(c.id);
-  return `<span class="card-frame rarity-${c.rarity.toLowerCase()} element-${ELEMENT_KEY[c.element]??'none'}" style="--rarity:${G.RARITIES[c.rarity].color}">${collectionPortrait(c.id)}<span class="card-rarity">${c.rarity}</span>${slot>=0?`<span class="card-flag team-flag">編成中</span>`:''}${g.label?`<span class="card-flag grow-flag">${g.label}</span>`:''}${extra}<span class="card-name"><i class="element-mark" aria-hidden="true">${c.element}</i><b>${c.name}</b><small>${!g.owned?'未所持':hero?`Lv.${state.levels[c.id]}`:`+${pct(G.bonusFor(state,c))}%`}</small></span></span>`;
+  return `<span class="card-frame tier-${Math.min(g.stage,5)} rarity-${c.rarity.toLowerCase()} element-${ELEMENT_KEY[c.element]??'none'}" style="--rarity:${G.RARITIES[c.rarity].color}">${collectionPortrait(c.id)}<span class="card-rarity">${c.rarity}</span>${slot>=0?`<span class="card-flag team-flag">編成中</span>`:''}${g.label?`<span class="card-flag grow-flag">${g.label}</span>`:''}${extra}<span class="card-name"><i class="element-mark" aria-hidden="true">${c.element}</i><b>${c.name}</b><small>${!g.owned?'未所持':hero?`Lv.${state.levels[c.id]}`:`+${pct(G.bonusFor(state,c))}%`}</small></span></span>`;
 }
 function party(){
   const slots=[0,1,2,3].map(i=>{
