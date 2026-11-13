@@ -114,3 +114,13 @@ test('狭い幅から広げても背景がビューポートに追従する',asy
   }
   expect(game.errors).toEqual([]);
 });
+
+test('上部の星晶石の「+」からショップへ移動できる',async({page},info)=>{
+  const game=new AstralPage(page);await game.moveToPage(data);
+  const add=page.locator('.wallet .gem-add');
+  if(info.project.name==='narrow'){await expect(add).toBeHidden();return;}
+  await expect(add).toBeVisible();await add.click();
+  await expect(page.locator('nav [data-page="shop"]')).toHaveAttribute('aria-current','page');
+  await expect(add).toBeHidden();
+  expect(game.errors).toEqual([]);
+});
