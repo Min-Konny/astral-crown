@@ -22,9 +22,12 @@ function owned(){
 test('召喚の選択・提供割合・不足時を実操作で確認する',async({page},info)=>{
   const game=new AstralPage(page);await game.moveToPage(data,{gems:3000});await game.openPage('summon');
   await stateShot(game,'summon',info,'[data-banner="standard"]');
+  const canvas=page.locator('#game-stage canvas');
+  const pickup=await canvas.screenshot();
   await page.keyboard.press('Enter');
   await expect(page.locator('[data-banner="standard"]')).toHaveAttribute('aria-pressed','true');
   await expect(page.locator('[data-banner="standard"]')).toBeFocused();
+  await expect.poll(async()=>pickup.equals(await canvas.screenshot())).toBe(false);
   await game.screenshot('summon-standard',info.project.name);
   await page.locator('[data-count="10000"]').click();
   await expect(page.locator('[data-count="10000"]')).toHaveAttribute('aria-pressed','true');
@@ -34,6 +37,19 @@ test('召喚の選択・提供割合・不足時を実操作で確認する',asy
   await page.locator('[data-action="rates"]').click();await expect(page.locator('#modal')).toBeVisible();
   await game.screenshot('summon-rates',info.project.name);
   expect((await game.savedState()).gems).toBe(3000);expect(game.errors).toEqual([]);
+  if(info.project.name==='laptop'){
+    await page.keyboard.press('Escape');
+    await page.setViewportSize({width:651,height:720});
+    const confirm=page.locator('[data-action="summon"]');
+    expect(await confirm.evaluate(button=>{
+      const style=getComputedStyle(button);
+      const text=document.createRange();
+      text.selectNodeContents(button.querySelector('span'));
+      return text.getClientRects().length===1&&text.getBoundingClientRect().width<=
+        button.clientWidth-parseFloat(style.paddingLeft)-parseFloat(style.paddingRight)+1;
+    })).toBe(true);
+    await game.screenshot('summon-insufficient','tablet');
+  }
 });
 test('投資上限では操作を無効にし理由を示す',async({page},info)=>{
   const game=new AstralPage(page);await game.moveToPage(data,{cash:0,facility:30,rank:100,bestRank:100});
