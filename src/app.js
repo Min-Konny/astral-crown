@@ -116,6 +116,16 @@ function badge(c){return `<span class="rarity" style="color:${G.RARITIES[c.rarit
 let selectedId=null;
 const ELEMENT_KEY={'水':'water','炎':'fire','森':'forest'};
 const SHOWCASE_ART={luna:'./assets/redesign/lune-summon.png'};
+const PORTRAIT_ATLASES=[
+  {name:'collection-portraits',columns:4,ids:['luna','sol','flora','iris','ash','noel','mira','sage']},
+  {name:'collection-legacy',columns:3,ids:['ranger','smith','guard','scholar','herbalist']},
+];
+function collectionPortrait(id){
+  const atlas=PORTRAIT_ATLASES.find(a=>a.ids.includes(id));
+  const index=atlas.ids.indexOf(id);
+  const column=index%atlas.columns,row=Math.floor(index/atlas.columns);
+  return `<span class="collection-portrait" aria-hidden="true" style="--atlas:url('./assets/redesign/${atlas.name}.webp');--atlas-size:${atlas.columns*100}% 200%;--atlas-position:${column*100/(atlas.columns-1)}% ${row*100}%"></span>`;
+}
 function growState(c){
   const n=state.counts[c.id]??0,owned=n>0,stage=G.promotionStage(state,c.id),ready=owned&&G.promotion(n).stage>stage;
   const level=owned&&G.isHero(c)&&!G.levelInfo(state,c.id).reason,skill=owned&&!G.trainingInfo(state,c.id).reason;
@@ -123,7 +133,7 @@ function growState(c){
 }
 function cardFace(c,extra=''){
   const g=growState(c),hero=G.isHero(c),slot=state.team.indexOf(c.id);
-  return `<span class="card-frame rarity-${c.rarity.toLowerCase()} element-${ELEMENT_KEY[c.element]??'none'}" style="--rarity:${G.RARITIES[c.rarity].color}">${crest(c)}<span class="card-rarity">${c.rarity}</span>${slot>=0?`<span class="card-flag team-flag">編成中</span>`:''}${g.label?`<span class="card-flag grow-flag">${g.label}</span>`:''}${extra}<span class="card-name"><i class="element-mark" aria-hidden="true">${c.element}</i><b>${c.name}</b><small>${!g.owned?'未所持':hero?`Lv.${state.levels[c.id]}`:`+${pct(G.bonusFor(state,c))}%`}</small></span></span>`;
+  return `<span class="card-frame rarity-${c.rarity.toLowerCase()} element-${ELEMENT_KEY[c.element]??'none'}" style="--rarity:${G.RARITIES[c.rarity].color}">${collectionPortrait(c.id)}<span class="card-rarity">${c.rarity}</span>${slot>=0?`<span class="card-flag team-flag">編成中</span>`:''}${g.label?`<span class="card-flag grow-flag">${g.label}</span>`:''}${extra}<span class="card-name"><i class="element-mark" aria-hidden="true">${c.element}</i><b>${c.name}</b><small>${!g.owned?'未所持':hero?`Lv.${state.levels[c.id]}`:`+${pct(G.bonusFor(state,c))}%`}</small></span></span>`;
 }
 function party(){
   const slots=[0,1,2,3].map(i=>{
@@ -139,7 +149,7 @@ function showcase(c){
   const g=growState(c),hero=G.isHero(c),r=G.RARITIES[c.rarity],equipped=state.team.includes(c.id),slot=state.team.indexOf(c.id),s=hero?G.stats(state,c):null,next=G.PROMOTION_THRESHOLDS[g.stage];
   const art=SHOWCASE_ART[c.id];
   return `<aside class="collection-showcase rarity-${c.rarity.toLowerCase()} element-${ELEMENT_KEY[c.element]??'none'} ${g.owned?'':'unowned'} ${art?'has-full-art':''}" aria-label="${c.name}の詳細" tabindex="-1">
-  <div class="showcase-art" aria-hidden="true">${art?`<img src="${art}" alt="" decoding="async">`:crest(c)}</div>
+  <div class="showcase-art" aria-hidden="true">${art?`<img src="${art}" alt="" decoding="async">`:collectionPortrait(c.id)}</div>
   <div class="showcase-info">
    <div class="showcase-name"><span class="card-rarity" style="--rarity:${r.color}">${c.rarity}</span><div><small>${c.title} · ${c.element} / ${c.role}</small><h2>${c.name}</h2></div></div>
    <p class="showcase-level">${!g.owned?'未所持 · 召喚で仲間にしよう':hero?`<b>Lv. ${state.levels[c.id]}</b><span>${G.awakening(state,c)} / ${r.cap}凸</span>`:`<span>全員の攻撃</span><b>+${pct(G.bonusFor(state,c))}%</b>`}</p>

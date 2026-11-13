@@ -748,3 +748,10 @@ body.royal[data-page=collection] #main .astral-collection .card-name b{white-spa
   body.royal[data-page=collection] #main .astral-collection .party .grow-flag{top:24px}
   body.royal[data-page=collection] #main .astral-collection .showcase-train{letter-spacing:0;font-size:14px}
 }
+
+body.royal[data-page=collection] #main .astral-collection .collection-portrait{position:absolute;inset:0;background-image:var(--atlas);background-position:var(--atlas-position);background-size:var(--atlas-size);background-repeat:no-repeat}
+body.royal[data-page=collection] #main .astral-collection .unowned .collection-portrait{filter:grayscale(.85) brightness(.6)}
+body.royal[data-page=collection] #main .astral-collection .showcase-art .collection-portrait{bottom:28%}
+@media(max-width:1100px){
+  body.royal[data-page=collection] #main .astral-collection .showcase-art .collection-portrait{bottom:0}
+}
