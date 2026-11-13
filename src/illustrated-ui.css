@@ -801,3 +801,16 @@ body.royal[data-page=collection] #main .astral-collection button:is(.selected-ca
   body.royal[data-page=collection] #main{position:fixed;inset:84px 0 112px;margin:0 auto;width:100%;height:auto;min-height:0;padding:0 4% 24px;scroll-padding-top:8px}
   body.royal[data-page=collection] #main .astral-collection .collection-title{margin-bottom:10px}
 }
+
+@media(min-width:651px){
+  body.royal[data-page=collection] #main .astral-collection .collection-title{margin-top:0}
+}
+@media(min-width:1101px){
+  body.royal[data-page=collection] #main .astral-collection .party .card-frame{max-height:clamp(128px,18vh,170px)}
+  body.royal[data-page=collection] #main .astral-collection .roster .card-frame{max-height:clamp(92px,13vh,124px)}
+  body.royal[data-page=collection] #main .astral-collection .party-slot.empty button{height:clamp(128px,18vh,170px);min-height:0;aspect-ratio:auto}
+}
+@media(max-width:650px){
+  body.royal[data-page=collection] #main .astral-collection .roster .card-name{grid-template-columns:minmax(0,1fr)}
+  body.royal[data-page=collection] #main .astral-collection .roster .card-name small{font-size:10px;white-space:nowrap}
+}
