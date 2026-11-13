@@ -205,7 +205,9 @@ $('#modal').addEventListener('close',()=>{
   if($('#modal').open)return; // A replacement dialog may already be open.
   if(trainingReturnId&&page==='collection'){
     const scope=trainingReturnFromShowcase?'.collection-showcase':'.roster';
-    const target=$(`${scope} [data-training="${trainingReturnId}"]:not(:disabled)`)||$(`[data-training="${trainingReturnId}"]:not(:disabled)`)||$('[data-filter="all"]')||$('nav [data-page="collection"]');
+    const target=$(`${scope} [data-training="${trainingReturnId}"]:not(:disabled)`)||
+      $(`[data-training="${trainingReturnId}"]:not(:disabled)`)||
+      $(`.roster [data-filter="${filter}"]`)||$('nav [data-page="collection"]');
     target?.focus({preventScroll:true});
   }
   trainingReturnId=null;
@@ -298,8 +300,10 @@ document.addEventListener('click',e=>{
     if(b.dataset.mission!==undefined){mission=Number(b.dataset.mission);page='arena';render();return;}
     if(b.dataset.select){
       const fromParty=!!b.closest('.party');selectedId=b.dataset.select;render();
-      if(matchMedia('(max-width:1100px)').matches){
-        const panel=$('.collection-showcase');
+      const panel=$('.collection-showcase');
+      const main=$('#main');
+      if(matchMedia('(max-width:1100px)').matches||
+        panel.getBoundingClientRect().top<main.getBoundingClientRect().top){
         panel?.scrollIntoView({block:'start',behavior:'instant'});
         panel?.focus({preventScroll:true});
       }else $(`${fromParty?'.party':'.roster'} [data-select="${selectedId}"]`)?.focus({preventScroll:true});

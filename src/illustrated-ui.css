@@ -791,3 +791,7 @@ body.royal[data-page=collection] #main .astral-collection .collection-showcase{s
 @media(max-width:650px){
   body.royal[data-page=collection] #main{position:fixed;inset:58px 0 112px;height:auto;min-height:0;margin:0;padding:0 4% 24px;width:100%;box-sizing:border-box}
 }
+
+@media(max-width:650px){
+  body.royal[data-page=collection] #main .astral-collection .party .card-name .element-mark{bottom:24px;left:auto;right:5px}
+}
