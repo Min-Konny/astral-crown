@@ -30,6 +30,10 @@ function createPhaserStage(parent, onError) {
       canvas?.addEventListener('webglcontextlost',contextLost);
       canvas?.addEventListener('contextlost',contextLost);
       this.load.image('garden','./assets/garden.png');
+      this.load.image('observatory','./assets/redesign/observatory.webp');
+      this.load.image('colosseum','./assets/redesign/colosseum.webp');
+      this.load.image('court','./assets/redesign/luna-court.webp');
+      this.load.image('lune-summon','./assets/redesign/lune-summon.png');
       this.load.image('luna','./assets/luna.png');
       this.load.image('party','./assets/party.png');
       for(const [id,src] of Object.entries(CHARACTER_ART))this.load.image(characterArt(id).key,src);
@@ -56,9 +60,9 @@ function createPhaserStage(parent, onError) {
   }
   function backdrop(mode){
     const s=current,w=s.scale.width,h=s.scale.height;
-    const bg=s.add.image(w/2,h/2,'garden');bg.setScale(Math.max(w/bg.width,h/bg.height));
-    if(mode==='summon')bg.setTint(0x435d9a);
-    s.add.rectangle(w/2,h/2,w,h,mode==='summon'?0x10224b:0x75b5dc,mode==='summon'?.3:.04);
+    const bg=s.add.image(w/2,h/2,mode==='summon'?'observatory':mode==='arena'?'colosseum':'garden');bg.setScale(Math.max(w/bg.width,h/bg.height));
+    // Dedicated night observatory keeps its original painted color palette.
+    s.add.rectangle(w/2,h/2,w,h,mode==='summon'?0x10224b:0x75b5dc,mode==='summon'?.08:.02);
     return {s,w,h};
   }
   function draw(mode,state,reduced){
@@ -66,8 +70,12 @@ function createPhaserStage(parent, onError) {
     queued=[mode,state,reduced];if(failed||!current||finish)return;
     clear();const {s,w,h}=backdrop(mode),mobile=w<650;
     if(mode==='home'||mode==='summon'){
-      const hero=s.add.image(w*(mobile?.54:.57),h*(mobile?.99:.93),'luna').setOrigin(.5,1);
-      const scale=h*(mobile?.8:.82)/hero.height;hero.setScale(scale);
+      const hero=s.add.image(w*(mobile?.60:(mode==='home'?.52:.56)),h*(mobile?.82:.94),mode==='summon'?'lune-summon':'court').setOrigin(.5,1);
+      const scale=h*(mode==='home'?(mobile?.89:1.08):(mobile?.76:.84))/hero.height;hero.setScale(scale);
+      if(mode==='summon'){hero.setScale(mobile?h*.73/hero.height:Math.min(h*.99/hero.height,w*.75/hero.width));hero.setPosition(w*(mobile?.66:.64),h*(mobile?.88:1.02));}
+      // Home: a large, waist-up Lune like the reference composition. On phones she sits
+      // between the medallion column and the banner column so her face stays clear.
+      if(mode==='home'){hero.setScale(h*(mobile?.9:1.3)/hero.height);hero.setPosition(w*(mobile?.31:.5),h*(mobile?.93:1.33));}
       if(!reduced)s.tweens.add({targets:hero,y:hero.y-7,duration:2600,yoyo:true,repeat:-1,ease:'Sine.easeInOut'});
       if(mode==='summon')s.add.rectangle(w/2,h/2,w,h,0x182447,.09);
       if(!reduced)for(let i=0;i<15;i++){

@@ -203,3 +203,5 @@ body.soft .growth-feedback,body.quick .growth-feedback{animation:none}
 
 /* Desktop result backdrop avoids a large luminance jump back to collection. */
 @media(min-width:651px){body dialog:has(.battle-result)::backdrop{background:rgba(16,41,71,.16);backdrop-filter:blur(3px)}}
+
+.combat-trial{padding:10px 12px;margin:12px 0;border:1px solid #91afc4;border-radius:14px;background:#d7e9f3;color:#203d59}.combat-trial p{font-size:14px;line-height:1.6;margin:0 0 8px}.combat-trial button{white-space:normal;line-height:1.6;min-height:44px}

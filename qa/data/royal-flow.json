@@ -1,0 +1,12 @@
+{
+  "cash": 1300000,
+  "gems": 3480000,
+  "facility": 8,
+  "seals": 4,
+  "pack": "large",
+  "packQuantity": 100,
+  "purchaseCost": 1000000,
+  "purchasedGems": 1800000,
+  "summons": 10000,
+  "pages": ["home", "earn", "shop", "summon", "collection", "arena"]
+}
