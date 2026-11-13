@@ -91,6 +91,8 @@ test('仲間の編成と低レアの手動継承強化を保存する',async({pa
   expect((await game.savedState()).team[0]).toBe(next);
   const train=page.locator('.showcase-train');
   await train.click();
+  await page.locator(`[data-promote="${next}"]`).click();
+  await page.locator(`#modal [data-training="${next}"]`).click();
   await page.keyboard.press('Escape');
   await expect(train).toBeFocused();
   await game.screenshot('collection-selected',info.project.name);

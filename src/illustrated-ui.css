@@ -755,3 +755,11 @@ body.royal[data-page=collection] #main .astral-collection .showcase-art .collect
 @media(max-width:1100px){
   body.royal[data-page=collection] #main .astral-collection .showcase-art .collection-portrait{height:100%}
 }
+
+@media(max-width:650px){
+  body.royal[data-page=collection] #main .astral-collection .party .team-flag+.grow-flag{top:23px}
+}
+@media(min-width:1101px) and (max-height:800px){
+  body.royal[data-page=collection] #main .astral-collection .party .card-frame{max-height:162px}
+  body.royal[data-page=collection] #main .astral-collection .roster .card-frame{max-height:152px}
+}

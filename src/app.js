@@ -165,7 +165,7 @@ function collection(){
   ${!chars.length?'<div class="roster-empty"><p>今の条件に合う仲間はいません。絞り込みは育成後も保持されます。</p><button data-filter="all">すべての仲間を表示</button></div>':''}
   <div class="character-grid">${chars.map(c=>{
     const g=growState(c);
-    return `<article class="roster-card ${g.owned?'':'unowned'} ${selectedId===c.id?'selected-card':''}"><button class="roster-art" data-select="${c.id}" aria-pressed="${selectedId===c.id}" aria-label="${c.name}（${c.rarity}）の詳細を表示">${cardFace(c)}</button><button class="roster-train ${g.ready?'ready':''}" data-training="${c.id}" ${g.owned?'':'disabled'}>${!g.owned?'未所持':g.ready?'昇格へ':'育成'}</button></article>`;
+    return `<article class="roster-card ${g.owned?'':'unowned'} ${selectedId===c.id?'selected-card':''}"><button class="roster-art" data-select="${c.id}" aria-pressed="${selectedId===c.id}" aria-label="${c.name}（${c.rarity}）${state.team.includes(c.id)?'・編成中':' '}${g.label?'・'+g.label:' '}の詳細を表示">${cardFace(c)}</button><button class="roster-train ${g.ready?'ready':''}" data-training="${c.id}" ${g.owned?'':'disabled'}>${!g.owned?'未所持':g.ready?'昇格へ':'育成'}</button></article>`;
   }).join('')}</div></section>
   </div>${showcase(G.byId(selectedId))}</div></section>`;
 }
@@ -283,7 +283,8 @@ document.addEventListener('click',e=>{
     if(b.hasAttribute('data-training-back')){const r=trainingTrip();if(!r)return;closeModal();page='collection';render();trainingDialog(r.id);return;}
     if(b.hasAttribute('data-adjust-patrol')){mission=state.presentation?.result?.mission??mission;closeModal();page='collection';render();return;}
     if(b.dataset.training){
-      const fromShowcase=!!b.closest('.collection-showcase');
+      const fromShowcase=!!b.closest('.collection-showcase')||
+        (!!b.closest('#modal')&&trainingReturnId===b.dataset.training&&trainingReturnFromShowcase);
       closeModal();page='collection';render();
       trainingReturnFromShowcase=fromShowcase;
       trainingDialog(b.dataset.training);return;
