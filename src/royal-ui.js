@@ -35,7 +35,7 @@ export function homeView(s){
  <button class="home-banner jewel-banner" data-page="shop"><span class="banner-ribbon">星晶石ショップ</span><strong>願いを星に</strong><small>稼いだお金で、召喚の準備</small><img class="banner-pack" src="./assets/redesign/pack-large.webp" alt=""/></button>
  </div>
  <div class="home-economy"><div class="estate-art" aria-hidden="true"></div><span class="income-chest" aria-hidden="true"></span><div class="income-copy"><h2>放置収入</h2><strong id="income-value">${money(G.income(s))}<small> / 秒</small></strong><small>おこづかいに自動加算</small><button data-page="earn">稼ぐ・強化へ ${icon('arrow')}</button></div></div>
- <div class="character-line"><span>月冠の魔女 リュネ</span><p>おかえりなさい、継承者さま。</p></div>
+ <div class="character-line"><span>月冠の魔女 リュネ</span><p class="home-greeting">おかえりなさい、継承者さま。</p><p class="home-notice" role="status" aria-live="polite" hidden></p></div>
  <div class="home-cta"><button class="launch adventure-launch" data-mission="0"><small>GARDEN ADVENTURE</small><b>冒険へ</b><span>仲間と、星降る庭園へ</span></button><button class="arena-shortcut" data-mission="-1"><span class="arena-crest" aria-hidden="true"></span><b>闘技場</b><small>現在 ${s.rank}位</small></button></div>
  </section>`;
 }

@@ -290,10 +290,6 @@ body.soft[data-page=home] .festival-home :is(.home-medal,.home-banner,.adventure
   body.royal[data-page=home] .festival-home .home-economy strong small{font-size:9px}
   body.royal[data-page=home] .festival-home .home-economy .income-copy>small{grid-area:note;margin:0;font-size:10px;line-height:1.3;color:#eef0e6}
   body.royal[data-page=home] .festival-home .home-economy button{grid-area:action;width:auto;min-height:44px;padding:4px 12px;font-size:12px}
-  /* The idle-income toast moves over the decorative logo band so it never covers the income plaque, CTA or nav.
-     It stays pointer-events:none (royal-ui.css), so nothing underneath is blocked while it is visible. */
-  body.royal[data-page=home] #toast{top:52px;bottom:auto;max-width:calc(100% - 24px);padding:9px 16px;font-size:13px;line-height:1.5;text-align:center;box-shadow:0 0 0 1px #6f4f22,0 8px 18px #050b1dcc;transform:translate(-50%,-8px)}
-  body.royal[data-page=home] #toast.visible{transform:translate(-50%,0)}
 }
 @media(max-width:360px){
   body.royal[data-page=home] .festival-home .home-logo>span{font-size:18px}
@@ -305,7 +301,10 @@ body.soft[data-page=home] .festival-home :is(.home-medal,.home-banner,.adventure
   body.royal[data-page=home] .festival-home .home-economy strong{font-size:15px}
   body.royal[data-page=home] .festival-home .home-economy button{padding:4px 8px;font-size:11px}
   body.royal[data-page=home] .festival-home .home-banners{gap:5px}
-  body.royal[data-page=home] .festival-home .character-line{bottom:292px;max-width:none;width:max-content;padding:6px 14px 7px}
+  body.royal[data-page=home] .festival-home .character-line{bottom:292px;max-width:92%;width:max-content;padding:6px 14px 7px}
   body.royal[data-page=home] .festival-home .character-line p{font-size:12px;white-space:nowrap}
-  body.royal[data-page=home] #toast{font-size:12px;padding:8px 12px}
 }
+/* Home notifications share the character's speech panel instead of covering the HUD or controls. */
+body.royal[data-page=home] .character-line:has(.home-notice:not([hidden])) .home-greeting{display:none}
+body.royal[data-page=home] .festival-home .character-line .home-notice{white-space:normal;overflow-wrap:anywhere;font-size:13px;line-height:1.5}
+body.royal[data-page=home] .character-line .home-notice[hidden]{display:none}

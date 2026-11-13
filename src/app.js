@@ -25,13 +25,19 @@ function save(){
 }
 let toastTimer;
 function toast(text){
-  $('#toast').textContent=text;$('#toast').classList.add('visible');clearTimeout(toastTimer);
+  clearTimeout(toastTimer);
+  $('#toast').classList.remove('visible');
+  const homeNotice=$('.home-notice');
+  const notice=homeNotice||$('#toast');
+  notice.textContent=text;
+  if(homeNotice)homeNotice.hidden=false;
+  notice.classList.add('visible');
   if($('#modal').open){
     let error=$('#dialog-notice');
     if(!error){error=document.createElement('p');error.id='dialog-notice';error.setAttribute('role','status');$('#modal-content').append(error);}
     error.textContent=text;error.scrollIntoView({block:'nearest'});
   }
-  toastTimer=setTimeout(()=>$('#toast').classList.remove('visible'),4200);
+  toastTimer=setTimeout(()=>{notice.classList.remove('visible');if(homeNotice)homeNotice.hidden=true;},4200);
 }
 function sound(kind='tap'){
   if(!state.settings.sound)return;
