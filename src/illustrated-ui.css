@@ -412,6 +412,7 @@ body.soft[data-page=summon] .astral-summon button:is(:hover,:active),body.quick[
 /* Phones: banner pair under the HUD, title + pity row, then the dock stacked above the nav. */
 @media(min-width:1001px) and (max-width:1200px){
   body.royal[data-page=summon] .astral-summon .summon-description{max-width:300px}
+  body.royal[data-page=summon] .astral-summon .summon-description h2{font-size:84px}
   body.royal[data-page=summon] .astral-summon.is-standard .summon-description h2{font-size:48px}
   body.royal[data-page=summon] .astral-summon .summon-signature{margin:0 0 8px;font-size:22px}
   body.royal[data-page=summon] .astral-summon .summon-description p{font-size:16px}
