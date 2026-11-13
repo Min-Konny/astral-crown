@@ -847,3 +847,7 @@ body.royal[data-page=collection] #main .astral-collection .roster .collection-po
 
 body.royal[data-page=collection] #main .astral-collection .card-frame:is(.tier-2,.tier-3,.tier-4,.tier-5)::after{border:2px solid #eed18e;box-shadow:inset 0 0 9px #eac77e,inset 0 -30px 24px -18px #050b2266}
 body.royal[data-page=collection] #main .astral-collection .card-frame:is(.tier-4,.tier-5)::after{border-color:#fff0ae;box-shadow:inset 0 0 18px #ffd980,inset 0 -30px 24px -18px #050b2266}
+
+@media(max-width:360px){
+  body.royal[data-page=collection] #main .astral-collection .roster .card-name .element-mark{display:grid}
+}

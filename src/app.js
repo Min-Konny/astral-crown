@@ -304,7 +304,7 @@ document.addEventListener('click',e=>{
       const panel=$('.collection-showcase');
       const main=$('#main');
       const bounds=panel.getBoundingClientRect(),viewport=main.getBoundingClientRect();
-      if(matchMedia('(max-width:1100px)').matches||bounds.top<viewport.top||bounds.bottom>viewport.bottom){
+      if(e.detail===0||matchMedia('(max-width:1100px)').matches||bounds.top<viewport.top||bounds.bottom>viewport.bottom){
         panel?.scrollIntoView({block:'start',behavior:'instant'});
         panel?.focus({preventScroll:true});
       }else $(`${fromParty?'.party':'.roster'} [data-select="${selectedId}"]`)?.focus({preventScroll:true});
