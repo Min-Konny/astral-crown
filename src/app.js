@@ -165,7 +165,7 @@ function collection(){
   ${!chars.length?'<div class="roster-empty"><p>今の条件に合う仲間はいません。絞り込みは育成後も保持されます。</p><button data-filter="all">すべての仲間を表示</button></div>':''}
   <div class="character-grid">${chars.map(c=>{
     const g=growState(c);
-    return `<article class="roster-card ${g.owned?'':'unowned'} ${selectedId===c.id?'selected-card':''}"><button class="roster-art" data-select="${c.id}" aria-pressed="${selectedId===c.id}" aria-label="${c.name}（${c.rarity}）${state.team.includes(c.id)?'・編成中':' '}${g.label?'・'+g.label:' '}の詳細を表示">${cardFace(c)}</button><button class="roster-train ${g.ready?'ready':''}" data-training="${c.id}" ${g.owned?'':'disabled'}>${!g.owned?'未所持':g.ready?'昇格へ':'育成'}</button></article>`;
+    return `<article class="roster-card ${g.owned?'':'unowned'} ${selectedId===c.id?'selected-card':''}"><button class="roster-art" data-select="${c.id}" aria-pressed="${selectedId===c.id}" aria-label="${c.name}（${c.rarity}）${state.team.includes(c.id)?'・編成中':' '}${g.label?'・'+g.label:' '}の詳細を表示">${cardFace(c)}</button><button aria-label="${c.name}：${!g.owned?'未所持':g.ready?'昇格へ':'育成'}" class="roster-train ${g.ready?'ready':''}" data-training="${c.id}" ${g.owned?'':'disabled'}>${!g.owned?'未所持':g.ready?'昇格へ':'育成'}</button></article>`;
   }).join('')}</div></section>
   </div>${showcase(G.byId(selectedId))}</div></section>`;
 }

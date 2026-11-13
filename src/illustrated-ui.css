@@ -851,3 +851,13 @@ body.royal[data-page=collection] #main .astral-collection .card-frame:is(.tier-4
 @media(max-width:360px){
   body.royal[data-page=collection] #main .astral-collection .roster .card-name .element-mark{display:grid}
 }
+
+@media(min-width:1101px) and (max-height:800px){
+  body.royal[data-page=collection] #main .astral-collection .collection-title{padding-block:4px;margin-bottom:6px}
+  body.royal[data-page=collection] #main .astral-collection .title-crest{width:35px;height:35px;font-size:22px}
+  body.royal[data-page=collection] #main .astral-collection .party .card-frame{max-height:108px}
+  body.royal[data-page=collection] #main .astral-collection .party-slot.empty button{height:108px}
+  body.royal[data-page=collection] #main .astral-collection .roster .card-frame{max-height:80px}
+  body.royal[data-page=collection] #main .astral-collection .collection-main{gap:8px}
+  body.royal[data-page=collection] #main .astral-collection .roster-train{min-height:28px;padding:3px}
+}
