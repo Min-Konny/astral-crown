@@ -291,6 +291,12 @@ body.soft[data-page=home] .festival-home :is(.home-medal,.home-banner,.adventure
   body.royal[data-page=home] .festival-home .home-economy .income-copy>small{grid-area:note;margin:0;font-size:10px;line-height:1.3;color:#eef0e6}
   body.royal[data-page=home] .festival-home .home-economy button{grid-area:action;width:auto;min-height:44px;padding:4px 12px;font-size:12px}
 }
+@media(min-width:361px) and (max-width:650px){
+  body.royal[data-page=summon] .astral-summon.is-standard .summon-description{max-width:48%}
+  body.royal[data-page=summon] .astral-summon.is-standard .summon-description h2{font-size:clamp(24px,6vw,36px)}
+  body.royal[data-page=summon] .astral-summon.is-standard .summon-signature{display:none}
+  body.royal[data-page=summon] .astral-summon.is-standard .summon-description p{display:none}
+}
 @media(max-width:360px){
   body.royal[data-page=home] .festival-home .home-logo>span{font-size:18px}
   body.royal[data-page=home] .festival-home .home-banner strong{font-size:15px}
