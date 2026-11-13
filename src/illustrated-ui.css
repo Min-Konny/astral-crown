@@ -1022,3 +1022,11 @@ body.royal[data-page=shop] .exchange-shop button.exchange-buy{min-height:80px;pa
   body.royal[data-page=shop] .exchange-art{max-width:96%}
   body.royal[data-page=shop] .exchange-shelf{padding-bottom:28px}
 }
+
+@media(min-width:1101px) and (max-height:800px){
+  body.royal[data-page=shop] .exchange-display{height:186px}
+  body.royal[data-page=shop] .exchange-art{max-width:96%}
+  body.royal[data-page=shop] .exchange-small .exchange-art{height:86%}
+  body.royal[data-page=shop] .exchange-medium .exchange-art{height:94%}
+  body.royal[data-page=shop] .exchange-large .exchange-art{height:100%}
+}
