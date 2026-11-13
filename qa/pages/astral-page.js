@@ -44,9 +44,7 @@ export class AstralPage {
   async hasOverflow(){return this.page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1);}
   async screenshot(name,project){
     if(name.startsWith('collection')){
-      await this.page.evaluate(async()=>{
-        await Promise.all([...document.querySelectorAll('.collection-portrait')].map(img=>img.decode()));
-      });
+      await this.page.waitForFunction(()=>[...document.querySelectorAll('.collection-portrait')].every(img=>img.complete&&img.naturalWidth>0));
     }
     await this.page.screenshot({path:path.join(root,'artifacts',`royal-${name}-${project}.png`),fullPage:!name.startsWith('collection')});
   }
