@@ -822,3 +822,6 @@ body.royal[data-page=collection] #main .astral-collection button:is(.selected-ca
 @media(max-width:650px){
   body.royal[data-page=collection] #main .astral-collection .showcase-info{background:#0a1530f2}
 }
+
+body.royal[data-page=collection] #main .astral-collection .party .collection-portrait{object-position:center top}
+body.royal[data-page=collection] #main .astral-collection .showcase-name small{display:inline-block;padding:2px 5px;background:#09142bef;border-radius:3px;color:#f6ecd6}
