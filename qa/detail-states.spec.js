@@ -56,6 +56,8 @@ test('召喚の選択・提供割合・不足時を実操作で確認する',asy
     const confirm=page.locator('[data-action="summon"]');
     for(const [width,height] of [[651,720],[1001,720],[1101,900]]){
       await page.setViewportSize({width,height});
+      await expect.poll(()=>canvas.evaluate(e=>[e.width,e.height])).toEqual([width,height]);
+      await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
       expect(await confirm.evaluate(button=>{
       const style=getComputedStyle(button);
       const text=document.createRange();
@@ -65,6 +67,10 @@ test('召喚の選択・提供割合・不足時を実操作で確認する',asy
       })).toBe(true);
       await game.screenshot('summon-insufficient',String(width));
     }
+    await page.reload();
+    await game.openPage('summon');
+    await expect.poll(()=>canvas.evaluate(e=>[e.width,e.height])).toEqual([1101,900]);
+    await game.screenshot('summon','1101-fresh');
   }
 });
 test('投資上限では操作を無効にし理由を示す',async({page},info)=>{

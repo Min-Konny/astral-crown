@@ -416,6 +416,7 @@ body.soft[data-page=summon] .astral-summon button:is(:hover,:active),body.quick[
   body.royal[data-page=summon] .astral-summon .summon-signature{margin:0 0 8px;font-size:22px}
   body.royal[data-page=summon] .astral-summon .summon-description p{font-size:16px}
   body.royal[data-page=summon] .astral-summon .standard-banner strong{font-size:15px}
+  body.royal[data-page=summon] .astral-summon .summon-dock{column-gap:26px}
 }
 @media(min-width:651px) and (max-width:1200px){
   body.royal[data-page=summon] .wallet>div{padding-inline:8px}
