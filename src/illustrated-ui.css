@@ -1016,3 +1016,9 @@ body.royal[data-page=shop] .exchange-shop button.exchange-buy small{margin-top:2
 }
 
 body.royal[data-page=shop] .exchange-shop button.exchange-buy{min-height:80px;padding-block:19px 13px}
+
+@media(min-width:1101px) and (min-height:801px){
+  body.royal[data-page=shop] .exchange-display{height:252px}
+  body.royal[data-page=shop] .exchange-art{max-width:96%}
+  body.royal[data-page=shop] .exchange-shelf{padding-bottom:28px}
+}

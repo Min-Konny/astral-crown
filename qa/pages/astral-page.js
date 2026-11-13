@@ -46,7 +46,7 @@ export class AstralPage {
     if(name.startsWith('collection')){
       await this.page.waitForFunction(()=>[...document.querySelectorAll('.collection-portrait')].every(img=>img.complete&&img.naturalWidth>0));
     }
-    await this.page.screenshot({path:path.join(root,'artifacts',`royal-${name}-${project}.png`),fullPage:!name.startsWith('collection')});
+    if(name.startsWith('shop'))await this.page.waitForFunction(()=>[...document.querySelectorAll('.exchange-shop img')].every(i=>i.complete&&i.naturalWidth>0));
+    await this.page.screenshot({path:path.join(root,'artifacts',`royal-${name}-${project}.png`),fullPage:!name.startsWith('collection')&&!name.startsWith('shop')});
   }
 }
-
