@@ -465,8 +465,8 @@ body.soft[data-page=summon] .astral-summon button:is(:hover,:active),body.quick[
 }
 @media(max-width:360px){
   body.royal[data-page=summon] #main,body.royal[data-page=summon] .astral-summon{min-height:700px}
-  body.royal[data-page=summon] #main:has(.astral-summon.is-standard),
-  body.royal[data-page=summon] .astral-summon.is-standard{min-height:820px}
+  body.royal[data-page=summon] .astral-summon.is-standard :is(.summon-signature,.summon-description p){display:none}
+  body.royal[data-page=summon] .astral-summon.is-standard .summon-description h2{font-size:34px}
   body.royal[data-page=summon] .astral-summon .summon-banners{top:60px}
   body.royal[data-page=summon] .astral-summon :is(.summon-banner,.summon-shop-banner){height:70px;padding:0 10px 7px}
   body.royal[data-page=summon] .astral-summon .summon-banner strong{font-size:14px}
