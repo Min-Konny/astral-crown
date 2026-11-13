@@ -135,13 +135,19 @@ function titleSummary(){
 function shop(){return shopView(state,packQuantity,titleSummary());}
 function earn(){return earnView(state,restored);}
 
+function showStage(){
+  const sceneState=page==='summon'?{...state,summonBanner:banner}:
+    mission>=0&&page==='arena'?{...state,previewEnemy:G.missionEnemy(mission).units}:state;
+  stage.show(page,sceneState,shortMotion());
+}
+
 function render(){
   wallet();preferences();
   const scenic=['home','summon','arena'].includes(page);
   document.body.dataset.page=page;
   $('#game-stage').hidden=!scenic;
   $('#main').innerHTML=scenic?gameHUD():({collection,shop,earn}[page])();
-  if(scenic)stage.show(page,mission>=0&&page==='arena'?{...state,previewEnemy:G.missionEnemy(mission).units}:state,shortMotion());
+  if(scenic)showStage();
   document.querySelectorAll('nav [data-page]').forEach(b=>{b.classList.toggle('active',b.dataset.page===page);if(b.dataset.page===page)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');});
   refreshEconomy(state);
 }
@@ -237,8 +243,8 @@ document.addEventListener('click',e=>{
     if(b.dataset.trainSkill){state=trainTransaction(storage,state,s=>G.trainSkill(s,b.dataset.trainSkill));render();trainingDialog(b.dataset.trainSkill);return;}
     if(b.dataset.focus){state=trainTransaction(storage,state,s=>G.chooseFocus(s,b.dataset.focusId,b.dataset.focus));render();trainingDialog(b.dataset.focusId);return;}
     if(b.dataset.action==='skip-promotion'){skipPromotion();return;}
-    if(b.dataset.banner){banner=b.dataset.banner;render();return;}
-    if(b.dataset.count){count=Number(b.dataset.count);render();return;}
+    if(b.dataset.banner){banner=b.dataset.banner;render();$(`[data-banner="${banner}"]`)?.focus({preventScroll:true});return;}
+    if(b.dataset.count){count=Number(b.dataset.count);render();$(`[data-count="${count}"]`)?.focus({preventScroll:true});return;}
     if(b.dataset.mission!==undefined){mission=Number(b.dataset.mission);page='arena';render();return;}
     if(b.dataset.filter){filter=b.dataset.filter;render();return;}
     if(b.dataset.quantity){packQuantity=Number(b.dataset.quantity);render();return;}
@@ -270,7 +276,7 @@ document.addEventListener('click',e=>{
   });
 });
 document.addEventListener('change',e=>{
-  if(e.target.dataset.setting){state.settings[e.target.dataset.setting]=e.target.checked;preferences();stage.show(page,state,shortMotion());save();if(e.target.dataset.setting==='sound')sound();}
+  if(e.target.dataset.setting){state.settings[e.target.dataset.setting]=e.target.checked;preferences();showStage();save();if(e.target.dataset.setting==='sound')sound();}
 });
 let pendingImport;
 $('#import-file').addEventListener('change',async e=>{

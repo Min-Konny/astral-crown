@@ -22,11 +22,14 @@ function owned(){
 test('召喚の選択・提供割合・不足時を実操作で確認する',async({page},info)=>{
   const game=new AstralPage(page);await game.moveToPage(data,{gems:3000});await game.openPage('summon');
   await stateShot(game,'summon',info,'[data-banner="standard"]');
-  await page.locator('[data-banner="standard"]').click();
+  await page.keyboard.press('Enter');
   await expect(page.locator('[data-banner="standard"]')).toHaveAttribute('aria-pressed','true');
+  await expect(page.locator('[data-banner="standard"]')).toBeFocused();
   await game.screenshot('summon-standard',info.project.name);
   await page.locator('[data-count="10000"]').click();
   await expect(page.locator('[data-count="10000"]')).toHaveAttribute('aria-pressed','true');
+  await expect(page.locator('[data-action="summon"]')).toBeDisabled();
+  await expect(page.locator('#summon-shortage')).toContainText('2,997,000');
   await game.screenshot('summon-insufficient',info.project.name);
   await page.locator('[data-action="rates"]').click();await expect(page.locator('#modal')).toBeVisible();
   await game.screenshot('summon-rates',info.project.name);

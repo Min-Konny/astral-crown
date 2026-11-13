@@ -56,19 +56,21 @@ export function refreshEconomy(s){
 }
 
 export function summonView(s,banner,count){
- const pickup=banner==='pickup';
- return `<section class="summon-ui celestial-summon">
+ const pickup=banner==='pickup',remaining=100-s.pity,cost=count*300,missing=Math.max(0,cost-Math.floor(s.gems));
+ return `<section class="summon-ui celestial-summon astral-summon${pickup?'':' is-standard'}">
  <div class="summon-banners" aria-label="召喚の種類">
- <button data-banner="pickup" aria-pressed="${pickup}" class="summon-banner ${pickup?'selected':''}"><img src="./assets/redesign/lune-summon.png" alt=""/><span>ピックアップ</span><strong>リュネ召喚</strong></button>
- <button data-banner="standard" aria-pressed="${!pickup}" class="summon-banner standard-banner ${!pickup?'selected':''}"><span>常設召喚</span><strong>星冠の仲間たち</strong></button>
+ <button data-banner="pickup" aria-pressed="${pickup}" class="summon-banner pickup-banner ${pickup?'selected':''}"><img class="banner-art" src="./assets/redesign/lune-summon.png" alt=""/><span>ピックアップ</span><strong>リュネ召喚</strong></button>
+ <button data-banner="standard" aria-pressed="${!pickup}" class="summon-banner standard-banner ${!pickup?'selected':''}"><img class="banner-art" src="./assets/party.png" alt=""/><span>常設召喚</span><strong>星冠の仲間たち</strong></button>
  <button class="summon-shop-banner" data-page="shop"><img src="./assets/redesign/pack-large.webp" alt=""/><span>星晶石ショップ</span><small>稼いだお金で、次の願いを</small></button>
  </div>
- <div class="chapter"><span>CELESTIAL SUMMON</span><h1>星の召喚</h1></div>
- <div class="pity-jewel">SSR確定まで <strong>${100-s.pity}</strong> 回</div>
+ <div class="chapter"><div class="chapter-top"><span>CELESTIAL SUMMON</span><div class="pity-jewel">SSR確定まで <strong>${remaining}</strong> 回<i class="pity-gauge" aria-hidden="true"><b style="width:${s.pity}%"></b></i></div></div><h1>星の召喚</h1></div>
  <div class="summon-description"><span class="pickup-label">✧ ${pickup?'月冠の魔女':'星々に集う継承者'} ✧</span><h2>${pickup?'リュネ':'星冠の仲間'}</h2><div class="summon-signature">${pickup?'Lune':'Astral companions'}</div><div class="hero-rarity"><b>SSR</b><span>${pickup?'◈ 水属性・攻撃型':'✦ すべての属性'}</span></div><p>${pickup?'月が導く、運命の出会い。':'星を越えて、まだ見ぬ仲間と。'}</p><small class="banner-rates">SSR 2%${pickup?' · SSR時リュネ50%':' · SSRキャラ均等'}</small></div>
- <div class="summon-dock"><div class="pull-options" aria-label="召喚回数">${[10,100,1000,10000].map(n=>`<button data-count="${n}" aria-pressed="${count===n}" class="${count===n?'selected':''}">${fmt(n)}<small>連</small></button>`).join('')}</div>
- <button class="primary summon-confirm" data-action="summon"><span>${fmt(count)}回召喚</span><small>✧ 星晶石 ${fmt(count*300)}</small></button>
- <div class="summon-footnotes"><button data-action="rates">ⓘ 提供割合・天井</button><button data-page="shop">星晶石を購入 ${icon('arrow')}</button></div></div>
+ <div class="summon-dock">
+ <span class="pull-label" id="pull-label">召喚回数を選ぶ</span>
+ <div class="pull-options" role="group" aria-labelledby="pull-label">${[10,100,1000,10000].map(n=>`<button data-count="${n}" aria-pressed="${count===n}" class="${count===n?'selected':''}"><b>${fmt(n)}<small>連</small></b><em>✧ ${fmt(n*300)}</em></button>`).join('')}</div>
+ <button class="primary summon-confirm" data-action="summon" ${missing?'disabled aria-describedby="summon-shortage"':''}><span>${fmt(count)}回召喚</span><small>✧ 星晶石 ${fmt(cost)}</small></button>
+ ${missing?`<p class="summon-shortage" id="summon-shortage">星晶石があと ${fmt(missing)} 個必要です</p>`:''}
+ <div class="summon-footnotes"><button data-action="rates">ⓘ 提供割合・天井</button><button data-page="shop" class="${missing?'needed':''}">星晶石を購入 ${icon('arrow')}</button></div></div>
  </section>`;
 }
 
