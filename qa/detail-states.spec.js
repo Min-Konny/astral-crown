@@ -83,6 +83,18 @@ test('仲間の編成と低レアの手動継承強化を保存する',async({pa
   const game=new AstralPage(page);await game.moveToPage(data,owned());await game.openPage('collection');
   await stateShot(game,'collection',info,'[data-filter="legacy"]');
   const team=(await game.savedState()).team;
+  const next=team[1];
+  await page.locator(`.roster [data-select="${next}"]`).click();
+  await expect(page.locator('.collection-showcase h2')).toHaveText(G.byId(next).name);
+  await expect(page.locator(`.roster [data-select="${next}"]`)).toBeFocused();
+  await page.locator(`.collection-showcase [data-forward="${next}"]`).click();
+  expect((await game.savedState()).team[0]).toBe(next);
+  const train=page.locator('.showcase-train');
+  await train.click();
+  await page.keyboard.press('Escape');
+  await expect(train).toBeFocused();
+  await game.screenshot('collection-selected',info.project.name);
+  await page.locator(`.roster [data-select="${team[0]}"]`).click();
   await page.locator(`[data-team="${team[0]}"]`).click();
   expect((await game.savedState()).team).not.toContain(team[0]);
   await page.locator(`[data-team="${team[0]}"]`).click();expect((await game.savedState()).team).toContain(team[0]);
