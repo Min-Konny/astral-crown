@@ -422,7 +422,7 @@ body.soft[data-page=summon] .astral-summon button:is(:hover,:active),body.quick[
   body.royal[data-page=summon] .wallet>div::before{display:none}
 }
 @media(max-width:1000px){
-  body.royal[data-page=summon] #main,body.royal[data-page=summon] .astral-summon{min-height:640px}
+  body.royal[data-page=summon] #main,body.royal[data-page=summon] .astral-summon{min-height:810px}
   body.royal[data-page=summon] .astral-summon::before{background:linear-gradient(90deg,#0a1234b3,#0a123440 60%,transparent 80%),linear-gradient(0deg,#0a1434f0,#0a1434a6 32%,transparent 50%)}
   body.royal[data-page=summon] .astral-summon .summon-banners{top:64px;left:3%;right:3%;width:auto;grid-template-columns:1fr 1fr;gap:8px}
   body.royal[data-page=summon] .astral-summon :is(.summon-banner,.summon-shop-banner){height:80px;padding:0 13px 9px}
@@ -462,6 +462,7 @@ body.soft[data-page=summon] .astral-summon button:is(:hover,:active),body.quick[
   body.royal[data-page=summon] .astral-summon .summon-footnotes button{min-height:36px;font-size:11px;padding:4px 12px}
 }
 @media(max-width:360px){
+  body.royal[data-page=summon] #main,body.royal[data-page=summon] .astral-summon{min-height:700px}
   body.royal[data-page=summon] .astral-summon .summon-banners{top:60px}
   body.royal[data-page=summon] .astral-summon :is(.summon-banner,.summon-shop-banner){height:70px;padding:0 10px 7px}
   body.royal[data-page=summon] .astral-summon .summon-banner strong{font-size:14px}
@@ -489,6 +490,7 @@ body.soft[data-page=summon] .astral-summon button:is(:hover,:active),body.quick[
 
 
 @media(min-width:651px) and (max-width:1000px){
+  body.royal[data-page=summon] #main,body.royal[data-page=summon] .astral-summon{min-height:720px}
   body.royal[data-page=summon] .wallet strong{font-size:clamp(13px,2.1vw,17px)}
   body.royal[data-page=summon] .astral-summon .summon-banners{top:74px}
   body.royal[data-page=summon] .astral-summon .pickup-banner .banner-art{width:110%;left:-25%;top:-37%}
@@ -500,8 +502,4 @@ body.soft[data-page=summon] .astral-summon button:is(:hover,:active),body.quick[
   body.royal[data-page=summon] .astral-summon .summon-signature{margin:0 0 2px;font-size:14px}
   body.royal[data-page=summon] .astral-summon .summon-description p{font-size:12px;margin:2px 0 0}
   body.royal[data-page=summon] .astral-summon .summon-dock{width:min(380px,92%);left:auto;bottom:120px}
-}
-@media(max-width:650px) and (max-height:700px){
-  body.royal[data-page=summon] #main,
-  body.royal[data-page=summon] .astral-summon{min-height:800px}
 }

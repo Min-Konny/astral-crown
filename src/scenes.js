@@ -70,8 +70,9 @@ function createPhaserStage(parent, onError) {
     queued=[mode,state,reduced];if(failed||!current||finish)return;
     clear();const {s,w,h}=backdrop(mode),mobile=w<650;
     if(mode==='summon'&&state.summonBanner==='standard'){
-      const party=s.add.image(w*(mobile?.52:.70),h*(mobile?.50:.54),'party','__BASE');
-      party.setScale(Math.min(w*(mobile?1.15:.63)/party.width,h*.48/party.height));
+      const compact=w<=1000;
+      const party=s.add.image(w*(mobile?.50:compact?.68:.67),h*(mobile?.46:compact?.39:.48),'party','__BASE');
+      party.setScale(Math.min(w*(mobile?.92:compact?.59:.60)/party.width,h*.48/party.height));
     }else if(mode==='home'||mode==='summon'){
       const hero=s.add.image(w*(mobile?.60:(mode==='home'?.52:.56)),h*(mobile?.82:.94),mode==='summon'?'lune-summon':'court').setOrigin(.5,1);
       const scale=h*(mode==='home'?(mobile?.89:1.08):(mobile?.76:.84))/hero.height;hero.setScale(scale);

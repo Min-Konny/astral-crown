@@ -42,10 +42,12 @@ test('召喚の選択・提供割合・不足時を実操作で確認する',asy
   expect((await game.savedState()).gems).toBe(3000);expect(game.errors).toEqual([]);
   if(info.project.name==='mobile'){
     await page.keyboard.press('Escape');
-    await page.setViewportSize({width:390,height:640});
-    const description=await page.locator('.summon-description').boundingBox();
-    const dock=await page.locator('.summon-dock').boundingBox();
-    expect(dock.y).toBeGreaterThan(description.y+description.height);
+    for(const height of [640,701,720]){
+      await page.setViewportSize({width:390,height});
+      const description=await page.locator('.summon-description').boundingBox();
+      const dock=await page.locator('.summon-dock').boundingBox();
+      expect(dock.y).toBeGreaterThan(description.y+description.height);
+    }
     await page.locator('[data-action="rates"]').click();
     await expect(page.locator('#modal')).toBeVisible();
   }
