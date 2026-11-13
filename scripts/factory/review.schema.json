@@ -4,9 +4,9 @@
   "required": ["verdict", "summary", "referenceViewed", "screenshotsViewed", "findings"],
   "properties": {
     "verdict": {"type": "string", "enum": ["pass", "revise", "blocked"]},
-    "summary": {"type": "string"},
+    "summary": {"type": "string", "description": "日本語の総評。確認済み事項・良い点・検証の出所はここにまとめる。"},
     "referenceViewed": {"type": "boolean"},
     "screenshotsViewed": {"type": "boolean"},
-    "findings": {"type": "array", "items": {"type": "string"}}
+    "findings": {"type": "array", "description": "未解決の不具合・受入条件未達・停止理由だけを列挙する。良い点や確認済み事項は含めない。passでは必ず空配列。", "items": {"type": "string"}}
   }
 }

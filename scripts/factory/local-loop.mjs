@@ -44,7 +44,7 @@ async function run(command,argv,{cwd=root,input='',log,timeout=20*60*1000,accept
 process.on('SIGINT',()=>{active?.kill();process.exit(130);});
 async function git(argv,cwd=work){return (await run('git',argv,{cwd})).stdout.trim();}
 async function statusHash(){
-  const hash=createHash('sha256').update(await git(['diff','HEAD','--binary'])).update(await git(['rev-parse','HEAD']));
+  const hash=createHash('sha256').update(await git(['diff','HEAD','--binary','--no-color'])).update(await git(['rev-parse','HEAD']));
   const changes=(await git(['ls-files','--others','--exclude-standard'])).split('\n').filter(Boolean);
   for(const file of changes){hash.update(file);hash.update(await fs.readFile(path.join(work,file)));}
   return hash.digest('hex');
@@ -92,7 +92,7 @@ try{
       if(previous.issue!==issue||previous.startingHead!==startingHead)throw Error('Resume source issue/base does not match.');
       const previousWork=await fs.realpath(path.join(previousDir,'work'));
       if(!previousWork.startsWith(previousDir+path.sep))throw Error('Invalid resume work path.');
-      const patch=(await run('git',['diff','--binary','HEAD'],{cwd:previousWork})).stdout;
+      const patch=(await run('git',['diff','--binary','--no-color','HEAD'],{cwd:previousWork})).stdout;
       if(patch){const patchFile=path.join(runDir,'resume.patch');await fs.writeFile(patchFile,patch);await git(['apply',patchFile]);}
       for(const file of (await git(['ls-files','--others','--exclude-standard'],previousWork)).split('\n').filter(Boolean)){
         if(!allowedChange(file))throw Error('Resume contains an out-of-scope file.');
@@ -131,7 +131,7 @@ try{
       const reviewPrompt=`ASTRAL CROWN の独立レビュー担当。コードは変更禁止。Issue: ${task.title}\n${task.body}\n重点: ${screen.focus}\n添付1枚目は参考画像、残りはこのラウンドの実画面PC/スマホです。必ず目視比較する。全118件以上の単体・ビルド・4サイズのブラウザ回帰は親が成功を確認済み。テスト成功だけを根拠に見た目を合格にしない。git diff を読んで操作と保存互換性も確認。図や文字の重なり、引き伸ばし、クリック妨害、可読性、構図と絵の密度を具体的に判定。大きな不足があればrevise、画像を確認できない/素材生成や仕様判断が必要ならblocked。passは受入条件を実際に確認できた場合のみ。コード修正、コミット、外部通信、他エージェントは禁止。結果は指定JSON形式の日本語。`;
       const beforeImages=captures.map(f=>path.join(before,path.basename(f)));
       const imageArgs=[reference,...captures,...beforeImages].flatMap(f=>['--image',f]);
-      const diff=await git(['diff','HEAD','--no-ext-diff']);
+      const diff=await git(['diff','HEAD','--no-ext-diff','--no-color']);
       const changed=(await git(['diff','--name-only','HEAD'])).split('\n').filter(f=>/\.(js|css|html)$/.test(f));
       const source=await Promise.all(changed.map(async f=>`\n--- ${f} (current) ---\n${await fs.readFile(path.join(work,f),'utf8')}`));
       const reviewInput=reviewPrompt+`\n重要: ツール・シェルは使わず、以下の親プロセスが収集した差分・コード・検証結果と添付画像だけで判定してください。git diffを自分で実行する必要はありません。未確認の操作を確認したと主張しないこと。\n添付順: 参考画像1枚、変更後${captures.length}枚、同条件の変更前${beforeImages.length}枚。各グループはdesktop/laptop/mobile/narrow順。\n基点コミット: ${startingHead}\n差分ハッシュ: ${snapshot}\n検証: node --test、build、Playwright全20ケースがこの差分で終了コード0。親がQA・テスト・保存経済モデルの無変更を検証。\n実装担当報告:\n${claudeResult.result||''}\n差分:\n${diff}\n現在の変更ファイル全文:\n${source.join('\n')}`;
