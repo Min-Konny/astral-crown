@@ -1014,3 +1014,5 @@ body.royal[data-page=shop] .exchange-shop button.exchange-buy small{margin-top:2
 @media(max-width:650px){
   body.royal[data-page=shop] #main:has(.exchange-shop){position:fixed;inset:58px 0 104px;margin:0;width:100%;height:auto;min-height:0;overflow:auto;padding:0 12px 20px}
 }
+
+body.royal[data-page=shop] .exchange-shop button.exchange-buy{min-height:80px;padding-block:19px 13px}

@@ -49,7 +49,7 @@ export function shopView(s,quantity,titles){
  <div class="exchange-title"><h1 id="exchange-title">星晶石ショップ</h1></div>
  <aside class="exchange-host" aria-label="ショップ店主">
  <img class="exchange-host-art" src="./assets/redesign/luna-court.webp" alt="月冠の魔女 リュネ" decoding="async"/>
- <p class="exchange-bubble"><b>ゲーム内のおこづかいで交換</b><small>実際の請求・決済情報の入力はありません</small></p>
+ <p class="exchange-bubble"><b>ゲーム内残高で交換</b><small>実際の請求はありません</small></p>
  </aside>
  <div class="exchange-counter">
  <div class="exchange-quantity" role="group" aria-label="まとめて購入"><span class="exchange-quantity-label">まとめて購入</span><div class="exchange-quantity-bar">${[1,10,100,1000].map(n=>`<button data-quantity="${n}" aria-pressed="${quantity===n}" class="${quantity===n?'selected':''}">×${fmt(n)}</button>`).join('')}</div></div>
