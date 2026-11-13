@@ -144,7 +144,7 @@ function showcase(c){
   return `<aside class="collection-showcase rarity-${c.rarity.toLowerCase()} element-${ELEMENT_KEY[c.element]??'none'} ${g.owned?'':'unowned'} ${art?'has-full-art':''}" aria-label="${c.name}の詳細" tabindex="-1">
   <div class="showcase-art" aria-hidden="true">${art?`<img src="${art}" alt="" decoding="async">`:collectionPortrait(c.id)}</div>
   <div class="showcase-info">
-   <div class="showcase-name"><span class="card-rarity" style="--rarity:${r.color}">${c.rarity}</span><div><small>${c.title} · ${c.element} / ${c.role}</small><h2>${c.name}</h2></div></div>
+   <div class="showcase-name"><span class="card-rarity" style="--rarity:${r.color}">${c.rarity}</span><div><small>${c.title} · <span style="white-space:nowrap">${c.element} / ${c.role}</span></small><h2>${c.name}</h2></div></div>
    <p class="showcase-level">${!g.owned?'未所持 · 召喚で仲間にしよう':hero?`<b>Lv. ${state.levels[c.id]}</b><span>${G.awakening(state,c)} / ${r.cap}凸</span>`:`<span>全員の攻撃</span><b>+${pct(G.bonusFor(state,c))}%</b>`}</p>
    <dl class="showcase-stats">${hero?`<div><dt>HP</dt><dd>${fmt(s.hp)}</dd></div><div><dt>攻撃</dt><dd>${fmt(s.atk)}</dd></div>`:`<div><dt>上限</dt><dd>${fmt(r.cap)}枚</dd></div>`}<div><dt>所持</dt><dd>${fmt(g.n)}枚 · 第${g.stage}段階</dd></div></dl>
    <p class="showcase-note">${hero?(equipped?`編成中・${slot<2?'前衛':'後衛'} ${slot+1}番目`:g.owned?'未編成・編成すると戦闘に参加':'編成するには入手が必要'):'編成不要・手動昇格で全員を強化'}${next?` · 次の昇格まで ${fmt(Math.max(0,next-g.n))}枚`:' · 最終段階'}</p>
@@ -268,7 +268,7 @@ document.addEventListener('click',e=>{
   run(()=>{
     if(b.dataset.skillMode){state=changeBattleMode(storage,state,b.dataset.skillMode);render();return;}
     if(b.dataset.continueRank){state=continueRanking(storage,state,b.dataset.continueRank);resumeBattle();return;}
-    if(b.dataset.page){if(!['home','earn','shop','summon','collection','arena'].includes(b.dataset.page))return;closeModal();page=b.dataset.page;render();window.scrollTo({top:0});return;}
+    if(b.dataset.page){if(!['home','earn','shop','summon','collection','arena'].includes(b.dataset.page))return;closeModal();page=b.dataset.page;render();$('#main').scrollTop=0;window.scrollTo({top:0});return;}
     if(b.hasAttribute('data-return-patrol')){closeModal();page='arena';render();window.scrollTo({top:0});return;}
     if(b.dataset.retryPatrol!==undefined||b.dataset.nextPatrol!==undefined){const next=b.dataset.nextPatrol!==undefined;const target=patrolDestination(state,Number(next?b.dataset.nextPatrol:b.dataset.retryPatrol),next?'next':'retry',Number(b.dataset.patrolRun));if(target===null)return;mission=target;page='arena';playBattle();return;}
     if(b.dataset.tryUpgrade){
