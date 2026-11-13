@@ -208,6 +208,7 @@ $('#modal').addEventListener('close',()=>{
     const target=$(`${scope} [data-training="${trainingReturnId}"]:not(:disabled)`)||
       $(`[data-training="${trainingReturnId}"]:not(:disabled)`)||
       $(`.roster [data-filter="${filter}"]`)||$('nav [data-page="collection"]');
+    target?.scrollIntoView({block:'nearest',behavior:'instant'});
     target?.focus({preventScroll:true});
   }
   trainingReturnId=null;
@@ -302,8 +303,8 @@ document.addEventListener('click',e=>{
       const fromParty=!!b.closest('.party');selectedId=b.dataset.select;render();
       const panel=$('.collection-showcase');
       const main=$('#main');
-      if(matchMedia('(max-width:1100px)').matches||
-        panel.getBoundingClientRect().top<main.getBoundingClientRect().top){
+      const bounds=panel.getBoundingClientRect(),viewport=main.getBoundingClientRect();
+      if(matchMedia('(max-width:1100px)').matches||bounds.top<viewport.top||bounds.bottom>viewport.bottom){
         panel?.scrollIntoView({block:'start',behavior:'instant'});
         panel?.focus({preventScroll:true});
       }else $(`${fromParty?'.party':'.roster'} [data-select="${selectedId}"]`)?.focus({preventScroll:true});

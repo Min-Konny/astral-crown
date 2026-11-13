@@ -814,3 +814,11 @@ body.royal[data-page=collection] #main .astral-collection button:is(.selected-ca
   body.royal[data-page=collection] #main .astral-collection .roster .card-name{grid-template-columns:minmax(0,1fr)}
   body.royal[data-page=collection] #main .astral-collection .roster .card-name small{font-size:10px;white-space:nowrap}
 }
+
+@media(min-width:1101px) and (max-height:800px){
+  body.royal[data-page=collection] #main .astral-collection .collection-showcase{min-height:calc(100dvh - 295px)}
+  body.royal[data-page=collection] #main .astral-collection .showcase-info{padding-top:28px}
+}
+@media(max-width:650px){
+  body.royal[data-page=collection] #main .astral-collection .showcase-info{background:#0a1530f2}
+}
