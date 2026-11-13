@@ -360,9 +360,9 @@ body.royal[data-page=summon] .astral-summon .pull-options button em{font:11px Ge
 body.royal[data-page=summon] .astral-summon .summon-dock .pull-options button.selected{filter:drop-shadow(0 0 6px #ffe39acc)}
 body.royal[data-page=summon] .astral-summon .summon-dock .pull-options button.selected em{color:#fff4cf}
 body.royal[data-page=summon] .astral-summon .summon-dock .pull-options button:hover:not(:disabled):not(.selected),body.royal[data-page=summon] .astral-summon .summon-dock .summon-footnotes button:hover:not(:disabled){filter:brightness(1.25);color:#fff8e6}
-body.royal[data-page=summon] .astral-summon .summon-dock>.summon-confirm{grid-area:confirm;width:100%;min-height:104px;padding:22px clamp(20px,3vw,44px);container-type:inline-size}
-body.royal[data-page=summon] .astral-summon .summon-dock>.summon-confirm>span{font-weight:700;font-size:clamp(18px,14cqw,32px)}
-body.royal[data-page=summon] .astral-summon .summon-dock>.summon-confirm>small{margin-top:3px;font-size:clamp(11px,8cqw,16px)}
+body.royal[data-page=summon] .astral-summon .summon-dock>.summon-confirm{grid-area:confirm;width:100%;min-height:112px;padding:29px clamp(20px,3vw,44px) 17px;gap:2px;container-type:inline-size}
+body.royal[data-page=summon] .astral-summon .summon-dock>.summon-confirm>span{font-weight:700;font-size:clamp(18px,14cqw,30px);line-height:1.14}
+body.royal[data-page=summon] .astral-summon .summon-dock>.summon-confirm>small{margin:0;font-size:clamp(11px,8cqw,15px);line-height:1.1}
 body.royal[data-page=summon] .astral-summon .summon-dock>.summon-confirm:disabled{background:url('../assets/redesign/summon-gold.png') center/100% 100% no-repeat;filter:grayscale(.75) brightness(.72) drop-shadow(0 5px 7px #080b25aa);cursor:not-allowed}
 body.royal[data-page=summon] .astral-summon .summon-dock>.summon-confirm:disabled>span{color:#2a2228}
 body.royal[data-page=summon] .astral-summon .summon-shortage{grid-area:short;margin:2px 0 0;text-align:right;font:600 13px var(--serif);color:#ffdca3;text-shadow:0 1px 3px #060a20}
@@ -394,7 +394,7 @@ body.soft[data-page=summon] .astral-summon button:is(:hover,:active),body.quick[
   body.royal[data-page=summon] .astral-summon .summon-description p{font-size:20px;margin:8px 0 4px}
   body.royal[data-page=summon] .astral-summon .summon-dock{bottom:132px;width:min(500px,42vw);grid-template-columns:minmax(0,190px) minmax(0,1fr)}
   body.royal[data-page=summon] .astral-summon .summon-dock .pull-options button{min-height:48px}
-  body.royal[data-page=summon] .astral-summon .summon-dock>.summon-confirm{padding:28px 34px 18px}
+  body.royal[data-page=summon] .astral-summon .summon-dock>.summon-confirm{padding-inline:34px}
   body.royal[data-page=summon] .astral-summon .summon-dock>.summon-confirm>span{font-size:clamp(18px,14cqw,27px)}
 }
 /* Tablet widths. */
