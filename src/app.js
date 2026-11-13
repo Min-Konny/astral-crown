@@ -116,16 +116,8 @@ function badge(c){return `<span class="rarity" style="color:${G.RARITIES[c.rarit
 let selectedId=null;
 const ELEMENT_KEY={'水':'water','炎':'fire','森':'forest'};
 const SHOWCASE_ART={luna:'./assets/redesign/lune-summon.png'};
-const PORTRAIT_ATLASES=[
-  {name:'collection-portraits',columns:4,ids:['luna','sol','flora','iris','ash','noel','mira','sage']},
-  {name:'collection-legacy',columns:3,ids:['ranger','smith','guard','scholar','herbalist']},
-];
 function collectionPortrait(id){
-  const atlas=PORTRAIT_ATLASES.find(a=>a.ids.includes(id));
-  const index=atlas.ids.indexOf(id);
-  const column=index%atlas.columns,row=Math.floor(index/atlas.columns);
-  const image=new URL(`../assets/redesign/${atlas.name}.webp`,import.meta.url);
-  return `<span class="collection-portrait" aria-hidden="true" style="--atlas:url('${image.href}');--atlas-size:${atlas.columns*100}% 200%;--atlas-position:${column*100/(atlas.columns-1)}% ${row*100}%"></span>`;
+  return `<img class="collection-portrait" src="./assets/redesign/portrait-${id}.webp" alt="" decoding="async">`;
 }
 function growState(c){
   const n=state.counts[c.id]??0,owned=n>0,stage=G.promotionStage(state,c.id),ready=owned&&G.promotion(n).stage>stage;

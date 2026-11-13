@@ -45,8 +45,7 @@ export class AstralPage {
   async screenshot(name,project){
     if(name.startsWith('collection')){
       await this.page.evaluate(async()=>{
-        const urls=new Set([...document.querySelectorAll('.collection-portrait')].map(node=>getComputedStyle(node).backgroundImage.slice(5,-2)));
-        await Promise.all([...urls].map(url=>{const img=new Image();img.src=url;return img.decode();}));
+        await Promise.all([...document.querySelectorAll('.collection-portrait')].map(img=>img.decode()));
       });
     }
     await this.page.screenshot({path:path.join(root,'artifacts',`royal-${name}-${project}.png`),fullPage:!name.startsWith('collection')});
