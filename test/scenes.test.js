@@ -73,3 +73,27 @@ test('normal navigation, resize and summon reveal never use camera flashes or re
     assert.equal(finished,2);assert.equal(engines,1);stage.destroy();
   }finally{if(previous===undefined)delete globalThis.Phaser;else globalThis.Phaser=previous;}
 });
+
+test('stage follows its element when the viewport grows back after a narrow layout',()=>{
+  const previous=globalThis.Phaser,previousObserver=globalThis.ResizeObserver;
+  const sizes=[];let notify,disconnected=0,observed;
+  globalThis.ResizeObserver=class{constructor(fn){notify=fn;}observe(node){observed=node;}disconnect(){disconnected++;}};
+  globalThis.Phaser={Scene:class{},Scale:{RESIZE:1},Game:class{
+    constructor(){this.scale={width:375,height:667,setParentSize:(w,h)=>{sizes.push([w,h]);this.scale.width=w;this.scale.height=h;}};}
+    destroy(){}
+  }};
+  try{
+    const parent={clientWidth:375,clientHeight:667};
+    const stage=createStage(parent,()=>assert.fail('Unexpected initialization failure'));
+    assert.equal(observed,parent);
+    notify();assert.deepEqual(sizes,[]); // unchanged size never forces a redraw
+    parent.clientWidth=1440;parent.clientHeight=900;notify();notify();
+    assert.deepEqual(sizes,[[1440,900]]);
+    parent.clientWidth=0;parent.clientHeight=0;notify(); // hidden stage keeps its last size
+    assert.deepEqual(sizes,[[1440,900]]);
+    stage.destroy();assert.equal(disconnected,1);
+  }finally{
+    if(previous===undefined)delete globalThis.Phaser;else globalThis.Phaser=previous;
+    if(previousObserver===undefined)delete globalThis.ResizeObserver;else globalThis.ResizeObserver=previousObserver;
+  }
+});

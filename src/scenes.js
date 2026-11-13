@@ -53,6 +53,15 @@ function createPhaserStage(parent, onError) {
   const game=new Phaser.Game({type:Phaser.AUTO,parent,backgroundColor:'#10224b',antialias:true,
     scale:{mode:Phaser.Scale.RESIZE,width:parent.clientWidth,height:parent.clientHeight},
     scene:AstralStage,render:{powerPreference:'low-power'},fps:{target:30,forceSetTimeOut:true},audio:{noAudio:true}});
+  // The engine's own parent polling can leave the canvas at a narrow size after the
+  // viewport grows back (#18). Follow the stage element directly and let RESIZE redraw.
+  const syncSize=()=>{
+    const w=parent.clientWidth,h=parent.clientHeight,scale=game.scale;
+    if(failed||!w||!h||!scale||typeof scale.setParentSize!=='function')return;
+    if(scale.width!==w||scale.height!==h)scale.setParentSize(w,h);
+  };
+  const observer=typeof ResizeObserver==='function'?new ResizeObserver(syncSize):null;
+  observer?.observe(parent);
   function clear(){
     sequence++;battleActive=false;liveUnits=null;liveState=null;retainBattle=false;battleEffects=[];if(!current)return;
     current.time.timeScale=1;current.tweens.timeScale=1;
@@ -183,6 +192,7 @@ function createPhaserStage(parent, onError) {
   },skip:complete,destroy:()=>{
     canvas?.removeEventListener('webglcontextlost',contextLost);
     canvas?.removeEventListener('contextlost',contextLost);
+    observer?.disconnect();
     finish=null;clear();current=null;failed=true;game.destroy(true);
   }};
 }
