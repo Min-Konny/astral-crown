@@ -311,7 +311,12 @@ document.addEventListener('click',e=>{
       return;
     }
     if(b.dataset.filter){filter=b.dataset.filter;render();$(`.roster [data-filter="${filter}"]`)?.focus({preventScroll:true});return;}
-    if(b.dataset.quantity){packQuantity=Number(b.dataset.quantity);render();return;}
+    if(b.dataset.quantity){
+      packQuantity=Number(b.dataset.quantity);
+      render();
+      $(`[data-quantity="${packQuantity}"]`)?.focus({preventScroll:true});
+      return;
+    }
     if(b.dataset.pack){checkout(b.dataset.pack);return;}
     if(b.dataset.confirmPack){purchase(b.dataset.confirmPack);return;}
     if(b.hasAttribute('data-go-summon')){closeModal();page='summon';render();return;}

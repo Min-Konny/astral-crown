@@ -1008,3 +1008,9 @@ body.royal[data-page=shop] .exchange-titles[open]>.spending-titles{max-height:20
   body.royal[data-page=shop] .exchange-name{font-size:13px;padding:4px 14px}
 }
 @media(prefers-reduced-motion:reduce){body.royal[data-page=shop] .exchange-shop button.exchange-buy{transition:none}body.royal[data-page=shop] .exchange-shop button.exchange-buy:is(:hover,:active):not(:disabled){transform:none}}
+
+body.royal[data-page=shop] .exchange-shop button.exchange-buy{min-height:70px;padding-block:10px 14px}
+body.royal[data-page=shop] .exchange-shop button.exchange-buy small{margin-top:2px}
+@media(max-width:650px){
+  body.royal[data-page=shop] #main:has(.exchange-shop){position:fixed;inset:58px 0 104px;margin:0;width:100%;height:auto;min-height:0;overflow:auto;padding:0 12px 20px}
+}
