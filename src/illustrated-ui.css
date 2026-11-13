@@ -835,3 +835,12 @@ body.royal[data-page=collection] #main .astral-collection .roster .collection-po
   body.royal[data-page=collection] #main .astral-collection .party .team-flag+.grow-flag{top:auto;bottom:4px;right:3px}
   body.royal[data-page=collection] #main .astral-collection .party .card-name{padding-bottom:17px}
 }
+
+@media(min-width:1101px) and (max-height:800px){
+  body.royal[data-page=collection] #main .astral-collection .collection-showcase{display:grid;grid-template-columns:42% minmax(0,1fr);align-items:stretch}
+  body.royal[data-page=collection] #main .astral-collection .showcase-art{position:relative;inset:auto;grid-column:1;min-height:100%}
+  body.royal[data-page=collection] #main .astral-collection .showcase-art .collection-portrait{height:100%;object-position:58% top}
+  body.royal[data-page=collection] #main .astral-collection .showcase-info{grid-column:2;justify-content:center;padding:12px 10px;background:#0a1530}
+  body.royal[data-page=collection] #main .astral-collection .showcase-team{flex-wrap:wrap}
+  body.royal[data-page=collection] #main .astral-collection .showcase-train{font-size:15px;letter-spacing:0}
+}
