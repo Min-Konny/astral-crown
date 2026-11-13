@@ -67,10 +67,9 @@ export function summonView(s,banner,count){
  <div class="summon-description"><span class="pickup-label">✧ ${pickup?'月冠の魔女':'星々に集う継承者'} ✧</span><h2>${pickup?'リュネ':'星冠の仲間'}</h2><div class="summon-signature">${pickup?'Lune':'Astral companions'}</div><div class="hero-rarity"><b>SSR</b><span>${pickup?'◈ 水属性・攻撃型':'✦ すべての属性'}</span></div><p>${pickup?'月が導く、運命の出会い。':'星を越えて、まだ見ぬ仲間と。'}</p><small class="banner-rates">SSR 2%${pickup?' · SSR時リュネ50%':' · SSRキャラ均等'}</small></div>
  <div class="summon-dock">
  <span class="pull-label" id="pull-label">召喚回数を選ぶ</span>
- <div class="pull-options" role="group" aria-labelledby="pull-label">${[10,100,1000,10000].map(n=>`<button data-count="${n}" aria-pressed="${count===n}" class="${count===n?'selected':''}"><b>${fmt(n)}<small>連</small></b><em>✧ ${fmt(n*300)}</em></button>`).join('')}</div>
+ <div class="pull-options" role="group" aria-labelledby="pull-label">${[10,100,1000,10000].map(n=>`<button data-count="${n}" aria-pressed="${count===n}" ${count===n&&missing?'aria-describedby="summon-shortage"':' '} class="${count===n?'selected':''}"><b>${fmt(n)}<small>連</small></b><em>✧ ${fmt(n*300)}</em></button>`).join('')}</div>
  <button class="primary summon-confirm" data-action="summon" ${missing?'disabled aria-describedby="summon-shortage"':''}><span>${fmt(count)}回召喚</span><small>✧ 星晶石 ${fmt(cost)}</small></button>
  ${missing?`<p class="summon-shortage" id="summon-shortage">星晶石があと ${fmt(missing)} 個必要です</p>`:''}
  <div class="summon-footnotes"><button data-action="rates">ⓘ 提供割合・天井</button><button data-page="shop" class="${missing?'needed':''}">星晶石を購入 ${icon('arrow')}</button></div></div>
  </section>`;
 }
-
