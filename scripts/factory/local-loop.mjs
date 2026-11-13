@@ -12,6 +12,7 @@ const option=(key,fallback)=>{const i=args.indexOf(key);return i<0?fallback:args
 const issue=Number(option('--issue','0'));
 const maxRounds=Number(option('--max-rounds','3'));
 const base=option('--base','codex/visual-redesign-baseline');
+const resumeFrom=option('--resume-from',null);
 const repo='Min-Konny/astral-crown';
 const screens=JSON.parse(await fs.readFile(new URL('./screens.json',import.meta.url),'utf8'));
 const screen=screens.find(s=>s.key===option('--screen','home'));
@@ -83,16 +84,36 @@ try{
     await run(process.execPath,[playwrightCli,'test','--config=qa/playwright.config.js'],{cwd:work,log:path.join(runDir,'baseline-browser.log')});
     const before=path.join(runDir,'before');await fs.mkdir(before);
     for(const capture of captures)await fs.copyFile(capture,path.join(before,path.basename(capture)));
+    if(resumeFrom){
+      const previousDir=await fs.realpath(path.resolve(root,resumeFrom));
+      const factoryDir=await fs.realpath(path.join(root,'.factory'));
+      if(!previousDir.startsWith(factoryDir+path.sep))throw Error('Resume source must be a retained .factory run.');
+      const previous=JSON.parse(await fs.readFile(path.join(previousDir,'result.json'),'utf8'));
+      if(previous.issue!==issue||previous.startingHead!==startingHead)throw Error('Resume source issue/base does not match.');
+      const previousWork=await fs.realpath(path.join(previousDir,'work'));
+      if(!previousWork.startsWith(previousDir+path.sep))throw Error('Invalid resume work path.');
+      const patch=(await run('git',['diff','--binary','HEAD'],{cwd:previousWork})).stdout;
+      if(patch){const patchFile=path.join(runDir,'resume.patch');await fs.writeFile(patchFile,patch);await git(['apply',patchFile]);}
+      for(const file of (await git(['ls-files','--others','--exclude-standard'],previousWork)).split('\n').filter(Boolean)){
+        if(!allowedChange(file))throw Error('Resume contains an out-of-scope file.');
+        await fs.mkdir(path.dirname(path.join(work,file)),{recursive:true});await fs.copyFile(path.join(previousWork,file),path.join(work,file));
+      }
+      await validateScope();
+      console.log('Resumed retained changes; first round starts at verification/review.');
+    }
     let feedback='初回。参考画像と既存実装を比較し、この画面のグラフィックを改善してください。';
     let outcome='round-limit';
     const history=[];
     for(let round=1;round<=maxRounds;round++){
       if(await fs.access(path.join(runDir,'STOP')).then(()=>true,()=>false)){outcome='stopped';break;}
+      let claudeResult={result:'前回の作業コピーから変更を復元。最初に再検証・レビューする。'};
+      if(!resumeFrom||round>1){
       console.log(`Round ${round}/${maxRounds}: Claude implementation`);
       const prompt=`ASTRAL CROWN の画面改修担当です。次のIssueだけを実装してください。\n${task.title}\n${task.body}\n参考画像をReadで必ず見る: ${reference}\n重点: ${screen.focus}\n前回フィードバック: ${feedback}\n編集可能: src/royal-ui.js, src/royal-ui.css, src/illustrated-ui.css, src/game-ui.css, src/scenes.js, src/app.js, index.html, assets/redesign/*.png/webp。ゲーム経済・抽選・保存ルールとセーブ互換性は変更禁止。テスト・QA・ビルド・依存・指示・設定ファイルは変更禁止。git操作、外部送信、公開、追加エージェント起動は禁止。テストと実画面キャプチャは親プロセスが実行します。CSSだけの管理画面にしない。既存の画像素材を活用し、専用の新規生成素材が不可欠なら未解決として報告する。完了後は変更点と未解決点を日本語で短く返す。`;
-      const implemented=await run('claude',['-p','--output-format','json','--permission-mode','acceptEdits','--permission-prompts','none','--tools','Read,Write,Edit,Glob,Grep','--allowedTools','Read,Write,Edit,Glob,Grep','--strict-mcp-config','--mcp-config','{"mcpServers":{}}','--no-session-persistence'],{cwd:work,input:prompt,log:path.join(runDir,`round-${round}-claude.log`)});
-      const claudeResult=JSON.parse(implemented.stdout);
+      const implemented=await run('claude',['-p','--output-format','json','--permission-mode','acceptEdits','--permission-prompts','none','--tools','Read,Write,Edit,Glob,Grep','--allowedTools','Read,Write,Edit,Glob,Grep','--strict-mcp-config','--mcp-config','{"mcpServers":{}}','--no-session-persistence'],{cwd:work,input:prompt+`\n変更前画像: ${before}\n直近の実画面もReadで確認する: ${captures.join(', ')}`,log:path.join(runDir,`round-${round}-claude.log`)});
+      claudeResult=JSON.parse(implemented.stdout);
       if(claudeResult.is_error)throw Error('Claude returned an error; see local log.');
+      }
       await validateScope();
       console.log(`Round ${round}: deterministic tests and screenshots`);
       let failed=false;
@@ -108,8 +129,13 @@ try{
       console.log(`Round ${round}: Codex visual review`);
       const output=path.join(runDir,`round-${round}-review.json`);
       const reviewPrompt=`ASTRAL CROWN の独立レビュー担当。コードは変更禁止。Issue: ${task.title}\n${task.body}\n重点: ${screen.focus}\n添付1枚目は参考画像、残りはこのラウンドの実画面PC/スマホです。必ず目視比較する。全118件以上の単体・ビルド・4サイズのブラウザ回帰は親が成功を確認済み。テスト成功だけを根拠に見た目を合格にしない。git diff を読んで操作と保存互換性も確認。図や文字の重なり、引き伸ばし、クリック妨害、可読性、構図と絵の密度を具体的に判定。大きな不足があればrevise、画像を確認できない/素材生成や仕様判断が必要ならblocked。passは受入条件を実際に確認できた場合のみ。コード修正、コミット、外部通信、他エージェントは禁止。結果は指定JSON形式の日本語。`;
-      const imageArgs=[reference,...captures].flatMap(f=>['--image',f]);
-      await run('codex',['exec','--sandbox','read-only','--ephemeral','--output-schema',schema,'--output-last-message',output,...imageArgs,'-'],{cwd:work,input:reviewPrompt,log:path.join(runDir,`round-${round}-codex.log`)});
+      const beforeImages=captures.map(f=>path.join(before,path.basename(f)));
+      const imageArgs=[reference,...captures,...beforeImages].flatMap(f=>['--image',f]);
+      const diff=await git(['diff','HEAD','--no-ext-diff']);
+      const changed=(await git(['diff','--name-only','HEAD'])).split('\n').filter(f=>/\.(js|css|html)$/.test(f));
+      const source=await Promise.all(changed.map(async f=>`\n--- ${f} (current) ---\n${await fs.readFile(path.join(work,f),'utf8')}`));
+      const reviewInput=reviewPrompt+`\n重要: ツール・シェルは使わず、以下の親プロセスが収集した差分・コード・検証結果と添付画像だけで判定してください。git diffを自分で実行する必要はありません。未確認の操作を確認したと主張しないこと。\n添付順: 参考画像1枚、変更後${captures.length}枚、同条件の変更前${beforeImages.length}枚。各グループはdesktop/laptop/mobile/narrow順。\n基点コミット: ${startingHead}\n差分ハッシュ: ${snapshot}\n検証: node --test、build、Playwright全20ケースがこの差分で終了コード0。親がQA・テスト・保存経済モデルの無変更を検証。\n実装担当報告:\n${claudeResult.result||''}\n差分:\n${diff}\n現在の変更ファイル全文:\n${source.join('\n')}`;
+      await run('codex',['exec','--sandbox','read-only','--ephemeral','--output-schema',schema,'--output-last-message',output,...imageArgs,'-'],{cwd:work,input:reviewInput,log:path.join(runDir,`round-${round}-codex.log`)});
       if(snapshot!==await statusHash())throw Error('Reviewer changed the work copy.');
       const review=reviewDecision(JSON.parse(await fs.readFile(output,'utf8')));
       history.push({round,worktreeHash:snapshot,...review});feedback=JSON.stringify(review);

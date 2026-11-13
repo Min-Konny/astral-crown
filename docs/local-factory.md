@@ -15,6 +15,8 @@ PowerShellでプロジェクトから実行する。初回は接続先・対象�
 ```powershell
 ./scripts/factory/run.ps1 -Issue 3 -Screen home -DryRun
 ./scripts/factory/run.ps1 -Issue 3 -Screen home -MaxRounds 3 -Publish
+# 保持した変更を引き継ぎ、再検証とレビューから再開する
+./scripts/factory/run.ps1 -Issue 3 -Screen home -ResumeFrom '.factory/issue-3-実行日時' -Publish
 ```
 
 `-Publish` がなければローカル結果のみ。付けた場合も視覚レビュー合格時だけ専用ブランチをpushし、基点ブランチ向けの下書きPRを作る。masterへのマージやPages公開はしない。次の画面は前の変更を取り込んだブランチを `-Base` に指定する。共通CSSを変更するので並列実行しない。
@@ -29,7 +31,7 @@ Playwrightはプロジェクトに導入済みのもの、またはCodexの同�
 2. 変更前の隔離ブラウザテストを実行して画像を保存する。
 3. Claudeに対象Issue、参考画像、前回の指摘を渡す。編集範囲はUIファイルと画像素材に限定する。テストや依存関係、保存・経済のモデルは変更させない。
 4. 親プロセスが単体テスト、ビルド、4サイズのPlaywrightテストを実行する。失敗はログを添えて差し戻す。
-5. Codexが参考画像とそのラウンドの4サイズの実キャプチャを見て `pass` / `revise` / `blocked` を返す。画像未確認・不正な判定・レビュー中のファイル変更は合格にしない。
+5. Codexが参考画像と変更前後の4サイズの実キャプチャ、親が収集した差分・変更ファイル全文・検証結果を見て `pass` / `revise` / `blocked` を返す。レビュー側でシェルを起動する必要はない。画像未確認・不正な判定・レビュー中のファイル変更は合格にしない。
 6. `revise` なら次ラウンド、`pass` または `blocked` なら終了する。上限到達でも合格にはしない。
 
 ログ、レビューJSON、変更前と各ラウンドの画像は `.factory/` に保持し、Gitから除外する。保存先は開始時に表示する。`result.json` に結果、`history.json` にレビュー経過を記録する。異常終了時は最後のログを確認する。

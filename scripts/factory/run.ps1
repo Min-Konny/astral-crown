@@ -3,6 +3,7 @@ param(
     [Parameter(Mandatory=$true)][string]$Screen,
     [ValidateRange(1,5)][int]$MaxRounds = 3,
     [string]$Base = 'codex/visual-redesign-baseline',
+    [string]$ResumeFrom,
     [switch]$DryRun,
     [switch]$Publish
 )
@@ -28,6 +29,7 @@ try {
     }
     $factoryArgs = @((Join-Path $PSScriptRoot 'local-loop.mjs'), '--issue', $Issue, '--screen', $Screen, '--max-rounds', $MaxRounds, '--base', $Base)
     if ($DryRun) { $factoryArgs += '--dry-run' }
+    if ($ResumeFrom) { $factoryArgs += @('--resume-from', $ResumeFrom) }
     if ($Publish) { $factoryArgs += '--publish' }
     & node @factoryArgs
     $factoryExitCode = $LASTEXITCODE
