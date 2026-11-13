@@ -1,0 +1,80 @@
+[
+  {
+    "key": "home",
+    "title": "拠点",
+    "capture": "home",
+    "focus": "大きなリュネ、絵入りバナー、宝箱の収入欄、金縁ナビの一体感。既存の仕事・召喚・庭園・ショップへの入口を維持。"
+  },
+  {
+    "key": "summon",
+    "title": "召喚",
+    "capture": "summon",
+    "focus": "リュネの顔と手、左バナー、天井表示、召喚回数と金色ボタンの構図。回数選択と実行を区別し価格は実データ。"
+  },
+  {
+    "key": "collection",
+    "title": "仲間・編成",
+    "capture": "collection",
+    "focus": "絵入りキャラカード、レアリティ、編成中と強化可能の識別。詳細・編成・手動育成を操作可能にする。"
+  },
+  {
+    "key": "arena",
+    "title": "闘技場",
+    "capture": "arena",
+    "focus": "競技場背景、順位・相手・自分の編成、挑戦ボタンの視線誘導。NPC戦と報酬の既存ルールを維持。"
+  },
+  {
+    "key": "shop-exchange",
+    "title": "星晶ショップ（交換所案）",
+    "capture": "shop",
+    "focus": "交換所案の絵・枠・商品配置を既存ショップの視覚表現へ取り込む。新しい交換通貨や商品仕様は追加しない。shop-packsと共通部を競合させない。"
+  },
+  {
+    "key": "training-exploration-battle",
+    "title": "育成・庭園探索・バトル",
+    "capture": "training",
+    "extraCaptures": [
+      "battle-result"
+    ],
+    "focus": "育成から出撃へ連続する画面の装飾統一。能力比較、編成所属、出撃・帰還、戦闘結果を読みやすくする。庭園の実画面も追加撮影して確認する。"
+  },
+  {
+    "key": "payment",
+    "title": "疑似決済・購入完了",
+    "capture": "checkout",
+    "extraCaptures": [
+      "payment"
+    ],
+    "focus": "支払方法、明細、購入確定と完了の華やかさ。ゲーム内残高のみ使用し、現実の個人情報入力を追加しない。"
+  },
+  {
+    "key": "shop-packs",
+    "title": "星晶石購入・まとめ買い",
+    "capture": "shop",
+    "focus": "大小パックの絵、価格・石数・数量とまとめ買いの強調。購入前後の実残高と不足導線を維持。"
+  },
+  {
+    "key": "income",
+    "title": "稼ぐ・設備投資",
+    "capture": "earn",
+    "focus": "工房背景と仕事、毎秒収入、投資前後の増加を一体に見せる。仕事と設備強化を押しやすくし待ち時間を実データで表示。"
+  },
+  {
+    "key": "mass-summon-results",
+    "title": "大量召喚・結果",
+    "capture": "bulk-result",
+    "focus": "大量獲得の達成感とレア度別集計。1万枚のDOMを作らず詳細へ展開し、育成導線を維持。"
+  },
+  {
+    "key": "inheritance",
+    "title": "低レアの継承強化",
+    "capture": null,
+    "focus": "低レアの枚数、次の段階、現在と強化後の貢献を描く。手動昇格でのみ強化を確定する。専用の隔離データと実キャプチャを先に追加する。"
+  },
+  {
+    "key": "ascension",
+    "title": "転生",
+    "capture": "ascension",
+    "focus": "転生の特別感、維持・初期化対象、永続倍率の前後差。確認なしに転生せず、既存QAの転生確認ダイアログを比較する。"
+  }
+]

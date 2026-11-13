@@ -1,0 +1,12 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["verdict", "summary", "referenceViewed", "screenshotsViewed", "findings"],
+  "properties": {
+    "verdict": {"type": "string", "enum": ["pass", "revise", "blocked"]},
+    "summary": {"type": "string"},
+    "referenceViewed": {"type": "boolean"},
+    "screenshotsViewed": {"type": "boolean"},
+    "findings": {"type": "array", "items": {"type": "string"}}
+  }
+}
