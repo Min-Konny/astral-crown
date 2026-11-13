@@ -10,6 +10,7 @@ async function stateShot(game,name,info,selector){
   await game.screenshot(name+'-hover',info.project.name);
   await game.page.keyboard.press('Tab');await target.focus();
   await expect(target).toBeFocused();
+  expect(await target.evaluate(e=>parseFloat(getComputedStyle(e).outlineWidth))).toBeGreaterThanOrEqual(2);
   await game.screenshot(name+'-focus',info.project.name);
   expect(await game.hasOverflow()).toBe(false);
 }
@@ -30,6 +31,12 @@ test('召喚の選択・提供割合・不足時を実操作で確認する',asy
   await page.locator('[data-action="rates"]').click();await expect(page.locator('#modal')).toBeVisible();
   await game.screenshot('summon-rates',info.project.name);
   expect((await game.savedState()).gems).toBe(3000);expect(game.errors).toEqual([]);
+});
+test('投資上限では操作を無効にし理由を示す',async({page},info)=>{
+  const game=new AstralPage(page);await game.moveToPage(data,{cash:0,facility:30,rank:100,bestRank:100});
+  await game.openPage('earn');await expect(page.locator('[data-invest-button]')).toBeDisabled();
+  await expect(page.locator('[data-invest-note]')).toContainText('完了');await game.screenshot('earn-disabled',info.project.name);
+  expect((await game.savedState()).facility).toBe(30);expect(game.errors).toEqual([]);
 });
 test('仲間の編成と低レアの手動継承強化を保存する',async({page},info)=>{
   const game=new AstralPage(page);await game.moveToPage(data,owned());await game.openPage('collection');
