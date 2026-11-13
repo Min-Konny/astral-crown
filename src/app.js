@@ -298,7 +298,11 @@ document.addEventListener('click',e=>{
     if(b.dataset.mission!==undefined){mission=Number(b.dataset.mission);page='arena';render();return;}
     if(b.dataset.select){
       const fromParty=!!b.closest('.party');selectedId=b.dataset.select;render();
-      $(`${fromParty?'.party':'.roster'} [data-select="${selectedId}"]`)?.focus({preventScroll:true});
+      if(matchMedia('(max-width:1100px)').matches){
+        const panel=$('.collection-showcase');
+        panel?.scrollIntoView({block:'start',behavior:'instant'});
+        panel?.focus({preventScroll:true});
+      }else $(`${fromParty?'.party':'.roster'} [data-select="${selectedId}"]`)?.focus({preventScroll:true});
       return;
     }
     if(b.dataset.filter){filter=b.dataset.filter;render();$(`.roster [data-filter="${filter}"]`)?.focus({preventScroll:true});return;}
