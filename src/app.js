@@ -124,7 +124,8 @@ function collectionPortrait(id){
   const atlas=PORTRAIT_ATLASES.find(a=>a.ids.includes(id));
   const index=atlas.ids.indexOf(id);
   const column=index%atlas.columns,row=Math.floor(index/atlas.columns);
-  return `<span class="collection-portrait" aria-hidden="true" style="--atlas:url('./assets/redesign/${atlas.name}.webp');--atlas-size:${atlas.columns*100}% 200%;--atlas-position:${column*100/(atlas.columns-1)}% ${row*100}%"></span>`;
+  const image=new URL(`../assets/redesign/${atlas.name}.webp`,import.meta.url);
+  return `<span class="collection-portrait" aria-hidden="true" style="--atlas:url('${image.href}');--atlas-size:${atlas.columns*100}% 200%;--atlas-position:${column*100/(atlas.columns-1)}% ${row*100}%"></span>`;
 }
 function growState(c){
   const n=state.counts[c.id]??0,owned=n>0,stage=G.promotionStage(state,c.id),ready=owned&&G.promotion(n).stage>stage;

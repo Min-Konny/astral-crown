@@ -42,6 +42,14 @@ export class AstralPage {
   async confirmPayment(){await this.page.locator('[data-confirm-pack]').click();}
   async savedState(){return this.page.evaluate(()=>JSON.parse(sessionStorage.getItem('astral-crown-save-v1')));}
   async hasOverflow(){return this.page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1);}
-  async screenshot(name,project){await this.page.screenshot({path:path.join(root,'artifacts',`royal-${name}-${project}.png`),fullPage:true});}
+  async screenshot(name,project){
+    if(name.startsWith('collection')){
+      await this.page.evaluate(async()=>{
+        const urls=new Set([...document.querySelectorAll('.collection-portrait')].map(node=>getComputedStyle(node).backgroundImage.slice(5,-2)));
+        await Promise.all([...urls].map(url=>{const img=new Image();img.src=url;return img.decode();}));
+      });
+    }
+    await this.page.screenshot({path:path.join(root,'artifacts',`royal-${name}-${project}.png`),fullPage:!name.startsWith('collection')});
+  }
 }
 
