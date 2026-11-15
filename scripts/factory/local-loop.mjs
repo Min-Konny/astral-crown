@@ -225,5 +225,5 @@ try{
     console.log(`Finished: ${outcome}. Evidence: ${runDir}`);
     if(outcome!=='pass')process.exitCode=2;
   }
-}catch(error){console.error(error.message);await fs.writeFile(path.join(runDir,'error.json'),JSON.stringify({issue,branch,pr,outcome:'error',message:error.message},null,2));await reportStop(error.message.split('\n')[0].slice(0,300)).catch(e=>console.error('Could not record stop:',e.message));process.exitCode=1;}
+}catch(error){console.error(error.message);await fs.writeFile(path.join(runDir,'error.json'),JSON.stringify({issue,branch,pr,outcome:'error',message:error.message},null,2));await reportStop(error.code?`ローカル処理失敗（${error.code}）`:error.message.split(/[\r\n;]+/,1)[0].slice(0,300)).catch(e=>console.error('Could not record stop:',e.message));process.exitCode=1;}
 finally{if(lock){await lock.close();await fs.unlink(lockPath);}}
