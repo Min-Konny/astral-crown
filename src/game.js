@@ -52,7 +52,7 @@ export function promote(s,id){
   s.promotions[id]=to;s.confirmedCounts??={};s.confirmedCounts[id]=s.counts[id];return {id,from,to};
 }
 export function initialState(now = Date.now()) {
-  return { version:1, cash:18000, gems:3000, dust:300, facility:0, rank:100, bestRank:100,
+  return { version:1, cash:18000, gems:3000, dust:300, facility:0, highestFacility:0, claimedMissions:[], rank:100, bestRank:100,
     season:1, seals:0, pity:0, spent:0, pulls:0, mail:false, lastSeen:now, campaignCleared:0, campaignRuns:0, campaignMedals:0,
     counts:Object.fromEntries(CHARACTERS.map(c => [c.id, ['iris','noel','mira'].includes(c.id) ? 1 : 0])),
     levels:Object.fromEntries(CHARACTERS.filter(isHero).map(c => [c.id,1])),
@@ -73,6 +73,7 @@ export function upgradeFacility(s) {
   const cost = facilityCost(s);
   if (s.cash < cost) throw Error('おこづかいが足りません');
   s.cash -= cost; s.facility++;
+  s.highestFacility=Math.max(s.highestFacility??0,s.facility);
 }
 export function buy(s, id, quantity=1) {
   const base = PACKS.find(p => p.id === id);
@@ -302,6 +303,7 @@ export const ascensionReward = s => s.rank<=50?Math.floor((101-s.rank)/10):0;
 export function ascend(s,now=Date.now()) {
   const reward=ascensionReward(s);
   if(!reward)throw Error('転生には50位以内への到達が必要です');
+  s.highestFacility=Math.max(s.highestFacility??0,s.facility);
   Object.assign(s,{cash:18000,gems:3000,dust:300,facility:0,rank:100,season:s.season+1,
     seals:s.seals+reward,pity:0,levels:initialState(now).levels,lastSeen:now});
   return reward;
@@ -309,6 +311,33 @@ export function ascend(s,now=Date.now()) {
 export function claimMail(s) {
   if(s.mail)throw Error('受取済みです');
   s.mail=true;s.gems+=3000;
+}
+const starterSSR=['luna','sol','flora'];
+const lifetimeMissions=[
+  {id:'pulls-1000',title:'累計1,000連',target:1000,progress:s=>s.pulls,reward:{gems:3000}},
+  {id:'facility-10',title:'収入設備Lv.10到達',target:10,progress:s=>Math.max(s.highestFacility??0,s.facility),reward:{dust:600}},
+  {id:'spent-1000000',title:'疑似課金 累計100万円',target:1000000,progress:s=>s.spent,reward:{gems:3000}},
+  {id:'original-ssr',title:'リュネ・レオニス・フィオレを所持',target:starterSSR.length,progress:s=>starterSSR.filter(id=>s.counts[id]>0).length,reward:{dust:1200}}
+];
+export function missionProgress(s){
+  return lifetimeMissions.map(({progress,...mission})=>{
+    const current=Math.min(mission.target,progress(s));
+    const claimed=!!s.claimedMissions?.includes(mission.id);
+    const {gems,dust}=mission.reward;
+    const full=(gems&&s.gems>1e16-gems)||(dust&&s.dust>1e16-dust);
+    const capacityBlocked=current===mission.target&&!claimed&&!!full;
+    return {...mission,current,claimed,capacityBlocked,claimable:current===mission.target&&!claimed&&!capacityBlocked};
+  });
+}
+export function claimMission(s,id){
+  const mission=missionProgress(s).find(m=>m.id===id);
+  if(mission?.capacityBlocked)throw Error('所持上限を超えます。報酬のアイテムを使用してから受け取れます');
+  if(!mission?.claimable)throw Error('受け取れるミッション報酬がありません');
+  const {gems,dust}=mission.reward;
+  if(gems)s.gems+=gems;
+  if(dust)s.dust+=dust;
+  (s.claimedMissions??=[]).push(id);
+  return mission.reward;
 }
 export function validateSave(raw) {
   if(!raw||raw.version!==1)throw Error('未対応のセーブ形式です');
@@ -325,6 +354,13 @@ export function validateSave(raw) {
     s[key]=n;
   }
   if(s.rank<1||s.rank>100||s.bestRank<1||s.bestRank>s.rank||s.facility>30||s.pity>99||s.season<1)throw Error('保存値が範囲外です');
+  const highestFacility=raw.highestFacility??s.facility;
+  if(!Number.isInteger(highestFacility)||highestFacility<0||highestFacility>30)throw Error('最高設備レベルが不正です');
+  s.highestFacility=Math.max(s.facility,highestFacility);
+  const claimed=raw.claimedMissions??[];
+  if(!Array.isArray(claimed)||new Set(claimed).size!==claimed.length||
+    claimed.some(id=>!lifetimeMissions.some(m=>m.id===id)))throw Error('ミッションの受取記録が不正です');
+  s.claimedMissions=[...claimed];
   for(const c of CHARACTERS){
     const mastery=raw.mastery?.[c.id]??0,focus=raw.focus?.[c.id]??'power';
     if(!Number.isInteger(mastery)||mastery<0||mastery>2||!['power','guard'].includes(focus))throw Error('育成方針が不正です');

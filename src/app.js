@@ -196,13 +196,14 @@ function render(){
 function dismissReceipt(){if(!playing&&state.presentation){delete state.presentation;save();}}
 function closeModal(){clearTimeout(timer);if($('#modal').open)$('#modal').close();dismissReceipt();}
 function modal(html,cls=''){
-  clearTimeout(timer);$('#modal').className=cls;
+  clearTimeout(timer);$('#modal').className=cls;$('#modal').removeAttribute('aria-labelledby');
   $('#modal-content').innerHTML=`<button class="modal-close" data-action="close" aria-label="閉じる">×</button>${html}`;
   if(!$('#modal').open)$('#modal').showModal();
 }
 $('#modal').addEventListener('cancel',()=>{clearTimeout(timer);dismissReceipt();});
 $('#modal').addEventListener('close',()=>{
   if($('#modal').open)return; // A replacement dialog may already be open.
+  if($('#modal').classList.contains('missions-modal')&&page==='home')$('[data-action="missions"]')?.focus({preventScroll:true});
   if(trainingReturnId&&page==='collection'){
     const scope=trainingReturnFromShowcase?'.collection-showcase':'.roster';
     const target=$(`${scope} [data-training="${trainingReturnId}"]:not(:disabled)`)||
@@ -257,6 +258,18 @@ function settings(){
 function rates(){
   modal(`<span class="eyebrow">SUMMON DETAILS</span><h2>提供割合と天井</h2><div class="receipt">${Object.entries(G.RARITIES).map(([r,d])=>`<div><span style="color:${d.color}">${r}</span><strong>${Number((d.rate*100).toFixed(4))}%</strong></div>`).join('')}</div><p>ピックアップではSSR抽選時、リュネ50%、レオニス25%、フィオレ25%。常設は各SSR均等です。他レアは同レア内で均等です。</p><p>100連以内にSSR確定。SSRが出るとカウンターをリセット。天井はバナー共通です。10連SR保証はありません。1,000連・10,000連も1回ずつ同じ確率と天井で抽選します。</p><p>天井分を除く基本排出率です。キャラは自動で重なり、上限後も枚数と育成素材は獲得します。</p>`);
 }
+function missionRows(){
+  return G.missionProgress(state).map(m=>{
+    const reward=m.reward.gems?`星晶石 ${fmt(m.reward.gems)}個`:`育成素材 ${fmt(m.reward.dust)}個`;
+    const status=m.claimed?'受取済み':m.capacityBlocked?'達成済み・所持上限':m.claimable?'受け取る':'未達成';
+    return `<li><div><h3>${m.title}</h3><p>${fmt(m.current)} / ${fmt(m.target)} · ${reward}</p>${m.capacityBlocked?'<p>所持数を減らすと受け取れます。</p>':''}</div><button class="${m.claimable?'primary':''}" data-claim-mission="${m.id}" aria-label="${m.title}の報酬：${status}" ${m.claimable?'':'disabled'}>${status}</button></li>`;
+  }).join('');
+}
+function missionsDialog(){
+  modal(`<h2 id="missions-title" tabindex="-1">ミッション</h2><p>報酬は各1回。達成と受け取り状況は転生後も引き継ぎます。</p><ul class="mission-rewards">${missionRows()}</ul><p class="mission-received" role="status"></p>`,'missions-modal');
+  $('#modal').setAttribute('aria-labelledby','missions-title');
+  $('#missions-title').focus({preventScroll:true});
+}
 function confirmAscend(){modal(ascensionView(state),'ascension-modal');}
 
 function run(action){
@@ -267,6 +280,15 @@ document.addEventListener('click',e=>{
   if(playing)return;
   run(()=>{
     if(b.dataset.skillMode){state=changeBattleMode(storage,state,b.dataset.skillMode);render();return;}
+    if(b.dataset.claimMission){
+      const reward=commitResources(s=>G.claimMission(s,b.dataset.claimMission));
+      render();
+      $('#modal .mission-rewards').innerHTML=missionRows();
+      $('#dialog-notice')?.remove();
+      ($('#modal [data-claim-mission]:not(:disabled)')||$('#missions-title')).focus();
+      $('.mission-received').textContent=reward.gems?`星晶石 +${fmt(reward.gems)}`:`育成素材 +${fmt(reward.dust)}`;
+      sound('purchase');return;
+    }
     if(b.dataset.continueRank){state=continueRanking(storage,state,b.dataset.continueRank);resumeBattle();return;}
     if(b.dataset.page){if(!['home','earn','shop','summon','collection','arena'].includes(b.dataset.page))return;closeModal();page=b.dataset.page;render();$('#main').scrollTop=0;window.scrollTo({top:0});return;}
     if(b.hasAttribute('data-return-patrol')){closeModal();page='arena';render();window.scrollTo({top:0});return;}
@@ -333,6 +355,7 @@ document.addEventListener('click',e=>{
       close:closeModal,
       work:()=>{commitResources(G.work);wallet();const feedback=$('#work-feedback');if(feedback){feedback.textContent='+¥ '+fmt(300*(1+state.seals*.25));feedback.classList.remove('earned');void feedback.offsetWidth;feedback.classList.add('earned');}sound();},
       facility:()=>{commitResources(G.upgradeFacility);render();sound('purchase');},
+      missions:()=>missionsDialog(),
       mail:()=>{commitResources(G.claimMail);render();toast('お詫びの星晶石 +3,000');sound('purchase');},
       summon:playSummon,
       rates,battle:playBattle,ascend:confirmAscend,
