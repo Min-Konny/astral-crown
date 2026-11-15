@@ -73,7 +73,15 @@ export function shopView(s,quantity,titles){
 }
 export function ascensionView(s){
  const reward=G.ascensionReward(s),after=s.seals+reward;
- return `<section class="ascension-view"><div class="eyebrow">A NEW SERVER. A GREATER LEGACY.</div><h2>新サーバーへ転生</h2><p>仲間との出会いを引き継いで、もっと遠くまで。</p><div class="ascension-reward">${icon('crown')}<span>継承印 <strong>+${reward}</strong><small>累計 ${fmt(s.seals)} → ${fmt(after)}</small></span></div><div class="ascension-lists"><div><h3>引き継ぐ</h3><p>全キャラ所持数・凸・図鑑効果・編成<br>課金と召喚の累計・最高順位・設定<br>継承印</p></div><div><h3>初期化する</h3><p>現在順位・通常レベル<br>おこづかい・星晶石・素材<br>収入設備・天井</p></div></div><div class="prestige-multipliers"><div>収入倍率<strong>×${(1+s.seals*.25).toFixed(2)} <span>→ ×${(1+after*.25).toFixed(2)}</span></strong></div><div>攻撃倍率<strong>×${(1+s.seals*.08).toFixed(2)} <span>→ ×${(1+after*.08).toFixed(2)}</span></strong></div></div><p class="muted">ひとり用の新シーズンです。新シーズンの初期資源が付与されます。</p><button class="primary wide" data-action="confirm-ascend" ${reward?'':'disabled'}>転生を確定する</button><button class="text-button wide" data-action="close">今回は見送る</button></section>`;
+ const inc=n=>(1+n*.25).toFixed(2),atk=n=>(1+n*.08).toFixed(2);
+ const note=reward
+  ?`シーズン${fmt(s.season+1)}を、おこづかい ${money(18000)}・星晶石 ${fmt(3000)}個・素材 ${fmt(300)}から始めます。<br>確定するまで転生しません。`
+  :`継承印は現在${fmt(s.rank)}位のため獲得できません。50位以内に入ると転生できます。`;
+ return `<section class="ascension-view" aria-labelledby="ascension-title"><div class="eyebrow">A NEW SERVER. A GREATER LEGACY.</div><h2 id="ascension-title">新サーバーへ転生</h2><p>ひとり用の新シーズンへ。仲間との出会いを引き継いで、もっと遠くまで。</p>`
+ +`<div class="ascension-reward">${icon('crown')}<span>継承印 <strong>+${fmt(reward)}</strong><small>累計 ${fmt(s.seals)} → ${fmt(after)} ・ 1つにつき 収入+25% / 攻撃+8%</small></span></div>`
+ +`<div class="ascension-lists"><div><h3>✦ 引き継ぐ</h3><p>所持キャラ・凸・図鑑効果・編成<br>累計課金・召喚回数・最高順位・設定<br>継承印（累計 ${fmt(after)}）</p></div><div><h3>↺ 初期化する</h3><p>現在順位（${fmt(s.rank)}位 → 100位）・通常レベル<br>おこづかい・星晶石・素材<br>収入設備（Lv.${fmt(s.facility)} → 0）・天井（${fmt(s.pity)} → 0）</p></div></div>`
+ +`<div class="prestige-multipliers" aria-label="次のサーバーでの永続倍率"><div>収入倍率（永続）<strong>×${inc(s.seals)} <span>→ ×${inc(after)}</span></strong></div><div>攻撃倍率（永続）<strong>×${atk(s.seals)} <span>→ ×${atk(after)}</span></strong></div></div>`
+ +`<p class="muted">${note}</p><button class="primary wide" data-action="confirm-ascend" ${reward?'':'disabled'}>${reward?'転生して次のサーバーへ':'50位以内で転生できます'}</button><button class="text-button wide" data-action="close">今回は見送る（何も変わりません）</button></section>`;
 }
 export function refreshEconomy(s){
  const button=document.querySelector('[data-invest-button]'),note=document.querySelector('[data-invest-note]');
