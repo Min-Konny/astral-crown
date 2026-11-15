@@ -14,7 +14,7 @@ const maxRounds=Number(option('--max-rounds','3'));
 const base=option('--base','master');
 const resumeFrom=option('--resume-from',null);
 const publish=args.includes('--publish')&&!args.includes('--dry-run');
-if(publish&&base!=='master')throw Error('Published runs must target master.');
+if(publish&&(base!=='master'||resumeFrom))throw Error('Publishing requires master and a fresh start; use --resume-from for local-only work.');
 const repo='Min-Konny/astral-crown';
 const screens=JSON.parse(await fs.readFile(new URL('./screens.json',import.meta.url),'utf8'));
 const screen=screens.find(s=>s.key===option('--screen','home'));
@@ -57,7 +57,7 @@ async function validateScope(){
   if([...files,...extra].some(f=>!allowedChange(f)))throw Error('Implementation changed a protected/out-of-scope file. Inspect the retained work copy.');
   if(await git(['rev-parse','HEAD'])!==expectedHead)throw Error('Agent unexpectedly committed changes.');
 }
-let startingHead,expectedHead,pr;
+let startingHead,expectedHead,pr,issueConfirmed;
 const evidenceDir=`docs/visual-verification/${screen.key}/${stamp}`;
 async function publishRound(beforeImages=[],afterImages=[]){
   if(!publish)return null;
@@ -93,16 +93,18 @@ async function publishRound(beforeImages=[],afterImages=[]){
 async function confirmRemoteHead(sha,waitForCheck=false){
   for(let retry=0;retry<120;retry++){
     const remote=JSON.parse((await run('gh',['pr','view',pr,'--repo',repo,'--json','headRefOid,statusCheckRollup'],{cwd:work})).stdout);
-    if(remote.headRefOid!==sha)throw Error('PR head changed during review; the result was not posted.');
-    if(!waitForCheck)return;
-    const check=remote.statusCheckRollup.find(c=>c.workflowName==='PR check'&&c.name==='check');
-    if(check?.status==='COMPLETED'){
-      if(check.conclusion==='SUCCESS')return;
-      throw Error(`PR check concluded ${check.conclusion}; review was not started.`);
+    if(!waitForCheck){
+      if(remote.headRefOid!==sha)throw Error('PR head changed during review; the result was not posted.');
+      return;
+    }
+    if(remote.headRefOid===sha){
+      const check=remote.statusCheckRollup.find(c=>c.workflowName==='PR check'&&c.name==='check');
+      if(check?.conclusion==='SUCCESS')return;
+      if(check?.status==='COMPLETED')throw Error(`PR check concluded ${check.conclusion}; review was not started.`);
     }
     await new Promise(resolve=>setTimeout(resolve,5000));
   }
-  throw Error('PR check has not completed after 10 minutes.');
+  throw Error('PR head or its checks did not become ready after 10 minutes.');
 }
 async function postReview(review,sha,round){
   if(!sha)return;
@@ -112,6 +114,16 @@ async function postReview(review,sha,round){
   await fs.writeFile(body,reviewComment(review,sha,url));
   await run('gh',['pr','comment',pr,'--repo',repo,'--body-file',body],{cwd:work});
 }
+async function reportStop(reason){
+  if(!publish||!issueConfirmed)return;
+  const file=path.join(runDir,'stop-report.md');
+  await fs.writeFile(file,`[停止] ${reason}\n\n再開時は原因を解消し、既存の下書きPRがあれば同じブランチを引き継いでください。masterが進んだ場合は統合後のSHAで再検証してください。\n`);
+  const requests=[['issue','comment',String(issue),'--body-file',file],['issue','edit',String(issue),'--add-label','社長判断']];
+  if(pr)requests.push(['pr','comment',pr,'--body-file',file]);
+  const results=await Promise.allSettled(requests.map(argv=>run('gh',[...argv,'--repo',repo])));
+  const failures=results.flatMap((result,index)=>result.status==='rejected'?[requests[index].slice(0,2).join(' ')]:[]);
+  if(failures.length)await fs.writeFile(path.join(runDir,'stop-report-failures.json'),JSON.stringify(failures));
+}
 await fs.mkdir(runDir,{recursive:true});
 const lockPath=path.join(root,'.factory','loop.lock');
 let lock;
@@ -120,6 +132,7 @@ try{
   console.log(`Run folder: ${runDir}`);
   const task=JSON.parse((await run('gh',['issue','view',String(issue),'--repo',repo,'--json','number,title,body,state,url'])).stdout);
   if(task.state!=='OPEN'||!task.body.includes(`docs/design-references/${screen.key}.png`))throw Error('Issue must be open and reference the selected screen image.');
+  issueConfirmed=true;
   await fs.writeFile(path.join(runDir,'issue.json'),JSON.stringify(task,null,2));
   if(publish)await git(['fetch','origin','master'],root);
   startingHead=await git(['rev-parse',`${publish?'FETCH_HEAD':base}^{commit}`],root);
@@ -176,11 +189,12 @@ try{
       await validateScope();
       console.log(`Round ${round}: deterministic tests and screenshots`);
       let failed=false;
+      await Promise.all(captures.map(file=>fs.rm(file,{force:true})));
       for(const [name,argv] of [['unit',['--test']],['build',['scripts/build.mjs']],['browser',[playwrightCli,'test','--config=qa/playwright.config.js']]]){
         const result=await run(process.execPath,argv,{cwd:work,log:path.join(runDir,`round-${round}-${name}.log`),acceptFailure:true});
         if(result.code!==0){feedback=`${name} テスト失敗。ログ:\n${(result.stdout+'\n'+result.stderr).slice(-18000)}`;history.push({round,gate:name,passed:false});await fs.writeFile(path.join(runDir,'history.json'),JSON.stringify(history,null,2));failed=true;break;}
       }
-      if(failed){await publishRound();continue;}
+      if(failed)continue;
       for(const capture of captures)await fs.access(capture);
       const roundImages=path.join(runDir,`round-${round}-images`);await fs.mkdir(roundImages);
       for(const capture of captures)await fs.copyFile(capture,path.join(roundImages,path.basename(capture)));
@@ -206,10 +220,10 @@ try{
       if(review.verdict==='pass'||review.verdict==='blocked'){outcome=review.verdict;break;}
     }
     await validateScope();
-    await fs.writeFile(path.join(runDir,'result.json'),JSON.stringify({issue,screen:screen.key,base,startingHead,branch,outcome,history},null,2));
-    if(publish&&['blocked','round-limit'].includes(outcome))await run('gh',['issue','edit',String(issue),'--repo',repo,'--add-label','社長判断'],{cwd:work});
+    await fs.writeFile(path.join(runDir,'result.json'),JSON.stringify({issue,screen:screen.key,base,startingHead,branch,pr,outcome,history},null,2));
+    if(['blocked','round-limit'].includes(outcome))await reportStop(history.at(-1)?.findings?.[0]||`ゲート ${history.at(-1)?.gate??'不明'} で停止しました。`);
     console.log(`Finished: ${outcome}. Evidence: ${runDir}`);
     if(outcome!=='pass')process.exitCode=2;
   }
-}catch(error){console.error(error.message);await fs.writeFile(path.join(runDir,'error.json'),JSON.stringify({issue,outcome:'error',message:error.message},null,2));process.exitCode=1;}
+}catch(error){console.error(error.message);await fs.writeFile(path.join(runDir,'error.json'),JSON.stringify({issue,branch,pr,outcome:'error',message:error.message},null,2));await reportStop(error.message.split('\n')[0].slice(0,300)).catch(e=>console.error('Could not record stop:',e.message));process.exitCode=1;}
 finally{if(lock){await lock.close();await fs.unlink(lockPath);}}
