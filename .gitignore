@@ -3,3 +3,4 @@ artifacts/
 *.log
 dist/
 vendor/
+.factory/
