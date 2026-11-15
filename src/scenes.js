@@ -29,15 +29,14 @@ function createPhaserStage(parent, onError) {
       canvas=this.game?.canvas;
       canvas?.addEventListener('webglcontextlost',contextLost);
       canvas?.addEventListener('contextlost',contextLost);
-      this.load.image('garden','./assets/garden.png');
+      this.load.image('garden','./assets/garden.webp');
       this.load.image('observatory','./assets/redesign/observatory.webp');
       this.load.image('colosseum','./assets/redesign/colosseum.webp');
       this.load.image('court','./assets/redesign/luna-court.webp');
-      this.load.image('lune-summon','./assets/redesign/lune-summon.png');
-      this.load.image('luna','./assets/luna.png');
-      this.load.image('party','./assets/party.png');
-      for(const [id,src] of Object.entries(CHARACTER_ART))this.load.image(characterArt(id).key,src);
-      this.load.on('loaderror',file=>{if(file?.key?.startsWith('hero-'))return;fail();});
+      this.load.image('lune-summon','./assets/redesign/lune-summon.webp');
+      this.load.image('party','./assets/party.webp');
+      // Cast art is optional: every use falls back to the party atlas until it arrives.
+      this.load.on('loaderror',file=>{if(file?.key?.startsWith('hero-')||file?.key==='luna')return;fail();});
     }
     create(){
       if(failed)return;
@@ -48,11 +47,26 @@ function createPhaserStage(parent, onError) {
       current=this;
       this.scale.on('resize',()=>{if(!finish&&liveState){const snapshot=liveState;clear();battle(snapshot,true,()=>{},()=>{});}else if(!finish&&queued)draw(...queued);});
       if(awaitingLive){const snapshot=awaitingLive;awaitingLive=null;battle(snapshot,true,()=>{},()=>{});}else if(queued)draw(...queued);
+      // The first frame needs only the backdrops and the two heroines. Fetch the
+      // thirteen cast portraits afterwards and refresh an idle arena once they exist (#20).
+      for(const [id,src] of Object.entries(CHARACTER_ART))this.load.image(characterArt(id).key,src);
+      this.load.image('luna','./assets/luna.webp');
+      this.load.once('complete',()=>{if(!failed&&!finish&&!liveState&&queued?.[0]==='arena')draw(...queued);});
+      this.load.start();
     }
   }
   const game=new Phaser.Game({type:Phaser.AUTO,parent,backgroundColor:'#10224b',antialias:true,
     scale:{mode:Phaser.Scale.RESIZE,width:parent.clientWidth,height:parent.clientHeight},
     scene:AstralStage,render:{powerPreference:'low-power'},fps:{target:30,forceSetTimeOut:true},audio:{noAudio:true}});
+  // The engine's own parent polling can leave the canvas at a narrow size after the
+  // viewport grows back (#18). Follow the stage element directly and let RESIZE redraw.
+  const syncSize=()=>{
+    const w=parent.clientWidth,h=parent.clientHeight,scale=game.scale;
+    if(failed||!w||!h||!scale||typeof scale.setParentSize!=='function')return;
+    if(scale.width!==w||scale.height!==h)scale.setParentSize(w,h);
+  };
+  const observer=typeof ResizeObserver==='function'?new ResizeObserver(syncSize):null;
+  observer?.observe(parent);
   function clear(){
     sequence++;battleActive=false;liveUnits=null;liveState=null;retainBattle=false;battleEffects=[];if(!current)return;
     current.time.timeScale=1;current.tweens.timeScale=1;
@@ -132,7 +146,8 @@ function createPhaserStage(parent, onError) {
       if(sequence!==ticket)return;
       ring.destroy();core.destroy();text.destroy();
       const identity=characterArt(best.id),dedicated=s.textures.exists?.(identity.key);
-      const art=s.add.image(w/2,h*.8,best.id==='luna'?'luna':dedicated?identity.key:'party',best.id==='luna'||dedicated?undefined:identity.frame).setOrigin(.5,1);
+      const cutIn=best.id==='luna'&&s.textures.exists?.('luna');
+      const art=s.add.image(w/2,h*.8,cutIn?'luna':dedicated?identity.key:'party',cutIn||dedicated?undefined:identity.frame).setOrigin(.5,1);
       art.setScale(Math.min(h*.63/art.height,w*.8/art.width));
       s.add.text(w/2,h*.82,`${best.rarity}  ${best.name}`,{fontFamily:'sans-serif',fontSize:w<650?'28px':'42px',fontStyle:'bold',color:'#fff5cc',stroke:'#173a66',strokeThickness:5}).setOrigin(.5);
       s.add.text(w/2,h*.9,best.title,{fontFamily:'sans-serif',fontSize:'18px',color:'#ffffff',stroke:'#173a66',strokeThickness:3}).setOrigin(.5);
@@ -183,6 +198,7 @@ function createPhaserStage(parent, onError) {
   },skip:complete,destroy:()=>{
     canvas?.removeEventListener('webglcontextlost',contextLost);
     canvas?.removeEventListener('contextlost',contextLost);
+    observer?.disconnect();
     finish=null;clear();current=null;failed=true;game.destroy(true);
   }};
 }

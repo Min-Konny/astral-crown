@@ -76,3 +76,19 @@ Reused painted frame art as a single bottom rail; removed inactive individual he
 
 ## Dedicated summon character (2026-11-13)
 Generated transparent lune-summon.png: silver-haired moon witch reaching toward the lower-left foreground, blue orb staff on the right, close-up navy/ivory costume. Loaded as a separate Phaser texture used only on the summon backdrop; home retains court artwork. Responsive scaling prioritizes the face on portrait viewports. Pickup thumbnail uses the new art. Build includes the PNG (44 files). Reviewed desktop and mobile screenshots; eight Playwright layout and purchase/summon/save flow checks passed across four viewport sizes.
+
+## 配信画像の軽量化（2026-11-14, #20）
+
+UI素材・立ち絵・デフォルメ13体・庭園背景をWebPで配信するように変更。制作元のPNGはリポジトリに残し、buildの配信リストからは外した。初回に取得する画像は約38MBから約3.6MBになる。
+
+| 対象 | 配信サイズ | 品質 |
+| --- | --- | --- |
+| デフォルメ13体（`*-chibi`） | 768×768 | 86 |
+| `garden` / `lune-summon` | 原寸 | 82 / 88 |
+| `party` | 1448×483 | 86 |
+| `luna` | 768×1152 | 86 |
+| `nav-icons` / `nav-active` / `hud-plate` | 1086×362 | 88 |
+| `banner-frame` | 原寸（9スライスの切り出し値が原寸基準のため） | 88 |
+| `summon-gold` | 1046×376 | 88 |
+
+デフォルメ13体と召喚カットイン用の `luna` は最初の描画に不要なため、ステージ表示後に読み込む。届くまでは従来どおり `party` のアトラスで代替表示し、闘技場を表示中なら読み込み完了時に描き直す。PNGを差し替えたときは同じサイズ・品質でWebPを作り直すこと。

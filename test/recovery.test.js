@@ -14,7 +14,7 @@ function harness(){
       scene=this;this.game={canvas};
       this.scale={width:390,height:844,on(){}};
       this.textures={get:()=>({getSourceImage:()=>({width:2048,height:683}),add(){}})};
-      this.load={image(){},on:(event,fn)=>{loadError=fn;}};
+      this.load={image(){},on:(event,fn)=>{loadError=fn;},once(){},start(){}};
       this.add=new Proxy({},{get:()=>object});
       this.tweens={add:config=>tweens.push(config),killAll:()=>{tweens.length=0;}};
       this.time={delayedCall:(ms,fn)=>tasks.push(fn),removeAllEvents:()=>{tasks.length=0;}};
