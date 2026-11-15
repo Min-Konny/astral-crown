@@ -1,0 +1,22 @@
+name: PR check
+# Runs the same gates as the deploy workflow on every pull request, without publishing.
+on:
+  pull_request:
+permissions:
+  contents: read
+concurrency:
+  group: pr-check-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.23.4'
+      - run: npm ci --ignore-scripts
+      - run: npm test
+      - run: node --check src/app.js
+      - run: npm run build
