@@ -109,3 +109,924 @@ body.royal[data-page] .sidebar nav button .painted-nav-icon{pointer-events:auto;
 body.royal[data-page] .sidebar nav button.active,body.royal[data-page] .sidebar nav button.active:hover{background:transparent!important;filter:none;isolation:isolate}
 body.royal[data-page] .sidebar nav button.active::before{content:'';display:block;position:absolute;inset:0;width:auto;height:auto;background:url('../assets/redesign/nav-active.png') center/100% 100% no-repeat;filter:brightness(.78) saturate(1.25);z-index:-1;pointer-events:none}
 body.royal[data-page] .sidebar nav button.active:hover::before{filter:brightness(.88) saturate(1.25)}
+/* UI 01/12 Home — reference composition: large Lune, illustrated banners, treasure income plaque and gold CTA.
+   Scoped to .festival-home so other screens keep their own layout. Live values stay HTML. */
+body.royal[data-page=home] .festival-home::before{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,#0e1d3a59,transparent 15%),linear-gradient(0deg,#0c1834b8,#0c183440 19%,transparent 34%)}
+body.royal[data-page=home] .festival-home .chapter{position:absolute;top:10px;left:1.6%;right:auto;bottom:auto;max-width:36%;margin:0;padding:0;background:none;border:0;border-radius:0;box-shadow:none;filter:none;display:flex;align-items:center;gap:12px;text-shadow:none;z-index:2}
+body.royal[data-page=home] .festival-home .royal-emblem{position:relative;isolation:isolate;flex:0 0 auto;width:70px;height:94px;padding:0;border:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;color:#f4d68f;background:linear-gradient(160deg,#fff1c2,#d2a557 42%,#7a5321);clip-path:polygon(8% 0,92% 0,100% 8%,100% 72%,50% 100%,0 72%,0 8%);filter:drop-shadow(0 4px 6px #0b1634aa)}
+body.royal[data-page=home] .festival-home .royal-emblem::before{content:"";position:absolute;inset:4px;z-index:-1;clip-path:polygon(8% 0,92% 0,100% 8%,100% 72%,50% 100%,0 72%,0 8%);background:radial-gradient(circle at 50% 30%,#3d5d9e,#1a2b5c 58%,#0e1838)}
+body.royal[data-page=home] .festival-home .royal-emblem .ui-icon{width:40px;height:40px;stroke-width:1.5;filter:drop-shadow(0 1px 1px #050b1d)}
+body.royal[data-page=home] .festival-home .royal-emblem span{font:16px/1 Georgia,serif;color:#a9f1ff;letter-spacing:0;margin:2px 0 8px;text-shadow:0 0 6px #7fe6ff}
+body.royal[data-page=home] .festival-home .home-logo{display:flex;flex-direction:column;align-items:center;min-width:0}
+body.royal[data-page=home] .festival-home .home-logo>span{display:block;font:400 clamp(26px,2.6vw,40px)/1.05 Georgia,"Times New Roman",serif;letter-spacing:.04em;white-space:nowrap;color:#f3d68f;background:linear-gradient(180deg,#fffbea 12%,#f3d68f 55%,#bf8c42 92%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 2px 0 #3b2a17) drop-shadow(0 3px 6px #0c1734aa)}
+body.royal[data-page=home] .festival-home .home-logo>span i{font-style:normal;font-size:.68em;margin:0 .08em;vertical-align:.2em}
+body.royal[data-page=home] .festival-home .home-logo h1{display:flex;align-items:center;gap:8px;margin:5px 0 0;padding:0;font:500 15px/1.2 var(--serif);letter-spacing:.36em;color:#fff3d6;text-shadow:0 1px 3px #0b1634,0 0 8px #0b1634}
+body.royal[data-page=home] .festival-home .home-logo h1::before,body.royal[data-page=home] .festival-home .home-logo h1::after{content:"";width:22px;height:1px;background:linear-gradient(90deg,transparent,#f3d68f);box-shadow:0 1px 1px #0b1634}
+body.royal[data-page=home] .festival-home .home-logo h1::after{transform:scaleX(-1)}
+/* Gold medallions (mail / collection / facility). */
+body.royal[data-page=home] .festival-home .home-tools{position:absolute;top:128px;left:1.8%;right:auto;bottom:auto;max-width:none;display:flex;flex-direction:column;gap:16px;z-index:2}
+body.royal[data-page=home] .festival-home .home-tools .home-medal{position:relative;width:86px;height:86px;min-width:0;min-height:0;margin:0;padding:6px 4px 8px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;text-align:center;background:radial-gradient(circle at 50% 32%,#3d5f93,#1b2d5a 58%,#0f1a3a);border:3px solid #edcd86;box-shadow:0 0 0 2px #6f4f22,0 0 0 4px #f6dfa466,inset 0 0 0 2px #0d1834,inset 0 0 16px #8ec5ff40,0 6px 12px #091331aa;color:#fff1d2;font:15px/1.15 var(--serif);text-shadow:0 1px 2px #050b1d;backdrop-filter:none;filter:none;transform:none}
+body.royal[data-page=home] .festival-home .home-tools .home-medal::before{content:"";position:absolute;top:-8px;left:50%;width:12px;height:12px;margin-left:-6px;transform:rotate(45deg);background:linear-gradient(135deg,#d2fcff,#3fb8c9);border:2px solid #f2d796;box-shadow:0 0 6px #8ff3ff99;font-size:0;color:transparent;text-shadow:none}
+body.royal[data-page=home] .festival-home .home-tools .medal-face{display:block;line-height:0}
+body.royal[data-page=home] .festival-home .home-tools .medal-face .ui-icon{width:32px;height:32px;color:#ffe2a3;stroke-width:1.6;filter:drop-shadow(0 2px 2px #050b1d)}
+body.royal[data-page=home] .festival-home .home-tools .medal-label{display:block;font:inherit;color:inherit;white-space:nowrap;letter-spacing:.04em}
+body.royal[data-page=home] .festival-home .home-tools .home-medal small{display:block;margin:0;font:10px/1.1 Georgia,serif;color:#f3d796;letter-spacing:0}
+body.royal[data-page=home] .festival-home .home-tools .home-medal:hover:not(:disabled){background:radial-gradient(circle at 50% 32%,#5480bb,#24396d 58%,#13214a);color:#fff8e4;border-color:#ffe2a0;transform:translateY(-2px)}
+body.royal[data-page=home] .festival-home .home-tools .home-medal:disabled{background:radial-gradient(circle at 50% 32%,#4a5568,#283246 58%,#1a2132);border-color:#b9a77c;color:#cfcabd;filter:saturate(.6);opacity:1;cursor:default}
+body.royal[data-page=home] .festival-home .home-tools .home-medal:disabled .ui-icon{color:#d4c8a8}
+body.royal[data-page=home] .festival-home .home-badge{position:absolute;top:-3px;right:-3px;width:24px;height:24px;display:grid;place-items:center;border-radius:50%;background:linear-gradient(#ef6f67,#a1263a);border:2px solid #ffe6bb;color:#fff;font:bold 15px/1 Georgia,serif;font-style:normal;box-shadow:0 2px 4px #102239}
+/* Illustrated banners with the painted gold frame. */
+body.royal[data-page=home] .festival-home .home-banners{position:absolute;top:84px;right:1.4%;left:auto;bottom:auto;width:330px;display:grid;gap:12px;z-index:2}
+body.royal[data-page=home] .festival-home .home-banners .home-banner{position:relative;isolation:isolate;overflow:hidden;height:118px;min-height:0;margin:0;padding:30px 42% 12px 24px;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:2px;text-align:left;border:0;border-radius:6px;box-shadow:0 6px 16px #0a142f88;color:#fff6e2;text-shadow:0 1px 2px #0a0f26,0 0 8px #0a0f26;filter:none;transform:none}
+/* banner-frame.png (2172×724) is drawn as a nine-slice so its corner ornaments keep their native proportions at every box size.
+   --fw is the reference width the corners are scaled from (box width, capped by height so the slices never overlap). */
+body.royal[data-page=home] .festival-home :is(.home-banners .home-banner,.home-economy)::after{content:"";position:absolute;inset:0;background:none;border:0 solid transparent;border-image-source:url('../assets/redesign/banner-frame.png');border-image-slice:410 360 250 360;border-image-width:calc(var(--fw)*.18876) calc(var(--fw)*.16575) calc(var(--fw)*.1151) calc(var(--fw)*.16575);border-image-repeat:stretch;z-index:3;pointer-events:none;font-size:0;color:transparent}
+body.royal[data-page=home] .festival-home .home-banners{--fw:330px}
+body.royal[data-page=home] .festival-home .home-economy{--fw:380px}
+body.royal[data-page=home] .festival-home .home-banner .banner-ribbon{position:absolute;top:13px;left:18px;z-index:2;padding:1px 12px 1px 9px;font:600 10px/1.6 var(--serif);letter-spacing:.08em;color:#fff3d8;background:linear-gradient(90deg,#8a2f6b,#4a2a6b);border:1px solid #f0d08e;border-radius:3px 12px 12px 3px;box-shadow:0 2px 4px #0a0f2688;white-space:nowrap}
+body.royal[data-page=home] .festival-home .home-banner strong{position:relative;z-index:2;display:block;margin:8px 0 0;font:500 26px/1.15 var(--serif);letter-spacing:.06em;color:#fffaf0;white-space:nowrap;text-shadow:0 0 10px #f7d98a88,0 2px 3px #0a0f26}
+body.royal[data-page=home] .festival-home .home-banner small{position:relative;z-index:2;display:block;margin:0;font:11px/1.35 var(--serif);color:#f6e6c2;white-space:nowrap}
+body.royal[data-page=home] .festival-home .home-banners .moon-banner{background:linear-gradient(90deg,#26174af2,#2d1c52c4 48%,#2d1c5200 82%),url('../assets/redesign/observatory.webp') 50% 35%/cover}
+body.royal[data-page=home] .festival-home .moon-banner .banner-portrait{position:absolute;z-index:0;left:auto;right:-4px;top:-16px;width:52%;height:auto;max-width:none;pointer-events:none;-webkit-mask-image:linear-gradient(90deg,transparent,#000 28%);mask-image:linear-gradient(90deg,transparent,#000 28%)}
+body.royal[data-page=home] .festival-home .home-banners .garden-banner{background:linear-gradient(90deg,#103229f2,#16413ab8 46%,#16413a00 80%),url('../assets/garden.png') 62% 28%/220%}
+body.royal[data-page=home] .festival-home .garden-banner .banner-ribbon{background:linear-gradient(90deg,#2f7050,#1d4a3f)}
+body.royal[data-page=home] .festival-home .garden-banner .banner-party{position:absolute;z-index:0;top:6px;right:8px;bottom:5px;width:50%;background:url('../assets/party.png') 100% 100%/auto 100% no-repeat;filter:drop-shadow(0 3px 3px #08201acc);pointer-events:none}
+body.royal[data-page=home] .festival-home .home-banners .jewel-banner{background:radial-gradient(circle at 78% 52%,#73e6ff66,transparent 42%),linear-gradient(90deg,#10294af5,#14406a 55%,#1b5c80)}
+body.royal[data-page=home] .festival-home .jewel-banner .banner-ribbon{background:linear-gradient(90deg,#1f708b,#23477a)}
+body.royal[data-page=home] .festival-home .jewel-banner .banner-pack{position:absolute;z-index:0;left:auto;right:5%;top:50%;width:38%;height:auto;max-width:none;transform:translateY(-50%);pointer-events:none;filter:drop-shadow(0 4px 8px #04122acc)}
+body.royal[data-page=home] .festival-home .home-banners .home-banner:hover:not(:disabled){filter:brightness(1.1) saturate(1.05);color:#fff8e8;transform:translateY(-1px)}
+/* Treasure income plaque. */
+body.royal[data-page=home] .festival-home .home-economy{position:absolute;left:1.8%;right:auto;top:auto;bottom:118px;width:380px;max-width:calc(100% - 3.6%);min-width:0;height:170px;margin:0;padding:0;overflow:hidden;isolation:isolate;border:0;border-radius:6px;background:#162a4c;box-shadow:0 8px 18px #0a142f99;color:#fff2d4;z-index:2}
+body.royal[data-page=home] .festival-home .home-economy .estate-art{position:absolute;inset:0;z-index:0;background:linear-gradient(90deg,#16294a00 16%,#16294acc 48%,#142645f5 60%),url('../assets/garden.png') 100% 30%/290% no-repeat}
+body.royal[data-page=home] .festival-home .home-economy .income-chest{position:absolute;z-index:1;left:44px;right:auto;top:auto;bottom:10px;width:124px;height:124px;opacity:1;background:url('../assets/redesign/nav-icons.png') 20% 50%/600% 190% no-repeat;filter:drop-shadow(0 0 10px #ffe39a99) drop-shadow(0 4px 4px #0a142f);pointer-events:none}
+body.royal[data-page=home] .festival-home .home-economy .income-copy{position:absolute;z-index:2;top:0;bottom:0;right:0;left:auto;width:54%;margin:0;padding:20px 24px 18px 2px;display:flex;flex-direction:column;justify-content:center;align-items:stretch;gap:2px;text-align:center;text-shadow:0 1px 3px #071026}
+body.royal[data-page=home] .festival-home .home-economy h2{margin:0;font:500 22px/1.2 var(--serif);letter-spacing:.14em;color:#ffe9b8}
+body.royal[data-page=home] .festival-home .home-economy strong{display:block;margin:2px 0 0;font:400 21px/1.2 Georgia,serif;color:#fff8e6;white-space:nowrap}
+body.royal[data-page=home] .festival-home .home-economy strong small{font:11px var(--serif);color:#e8dcc0}
+body.royal[data-page=home] .festival-home .home-economy .income-copy>small{display:block;margin:0 0 6px;font-size:10px;line-height:1.4;color:#dfe3d8}
+body.royal[data-page=home] .festival-home .home-economy button{width:100%;min-height:38px;margin:0;padding:4px 10px;display:inline-flex;align-items:center;justify-content:center;gap:6px;border:2px solid #efd08e;border-radius:22px;background:linear-gradient(#3aa0a8,#17606c);box-shadow:inset 0 1px #c9fff6aa,0 0 0 1px #6f4f22,0 3px 6px #04122a99;color:#fff5dc;font:500 14px/1.2 var(--serif);text-shadow:0 1px 2px #062a30;white-space:nowrap}
+body.royal[data-page=home] .festival-home .home-economy button .ui-icon{width:16px;height:16px}
+body.royal[data-page=home] .festival-home .home-economy button:hover:not(:disabled){background:linear-gradient(#4cb7be,#1e7682);color:#fff;border-color:#ffe2a0}
+/* Lune's greeting bubble. */
+body.royal[data-page=home] .festival-home .character-line{position:absolute;left:calc(1.8% + 400px);right:auto;top:auto;bottom:250px;width:max-content;max-width:330px;margin:0;padding:11px 26px 12px 24px;background:linear-gradient(#fffef9f2,#f7f0e1f2);border:2px solid #e2c98f;border-radius:28px;box-shadow:0 0 0 1px #fff8,0 6px 16px #0a142f55;color:#2c3346;text-align:left;filter:none;z-index:2}
+body.royal[data-page=home] .festival-home .character-line::after{content:"";position:absolute;right:-11px;top:50%;width:16px;height:16px;margin-top:-8px;background:#f9f4e8;border-top:2px solid #e2c98f;border-right:2px solid #e2c98f;border-radius:0 4px 0 0;transform:rotate(45deg)}
+body.royal[data-page=home] .festival-home .character-line>span{display:block;font:10px/1.4 var(--serif);letter-spacing:.12em;color:#7f6438}
+body.royal[data-page=home] .festival-home .character-line p{margin:2px 0 0;font:500 17px/1.55 var(--serif);color:#2c3346;white-space:nowrap}
+/* Gold-framed adventure CTA and arena pill. */
+body.royal[data-page=home] .festival-home .home-cta{position:absolute;right:1.4%;left:auto;top:auto;bottom:118px;width:330px;display:flex;flex-direction:column;align-items:stretch;gap:12px;z-index:2}
+/* The primary CTA uses the star-crested, scroll-cornered nav-active.png plaque at its native 3:1 ratio (never stretched),
+   so it reads as a different, more ornate shape than the rectangular event banners. Garden art shows through its glass. */
+body.royal[data-page=home] .festival-home .home-cta .adventure-launch,body.royal[data-page=home] .festival-home .home-cta .adventure-launch:hover:not(:disabled){background:url('../assets/redesign/nav-active.png') center/100% 100% no-repeat}
+body.royal[data-page=home] .festival-home .home-cta .adventure-launch{position:relative;isolation:isolate;overflow:visible;aspect-ratio:3/1;width:auto;height:auto;min-height:0;margin:0 -16px;padding:8.6% 14% 6.4%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;text-align:center;border:0;border-radius:0;box-shadow:none;color:#fff6dc;transform:none;filter:drop-shadow(0 0 10px #ffe2a055) drop-shadow(0 6px 8px #0a142fa6)}
+body.royal[data-page=home] .festival-home .home-cta .adventure-launch:hover:not(:disabled){filter:brightness(1.12) drop-shadow(0 0 14px #ffe2a088) drop-shadow(0 6px 8px #0a142fa6);color:#fffaf0}
+body.royal[data-page=home] .festival-home .home-cta .adventure-launch::before{content:"";position:absolute;inset:25.5% 12% 18.5%;z-index:-1;background:linear-gradient(0deg,#052a33b3,#052a3326 55%,#052a3366),url('../assets/garden.png') 62% 26%/cover no-repeat;opacity:.82;-webkit-mask-image:linear-gradient(90deg,transparent,#000 14%,#000 86%,transparent);mask-image:linear-gradient(90deg,transparent,#000 14%,#000 86%,transparent);pointer-events:none}
+body.royal[data-page=home] .festival-home .home-cta .adventure-launch::after{content:none}
+body.royal[data-page=home] .festival-home .home-cta .adventure-launch small{display:none}
+body.royal[data-page=home] .festival-home .home-cta .adventure-launch b{display:block;margin:0;padding-left:.14em;font:500 42px/1.02 var(--serif);letter-spacing:.14em;color:#fffaf0;text-shadow:0 0 2px #6b4a1c,0 2px 0 #6b4a1c,0 0 14px #ffe7a6aa,0 4px 10px #071026;transform:none}
+body.royal[data-page=home] .festival-home .home-cta .adventure-launch span{display:block;margin:2px 0 0;font:12px/1.3 var(--serif)!important;letter-spacing:.08em;color:#f3ead4!important;text-shadow:0 1px 2px #041d24,0 0 6px #041d24;transform:none}
+body.royal[data-page=home] .festival-home .home-cta .arena-shortcut,body.royal[data-page=home] .festival-home .home-cta .arena-shortcut:hover:not(:disabled){background:linear-gradient(#7d4b60,#4a2b45 55%,#341f37)}
+body.royal[data-page=home] .festival-home .home-cta .arena-shortcut{position:relative;height:52px;min-height:0;margin:0 30px;padding:4px 18px;display:flex;align-items:center;justify-content:center;gap:10px;border:2px solid #f0d08e;border-radius:28px;box-shadow:0 0 0 2px #5f4120,inset 0 1px #ffd9e855,inset 0 0 10px #00000055,0 4px 8px #0a142f88;color:#fff0d4;text-shadow:0 1px 2px #1a0d18;transform:none;filter:none;font:500 16px var(--serif)}
+body.royal[data-page=home] .festival-home .home-cta .arena-shortcut:hover:not(:disabled){filter:brightness(1.15);color:#fff8e6;border-color:#ffe2a0}
+body.royal[data-page=home] .festival-home .home-cta .arena-crest{flex:0 0 40px;width:40px;height:40px;background:url('../assets/redesign/nav-icons.png') 80% 50%/600% 190% no-repeat;filter:drop-shadow(0 2px 2px #1a0d18)}
+body.royal[data-page=home] .festival-home .home-cta .arena-shortcut b{margin:0;font:500 23px/1 var(--serif);letter-spacing:.12em;color:#fff3d8;transform:none}
+body.royal[data-page=home] .festival-home .home-cta .arena-shortcut small{display:inline-block;margin:0;font:11px/1.2 var(--serif)!important;letter-spacing:0;color:#f6dca6!important;white-space:nowrap;transform:none}
+body.royal[data-page=home] .festival-home :is(.home-medal,.home-banner,.adventure-launch,.arena-shortcut,.home-economy button):focus-visible{outline:3px solid #ffe08a;outline-offset:4px}
+body.royal[data-page=home] .festival-home :is(.home-medal,.home-banner,.adventure-launch,.arena-shortcut,.home-economy button):active:not(:disabled){transform:translateY(2px) scale(.98)}
+body.soft[data-page=home] .festival-home :is(.home-medal,.home-banner,.adventure-launch,.arena-shortcut,.home-economy button):is(:hover,:active),body.quick[data-page=home] .festival-home :is(.home-medal,.home-banner,.adventure-launch,.arena-shortcut,.home-economy button):is(:hover,:active){transform:none!important}
+@media(prefers-reduced-motion:reduce){body.royal[data-page=home] .festival-home :is(.home-medal,.home-banner,.adventure-launch,.arena-shortcut,.home-economy button):is(:hover,:active){transform:none!important}}
+/* Short desktop windows (1280×720). */
+@media(min-width:651px) and (max-height:800px){
+  body.royal[data-page=home] .festival-home .royal-emblem{width:58px;height:78px}
+  body.royal[data-page=home] .festival-home .royal-emblem .ui-icon{width:32px;height:32px}
+  body.royal[data-page=home] .festival-home .home-logo>span{font-size:clamp(24px,2.4vw,34px)}
+  body.royal[data-page=home] .festival-home .home-logo h1{font-size:13px}
+  body.royal[data-page=home] .festival-home .home-tools{top:108px;gap:12px}
+  body.royal[data-page=home] .festival-home .home-tools .home-medal{width:72px;height:72px;font-size:13px;padding:4px 3px 6px}
+  body.royal[data-page=home] .festival-home .home-tools .medal-face .ui-icon{width:26px;height:26px}
+  body.royal[data-page=home] .festival-home .home-tools .home-medal small{font-size:9px}
+  body.royal[data-page=home] .festival-home .home-banners{top:80px;gap:8px;width:300px}
+  body.royal[data-page=home] .festival-home .home-banners .home-banner{height:94px;padding:26px 42% 9px 20px}
+  body.royal[data-page=home] .festival-home .home-banner .banner-ribbon{top:9px;left:15px}
+  body.royal[data-page=home] .festival-home .home-banner strong{font-size:22px;margin-top:4px}
+  body.royal[data-page=home] .festival-home .moon-banner .banner-portrait{top:-12px;width:48%}
+  body.royal[data-page=home] .festival-home .home-economy{bottom:112px;width:350px;height:148px}
+  body.royal[data-page=home] .festival-home .home-economy .income-chest{left:40px;bottom:10px;width:104px;height:104px}
+  body.royal[data-page=home] .festival-home .home-economy .income-copy{padding:16px 22px 14px 2px}
+  body.royal[data-page=home] .festival-home .home-economy h2{font-size:19px}
+  body.royal[data-page=home] .festival-home .home-economy strong{font-size:19px}
+  body.royal[data-page=home] .festival-home .home-economy button{min-height:34px;font-size:13px}
+  body.royal[data-page=home] .festival-home .home-cta{bottom:112px;width:300px;gap:10px}
+  body.royal[data-page=home] .festival-home .home-banners{--fw:300px}
+  body.royal[data-page=home] .festival-home .home-economy{--fw:350px}
+  body.royal[data-page=home] .festival-home .home-cta .adventure-launch b{font-size:36px}
+  body.royal[data-page=home] .festival-home .home-cta .adventure-launch span{font-size:11px!important}
+  body.royal[data-page=home] .festival-home .home-cta .arena-shortcut{height:46px}
+  body.royal[data-page=home] .festival-home .home-cta .arena-shortcut b{font-size:20px}
+  body.royal[data-page=home] .festival-home .home-cta .arena-crest{flex-basis:34px;width:34px;height:34px}
+  body.royal[data-page=home] .festival-home .character-line{left:calc(1.8% + 370px);bottom:220px}
+  body.royal[data-page=home] .festival-home .character-line p{font-size:15px}
+}
+/* Tablet widths: logo drops under the HUD so neither is clipped. */
+@media(min-width:651px) and (max-width:1100px){
+  body.royal[data-page=home] .festival-home .chapter{top:80px;max-width:60%}
+  body.royal[data-page=home] .festival-home .royal-emblem{width:52px;height:70px}
+  body.royal[data-page=home] .festival-home .royal-emblem .ui-icon{width:28px;height:28px}
+  body.royal[data-page=home] .festival-home .home-logo>span{font-size:24px}
+  body.royal[data-page=home] .festival-home .home-logo h1{font-size:12px}
+  body.royal[data-page=home] .festival-home .home-tools{top:170px}
+  body.royal[data-page=home] .festival-home .home-banners{width:270px;--fw:270px}
+  body.royal[data-page=home] .festival-home .home-economy{width:320px;--fw:320px}
+  body.royal[data-page=home] .festival-home .home-cta .adventure-launch b{font-size:34px}
+  body.royal[data-page=home] .festival-home .home-cta .adventure-launch span{font-size:11px!important}
+  body.royal[data-page=home] .festival-home .home-cta{width:280px}
+  body.royal[data-page=home] .festival-home .character-line{left:calc(1.8% + 330px);bottom:330px}
+}
+/* Phones: medallions left, banners right, Lune between them; income and CTA rows above the nav. */
+@media(max-width:650px){
+  body.royal[data-page=home] .festival-home .chapter{top:56px;left:3%;max-width:72%;gap:8px}
+  body.royal[data-page=home] .festival-home .royal-emblem{width:40px;height:54px}
+  body.royal[data-page=home] .festival-home .royal-emblem::before{inset:3px}
+  body.royal[data-page=home] .festival-home .royal-emblem .ui-icon{width:22px;height:22px}
+  body.royal[data-page=home] .festival-home .royal-emblem span{font-size:10px;margin:1px 0 5px}
+  body.royal[data-page=home] .festival-home .home-logo>span{font-size:21px}
+  body.royal[data-page=home] .festival-home .home-logo h1{font-size:10px;letter-spacing:.3em;margin-top:3px;gap:5px}
+  body.royal[data-page=home] .festival-home .home-logo h1::before,body.royal[data-page=home] .festival-home .home-logo h1::after{width:12px}
+  body.royal[data-page=home] .festival-home .home-tools{top:124px;left:3%;gap:12px}
+  body.royal[data-page=home] .festival-home .home-tools .home-medal{width:60px;height:60px;padding:3px 2px 5px;font-size:11px;border-width:2px;box-shadow:0 0 0 2px #6f4f22,0 0 0 3px #f6dfa466,inset 0 0 12px #8ec5ff40,0 4px 8px #091331aa}
+  body.royal[data-page=home] .festival-home .home-tools .home-medal::before{top:-6px;width:9px;height:9px;margin-left:-5px}
+  body.royal[data-page=home] .festival-home .home-tools .medal-face .ui-icon{width:21px;height:21px}
+  body.royal[data-page=home] .festival-home .home-tools .home-medal small{font-size:8px}
+  body.royal[data-page=home] .festival-home .home-badge{width:19px;height:19px;font-size:12px;top:-4px;right:-4px}
+  body.royal[data-page=home] .festival-home .home-banners{top:118px;right:3%;width:42%;gap:7px;--fw:42vw}
+  body.royal[data-page=home] .festival-home .home-banners .home-banner{height:auto;min-height:72px;padding:22px 30% 9px 11px;border-radius:4px}
+  body.royal[data-page=home] .festival-home .home-banner .banner-ribbon{top:6px;left:9px;padding:0 7px 0 6px;font-size:9px;line-height:1.5}
+  body.royal[data-page=home] .festival-home .home-banner strong{margin-top:4px;font-size:16px;letter-spacing:.02em}
+  body.royal[data-page=home] .festival-home .home-banner small{margin-top:1px;font-size:10px;line-height:1.25;white-space:normal;color:#fff3d8;text-shadow:0 1px 2px #050a1c,0 0 4px #050a1c,0 0 8px #050a1c}
+  /* Text column gets an opaque dark field; the art stays on the right third and fades out before the copy. */
+  body.royal[data-page=home] .festival-home .home-banners .moon-banner{background:linear-gradient(90deg,#1b1036fa,#22164af2 56%,#2d1c5233 80%,#2d1c5200),url('../assets/redesign/observatory.webp') 50% 35%/cover}
+  body.royal[data-page=home] .festival-home .home-banners .garden-banner{background:linear-gradient(90deg,#0a2620fa,#0e3129f2 56%,#16413a33 82%,#16413a00),url('../assets/garden.png') 62% 28%/220%}
+  body.royal[data-page=home] .festival-home .home-banners .jewel-banner{background:radial-gradient(circle at 84% 52%,#73e6ff55,transparent 36%),linear-gradient(90deg,#0b1f3dfa,#10325af2 56%,#1b5c80)}
+  body.royal[data-page=home] .festival-home .moon-banner .banner-portrait{top:-6px;right:-6px;width:50%;-webkit-mask-image:linear-gradient(90deg,transparent,#000 40%);mask-image:linear-gradient(90deg,transparent,#000 40%)}
+  body.royal[data-page=home] .festival-home .garden-banner .banner-party{width:38%;top:4px;right:5px;bottom:3px;-webkit-mask-image:linear-gradient(90deg,transparent,#000 30%);mask-image:linear-gradient(90deg,transparent,#000 30%)}
+  body.royal[data-page=home] .festival-home .jewel-banner .banner-pack{width:32%;right:3%}
+  body.royal[data-page=home] .festival-home .character-line{left:4%;bottom:304px;max-width:64%;padding:7px 16px 8px;border-radius:20px}
+  body.royal[data-page=home] .festival-home .character-line::after{width:12px;height:12px;margin-top:-6px;right:-8px}
+  body.royal[data-page=home] .festival-home .character-line>span{font-size:9px}
+  body.royal[data-page=home] .festival-home .character-line p{font-size:13px;white-space:normal}
+  body.royal[data-page=home] .festival-home .home-cta{left:3%;right:3%;width:auto;bottom:214px;flex-direction:row;align-items:center;gap:10px}
+  body.royal[data-page=home] .festival-home .home-cta .adventure-launch{flex:1.8 1 0;min-width:0;height:auto;margin:0 -4px}
+  body.royal[data-page=home] .festival-home .home-cta .adventure-launch b{font-size:27px;line-height:1;letter-spacing:.08em;padding-left:.08em}
+  body.royal[data-page=home] .festival-home .home-cta .adventure-launch span{margin-top:1px;font-size:10px!important;line-height:1.2!important;letter-spacing:0;white-space:nowrap}
+  body.royal[data-page=home] .festival-home .home-cta .arena-shortcut{flex:1 1 0;min-width:0;height:60px;margin:0;padding:4px 8px;display:grid;grid-template-columns:auto auto;grid-template-rows:auto auto;column-gap:5px;row-gap:1px;align-content:center;justify-content:center;border-radius:20px}
+  body.royal[data-page=home] .festival-home .home-cta .arena-crest{grid-row:1/3;flex:none;width:30px;height:30px;align-self:center}
+  body.royal[data-page=home] .festival-home .home-cta .arena-shortcut b{font-size:17px;letter-spacing:.06em;align-self:end}
+  body.royal[data-page=home] .festival-home .home-cta .arena-shortcut small{font-size:9px!important;align-self:start}
+  body.royal[data-page=home] .festival-home .home-economy{left:3%;right:3%;width:auto;max-width:none;bottom:104px;height:100px;--fw:min(94vw,329px)}
+  body.royal[data-page=home] .festival-home .home-economy .estate-art{background:linear-gradient(90deg,#16294a10 6%,#16294ad0 30%,#142645f2 44%),url('../assets/garden.png') 100% 30%/auto 300% no-repeat}
+  body.royal[data-page=home] .festival-home .home-economy .income-chest{left:6px;bottom:4px;width:82px;height:82px}
+  body.royal[data-page=home] .festival-home .home-economy .income-copy{left:88px;right:12px;width:auto;padding:8px 2px;display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"title action" "value action" "note action";align-content:center;align-items:center;column-gap:8px;row-gap:0;text-align:left}
+  body.royal[data-page=home] .festival-home .home-economy h2{grid-area:title;font-size:15px;letter-spacing:.1em}
+  body.royal[data-page=home] .festival-home .home-economy strong{grid-area:value;margin:0;font-size:17px}
+  body.royal[data-page=home] .festival-home .home-economy strong small{font-size:9px}
+  body.royal[data-page=home] .festival-home .home-economy .income-copy>small{grid-area:note;margin:0;font-size:10px;line-height:1.3;color:#eef0e6}
+  body.royal[data-page=home] .festival-home .home-economy button{grid-area:action;width:auto;min-height:44px;padding:4px 12px;font-size:12px}
+}
+@media(min-width:361px) and (max-width:650px){
+  body.royal[data-page=summon] .astral-summon.is-standard .summon-description{max-width:48%}
+  body.royal[data-page=summon] .astral-summon.is-standard .summon-description h2{font-size:clamp(24px,6vw,36px)}
+  body.royal[data-page=summon] .astral-summon.is-standard .summon-signature{display:none}
+  body.royal[data-page=summon] .astral-summon.is-standard .summon-description p{display:none}
+}
+@media(max-width:360px){
+  body.royal[data-page=home] .festival-home .home-logo>span{font-size:18px}
+  body.royal[data-page=home] .festival-home .home-banner strong{font-size:15px}
+  body.royal[data-page=home] .festival-home .home-cta .adventure-launch b{font-size:23px}
+  body.royal[data-page=home] .festival-home .home-cta .arena-shortcut b{font-size:15px}
+  body.royal[data-page=home] .festival-home .home-economy .income-chest{width:70px;height:70px;bottom:10px}
+  body.royal[data-page=home] .festival-home .home-economy .income-copy{left:74px;right:10px;column-gap:6px}
+  body.royal[data-page=home] .festival-home .home-economy strong{font-size:15px}
+  body.royal[data-page=home] .festival-home .home-economy button{padding:4px 8px;font-size:11px}
+  body.royal[data-page=home] .festival-home .home-banners{gap:5px}
+  body.royal[data-page=home] .festival-home .character-line{bottom:292px;max-width:92%;width:max-content;padding:6px 14px 7px}
+  body.royal[data-page=home] .festival-home .character-line p{font-size:12px;white-space:nowrap}
+}
+/* Home notifications share the character's speech panel instead of covering the HUD or controls. */
+body.royal[data-page=home] .character-line:has(.home-notice:not([hidden])) .home-greeting{display:none}
+body.royal[data-page=home] .festival-home .character-line .home-notice{white-space:normal;overflow-wrap:anywhere;font-size:13px;line-height:1.5}
+body.royal[data-page=home] .character-line .home-notice[hidden]{display:none}
+/* UI 02/12 Summon — reference composition: illustrated banner rail, gold title block with pity beside it,
+   large Lune with open hand, and a count-selection plate group separated from the gold execute button.
+   Scoped to .astral-summon; prices, pity and balances stay live HTML. */
+body.royal[data-page=summon] .astral-summon::before{inset:0;background:linear-gradient(90deg,#090e2ce6 0%,#0b1234b3 24%,#0c143840 44%,transparent 58%),linear-gradient(0deg,#0a1434d9,#0a143466 16%,transparent 32%)}
+body.royal[data-page=summon] .astral-summon .summon-banners{left:1.6%;top:150px;width:228px;gap:14px;z-index:1}
+body.royal[data-page=summon] .astral-summon :is(.summon-banner,.summon-shop-banner){height:128px;min-height:0;padding:0 22px 15px;justify-content:flex-end;align-items:flex-end;text-align:right;overflow:hidden}
+body.royal[data-page=summon] .astral-summon :is(.summon-banner,.summon-shop-banner)::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(0deg,#0a0d2ef0 0%,#0d1238b3 34%,transparent 62%),linear-gradient(270deg,#0d123899,transparent 55%)}
+body.royal[data-page=summon] .astral-summon :is(.summon-banner,.summon-shop-banner)>:is(span,strong,small){position:relative;z-index:2}
+body.royal[data-page=summon] .astral-summon .summon-banner .banner-art{position:absolute;z-index:0;max-width:none;pointer-events:none}
+body.royal[data-page=summon] .astral-summon .pickup-banner{background:radial-gradient(circle at 30% 30%,#8ea7ff55,transparent 60%),url('../assets/redesign/observatory.webp') 50% 30%/cover!important}
+body.royal[data-page=summon] .astral-summon .pickup-banner .banner-art{width:190%;left:-62%;top:-27%}
+body.royal[data-page=summon] .astral-summon .standard-banner{background:linear-gradient(0deg,#10284066,transparent),url('../assets/garden.png') 50% 40%/cover!important}
+body.royal[data-page=summon] .astral-summon .standard-banner .banner-art{width:116%;left:-9%;top:2%}
+body.royal[data-page=summon] .astral-summon .summon-banner>span{padding:1px 8px;border-radius:3px;background:linear-gradient(90deg,transparent,#7a5a2acc 30%,#7a5a2acc);font:600 12px var(--serif);letter-spacing:.08em;color:#fff1c8}
+body.royal[data-page=summon] .astral-summon .summon-banner strong{font:700 23px/1.25 var(--serif);letter-spacing:.06em;color:#fff6e2;text-shadow:0 0 2px #2b1b3a,0 2px 4px #070b22,0 0 10px #ffd98a66}
+body.royal[data-page=summon] .astral-summon .summon-banner:not(.selected){filter:saturate(.7) brightness(.78)}
+body.royal[data-page=summon] .astral-summon .summon-banner.selected{box-shadow:0 0 0 2px #ffe3a1,0 0 22px #ffd77acc!important}
+body.royal[data-page=summon] .astral-summon .summon-banner:hover:not(.selected){filter:saturate(.95) brightness(1)}
+body.royal[data-page=summon] .astral-summon .summon-shop-banner{height:104px;align-items:flex-start;text-align:left;padding:0 18px 14px}
+body.royal[data-page=summon] .astral-summon .summon-shop-banner span{font:700 19px var(--serif);color:#fff3d8}
+body.royal[data-page=summon] .astral-summon .summon-shop-banner small{margin-top:3px;font-size:11px;color:#f0e4c4}
+body.royal[data-page=summon] .astral-summon .chapter{left:calc(1.6% + 256px);top:136px;width:auto;max-width:none;padding:0;background:none;border:0;box-shadow:none;text-shadow:none;z-index:1}
+body.royal[data-page=summon] .astral-summon .chapter-top{display:flex;align-items:center;gap:18px}
+body.royal[data-page=summon] .astral-summon .chapter-top>span{font:11px Georgia,serif;letter-spacing:.32em;color:#cdd6f2;text-shadow:0 1px 3px #050a22}
+body.royal[data-page=summon] .astral-summon .chapter h1{margin:2px 0 0;padding:0;border:0;font:700 66px/1.12 var(--serif);letter-spacing:.06em;color:transparent;background:linear-gradient(180deg,#fffdf4 18%,#f6dc9c 58%,#c99647 92%);-webkit-background-clip:text;background-clip:text;text-shadow:none;filter:drop-shadow(0 2px 0 #3a2442) drop-shadow(0 0 12px #f5d48a55)}
+body.royal[data-page=summon] .astral-summon .pity-jewel{position:relative;top:auto;left:auto;display:inline-flex;align-items:baseline;gap:6px;padding:7px 28px 12px;font:600 15px var(--serif);color:#fff0d4;text-shadow:0 1px 2px #060a1e;white-space:nowrap}
+body.royal[data-page=summon] .astral-summon .pity-jewel strong{margin:0 2px;font:700 30px/1 Georgia,serif;color:#ffe29a;text-shadow:0 0 8px #ffd06e88,0 2px 2px #1b1022}
+body.royal[data-page=summon] .astral-summon .pity-gauge{position:absolute;left:30px;right:30px;bottom:7px;height:3px;border-radius:3px;background:#ffffff26;overflow:hidden}
+body.royal[data-page=summon] .astral-summon .pity-gauge b{display:block;height:100%;background:linear-gradient(90deg,#63e3dc,#ffe29a)}
+body.royal[data-page=summon] .astral-summon .summon-description{left:calc(1.6% + 256px);top:286px;max-width:440px;padding:0;background:none;text-shadow:none;z-index:1}
+body.royal[data-page=summon] .astral-summon .pickup-label{font:600 22px var(--serif);letter-spacing:.16em;color:#f6e2ae;text-shadow:0 2px 6px #070b26}
+body.royal[data-page=summon] .astral-summon .summon-description h2{margin:4px 0 0;font:700 110px/1.04 var(--serif);letter-spacing:.04em;color:transparent;background:linear-gradient(180deg,#ffffff 15%,#f8e6bb 55%,#d6a95a 95%);-webkit-background-clip:text;background-clip:text;text-shadow:none;filter:drop-shadow(0 3px 0 #3a2442) drop-shadow(0 0 16px #e8c4ff66)}
+body.royal[data-page=summon] .astral-summon.is-standard .summon-description h2{font-size:76px;margin:10px 0 12px}
+body.royal[data-page=summon] .astral-summon .summon-signature{margin:-14px 0 8px 150px;font:italic 32px Georgia,serif;letter-spacing:.1em;color:#eadbbb;text-shadow:0 2px 6px #070b26}
+body.royal[data-page=summon] .astral-summon .hero-rarity{gap:18px}
+body.royal[data-page=summon] .astral-summon .hero-rarity b{font:italic 700 50px/1.1 Georgia,serif;color:transparent;background:linear-gradient(180deg,#fff6d5,#f2c766 55%,#b9822f);-webkit-background-clip:text;background-clip:text;text-shadow:none;filter:drop-shadow(0 2px 0 #3d2a1b) drop-shadow(0 0 10px #f6c96b66)}
+body.royal[data-page=summon] .astral-summon .hero-rarity span{padding:6px 16px;border:1px solid #e3c98a;border-radius:24px;background:#132447cc;box-shadow:inset 0 0 8px #6fb6ff44;font:600 16px var(--serif);color:#e4f2ff}
+body.royal[data-page=summon] .astral-summon .summon-description p{margin:12px 0 6px;font:600 25px/1.5 var(--serif);letter-spacing:.06em;color:#fff7e8;text-shadow:0 2px 6px #070b26,0 0 12px #0b1236}
+body.royal[data-page=summon] .astral-summon .banner-rates{font-size:12px;color:#dfe2f2;text-shadow:0 1px 3px #070b26}
+/* Dock: selection plates on the left, the gold execute plate on the right (stacked on phones). */
+body.royal[data-page=summon] .astral-summon .summon-dock{left:auto;right:2.4%;bottom:136px;width:min(560px,44vw);max-width:none;padding:0;background:none;border:0;box-shadow:none;display:grid;grid-template-columns:minmax(0,212px) minmax(0,1fr);grid-template-areas:"label confirm" "options confirm" "short short" "notes notes";column-gap:14px;row-gap:6px;align-items:center;z-index:2}
+body.royal[data-page=summon] .astral-summon .pull-label{grid-area:label;align-self:end;justify-self:start;padding:4px 8px;background:#111a36;border:1px solid #9f814b;border-radius:4px;font:600 13px var(--serif);letter-spacing:.14em;color:#f4e5c0;text-shadow:0 1px 3px #060a20}
+body.royal[data-page=summon] .astral-summon .pull-label::before{content:"✧ "}
+body.royal[data-page=summon] .astral-summon .pull-options{grid-area:options;align-self:start;display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0}
+body.royal[data-page=summon] .astral-summon .summon-dock .pull-options button{min-height:56px;padding:6px 10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;line-height:1.1;color:#fff0d4;white-space:nowrap}
+body.royal[data-page=summon] .astral-summon .pull-options button b{font:700 20px Georgia,serif;letter-spacing:.02em}
+body.royal[data-page=summon] .astral-summon .pull-options button[data-count="10000"] b{font-size:18px}
+body.royal[data-page=summon] .astral-summon .pull-options button b small{margin-left:2px;font:600 11px var(--serif);color:inherit}
+body.royal[data-page=summon] .astral-summon .pull-options button em{font:11px Georgia,serif;font-style:normal;color:#cfe3ff}
+body.royal[data-page=summon] .astral-summon .summon-dock .pull-options button.selected{filter:drop-shadow(0 0 6px #ffe39acc)}
+body.royal[data-page=summon] .astral-summon .summon-dock .pull-options button.selected em{color:#fff4cf}
+body.royal[data-page=summon] .astral-summon .summon-dock .pull-options button:hover:not(:disabled):not(.selected),body.royal[data-page=summon] .astral-summon .summon-dock .summon-footnotes button:hover:not(:disabled){filter:brightness(1.25);color:#fff8e6}
+body.royal[data-page=summon] .astral-summon .summon-dock>.summon-confirm{grid-area:confirm;width:100%;min-height:112px;padding:29px clamp(20px,3vw,44px) 17px;gap:2px;container-type:inline-size}
+body.royal[data-page=summon] .astral-summon .summon-dock>.summon-confirm>span{font-weight:700;font-size:clamp(18px,14cqw,30px);line-height:1.14}
+body.royal[data-page=summon] .astral-summon .summon-dock>.summon-confirm>small{margin:0;font-size:clamp(11px,8cqw,15px);line-height:1.1}
+body.royal[data-page=summon] .astral-summon .summon-dock>.summon-confirm:hover:not(:disabled){background:url('../assets/redesign/summon-gold.png') center/100% 100% no-repeat}
+body.royal[data-page=summon] .astral-summon .summon-dock>.summon-confirm:disabled{background:url('../assets/redesign/summon-gold.png') center/100% 100% no-repeat;filter:grayscale(.75) brightness(.72) drop-shadow(0 5px 7px #080b25aa);cursor:not-allowed}
+body.royal[data-page=summon] .astral-summon .summon-dock>.summon-confirm:disabled>span{color:#2a2228}
+body.royal[data-page=summon] .astral-summon .summon-shortage{grid-area:short;margin:2px 0 0;text-align:right;font:600 13px var(--serif);color:#ffdca3;text-shadow:0 1px 3px #060a20}
+body.royal[data-page=summon] .astral-summon .summon-footnotes{grid-area:notes;margin-top:6px}
+body.royal[data-page=summon] .astral-summon .summon-footnotes button{min-height:40px;font-size:13px;color:#fff0d4}
+body.royal[data-page=summon] .astral-summon .summon-footnotes button.needed{filter:drop-shadow(0 0 7px #ffd77acc)}
+body.royal[data-page=summon] .astral-summon :is(.summon-banner,.summon-shop-banner,.summon-dock button):focus-visible{outline:3px solid #ffe08a;outline-offset:4px}
+body.royal[data-page=summon] .astral-summon :is(.summon-banner,.summon-shop-banner):active{transform:translateY(2px) scale(.98)}
+body.soft[data-page=summon] .astral-summon button:is(:hover,:active),body.quick[data-page=summon] .astral-summon button:is(:hover,:active){transform:none!important}
+@media(prefers-reduced-motion:reduce){body.royal[data-page=summon] .astral-summon button:is(:hover,:active){transform:none!important;transition:none}}
+/* Short desktop windows (1280×720). */
+@media(min-width:1001px) and (max-height:800px){
+  body.royal[data-page=summon] .astral-summon .summon-banners{top:112px;width:204px;gap:10px}
+  body.royal[data-page=summon] .astral-summon :is(.summon-banner,.summon-shop-banner){height:108px;padding-bottom:12px}
+  body.royal[data-page=summon] .astral-summon .summon-shop-banner{height:90px}
+  body.royal[data-page=summon] .astral-summon .summon-banner strong{font-size:20px}
+  body.royal[data-page=summon] .astral-summon :is(.chapter,.summon-description){left:calc(1.6% + 226px)}
+  body.royal[data-page=summon] .astral-summon .chapter{top:104px}
+  body.royal[data-page=summon] .astral-summon .chapter h1{font-size:50px}
+  body.royal[data-page=summon] .astral-summon .pity-jewel{font-size:13px;padding:6px 24px 11px}
+  body.royal[data-page=summon] .astral-summon .pity-jewel strong{font-size:25px}
+  body.royal[data-page=summon] .astral-summon .summon-description{top:218px;max-width:400px}
+  body.royal[data-page=summon] .astral-summon .pickup-label{font-size:18px}
+  body.royal[data-page=summon] .astral-summon .summon-description h2{font-size:84px}
+  body.royal[data-page=summon] .astral-summon.is-standard .summon-description h2{font-size:60px}
+  body.royal[data-page=summon] .astral-summon .summon-signature{font-size:26px;margin:-10px 0 4px 120px}
+  body.royal[data-page=summon] .astral-summon .hero-rarity b{font-size:40px}
+  body.royal[data-page=summon] .astral-summon .hero-rarity span{font-size:14px;padding:4px 13px}
+  body.royal[data-page=summon] .astral-summon .summon-description p{font-size:20px;margin:8px 0 4px}
+  body.royal[data-page=summon] .astral-summon .summon-dock{bottom:132px;width:min(500px,42vw);grid-template-columns:minmax(0,190px) minmax(0,1fr)}
+  body.royal[data-page=summon] .astral-summon .summon-dock .pull-options button{min-height:48px}
+  body.royal[data-page=summon] .astral-summon .summon-dock>.summon-confirm{padding-inline:34px}
+  body.royal[data-page=summon] .astral-summon .summon-dock>.summon-confirm>span{font-size:clamp(18px,14cqw,27px)}
+}
+/* Tablet widths. */
+@media(min-width:1001px) and (max-width:1100px){
+  body.royal[data-page=summon] .astral-summon .summon-banners{width:170px}
+  body.royal[data-page=summon] .astral-summon .summon-banner strong{font-size:17px}
+  body.royal[data-page=summon] .astral-summon :is(.chapter,.summon-description){left:calc(1.6% + 190px)}
+  body.royal[data-page=summon] .astral-summon .chapter h1{font-size:44px}
+  body.royal[data-page=summon] .astral-summon .summon-description h2{font-size:70px}
+  body.royal[data-page=summon] .astral-summon.is-standard .summon-description h2{font-size:50px}
+  body.royal[data-page=summon] .astral-summon .summon-description{max-width:330px}
+  body.royal[data-page=summon] .astral-summon .summon-dock{width:min(460px,70vw);grid-template-columns:minmax(0,170px) minmax(0,1fr)}
+}
+/* Phones: banner pair under the HUD, title + pity row, then the dock stacked above the nav. */
+@media(min-width:1001px) and (max-width:1200px){
+  body.royal[data-page=summon] .astral-summon .summon-description{max-width:300px}
+  body.royal[data-page=summon] .astral-summon .summon-description h2{font-size:84px}
+  body.royal[data-page=summon] .astral-summon.is-standard .summon-description h2{font-size:48px}
+  body.royal[data-page=summon] .astral-summon .summon-signature{margin:0 0 8px;font-size:22px}
+  body.royal[data-page=summon] .astral-summon .summon-description p{font-size:16px}
+  body.royal[data-page=summon] .astral-summon .standard-banner strong{font-size:15px}
+  body.royal[data-page=summon] .astral-summon .summon-dock{column-gap:26px}
+}
+@media(min-width:651px) and (max-width:1200px){
+  body.royal[data-page=summon] .wallet>div{padding-inline:8px}
+  body.royal[data-page=summon] .wallet>div::before{display:none}
+}
+@media(max-width:1000px){
+  body.royal[data-page=summon] #main,body.royal[data-page=summon] .astral-summon{min-height:810px}
+  body.royal[data-page=summon] .astral-summon::before{background:linear-gradient(90deg,#0a1234b3,#0a123440 60%,transparent 80%),linear-gradient(0deg,#0a1434f0,#0a1434a6 32%,transparent 50%)}
+  body.royal[data-page=summon] .astral-summon .summon-banners{top:64px;left:3%;right:3%;width:auto;grid-template-columns:1fr 1fr;gap:8px}
+  body.royal[data-page=summon] .astral-summon :is(.summon-banner,.summon-shop-banner){height:80px;padding:0 13px 9px}
+  body.royal[data-page=summon] .astral-summon .summon-shop-banner{display:none}
+  body.royal[data-page=summon] .astral-summon .summon-banner>span{font-size:9px;padding:0 6px}
+  body.royal[data-page=summon] .astral-summon .summon-banner strong{font-size:16px}
+  body.royal[data-page=summon] .astral-summon :is(.chapter,.summon-description){left:4%}
+  body.royal[data-page=summon] .astral-summon .chapter{top:152px;right:4%}
+  body.royal[data-page=summon] .astral-summon .chapter-top{justify-content:space-between;gap:8px}
+  body.royal[data-page=summon] .astral-summon .chapter-top>span{font-size:8px;letter-spacing:.2em}
+  body.royal[data-page=summon] .astral-summon .chapter h1{font-size:36px}
+  body.royal[data-page=summon] .astral-summon .pity-jewel{font-size:11px;padding:5px 16px 9px;gap:3px}
+  body.royal[data-page=summon] .astral-summon .pity-jewel strong{font-size:20px}
+  body.royal[data-page=summon] .astral-summon .pity-gauge{left:18px;right:18px;bottom:5px;height:2px}
+  body.royal[data-page=summon] .astral-summon .summon-description{top:238px;max-width:72%}
+  body.royal[data-page=summon] .astral-summon .pickup-label{font-size:13px}
+  body.royal[data-page=summon] .astral-summon .summon-description h2{font-size:52px;margin-top:2px}
+  body.royal[data-page=summon] .astral-summon.is-standard .summon-description h2{font-size:40px;margin:6px 0 8px}
+  body.royal[data-page=summon] .astral-summon .summon-signature{font-size:18px;margin:-7px 0 3px 74px}
+  body.royal[data-page=summon] .astral-summon .hero-rarity{gap:9px}
+  body.royal[data-page=summon] .astral-summon .hero-rarity b{font-size:28px}
+  body.royal[data-page=summon] .astral-summon .hero-rarity span{font-size:11px;padding:3px 10px}
+  body.royal[data-page=summon] .astral-summon .summon-description p{font-size:14px;margin:5px 0 2px}
+  body.royal[data-page=summon] .astral-summon .banner-rates{font-size:9px}
+  body.royal[data-page=summon] .astral-summon .summon-dock{left:4%;right:4%;bottom:104px;width:auto;grid-template-columns:minmax(0,1fr);grid-template-areas:"label" "options" "confirm" "short" "notes";row-gap:5px}
+  body.royal[data-page=summon] .astral-summon .pull-label{font-size:11px}
+  body.royal[data-page=summon] .astral-summon .pull-options{grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}
+  body.royal[data-page=summon] .astral-summon .summon-dock .pull-options button{min-height:48px;padding:4px 4px}
+  body.royal[data-page=summon] .astral-summon .pull-options button b,body.royal[data-page=summon] .astral-summon .pull-options button[data-count="10000"] b{font-size:15px}
+  body.royal[data-page=summon] .astral-summon .pull-options button b small{font-size:9px;margin-left:1px}
+  body.royal[data-page=summon] .astral-summon .pull-options button em{font-size:9px}
+  body.royal[data-page=summon] .astral-summon .summon-dock>.summon-confirm{justify-self:center;width:min(100%,300px);padding:26px 30px 16px}
+  body.royal[data-page=summon] .astral-summon .summon-dock>.summon-confirm>span{font-size:25px}
+  body.royal[data-page=summon] .astral-summon .summon-dock>.summon-confirm>small{font-size:13px}
+  body.royal[data-page=summon] .astral-summon .summon-shortage{text-align:center;font-size:11px}
+  body.royal[data-page=summon] .astral-summon .summon-footnotes{margin-top:2px}
+  body.royal[data-page=summon] .astral-summon .summon-footnotes button{min-height:36px;font-size:11px;padding:4px 12px}
+}
+@media(max-width:360px){
+  body.royal[data-page=summon] #main,body.royal[data-page=summon] .astral-summon{min-height:700px}
+  body.royal[data-page=summon] .astral-summon.is-standard :is(.summon-signature,.summon-description p){display:none}
+  body.royal[data-page=summon] .astral-summon.is-standard .summon-description h2{font-size:34px}
+  body.royal[data-page=summon] .astral-summon .summon-banners{top:60px}
+  body.royal[data-page=summon] .astral-summon :is(.summon-banner,.summon-shop-banner){height:70px;padding:0 10px 7px}
+  body.royal[data-page=summon] .astral-summon .summon-banner strong{font-size:14px}
+  body.royal[data-page=summon] .astral-summon .chapter{top:138px}
+  body.royal[data-page=summon] .astral-summon .chapter h1{font-size:29px}
+  body.royal[data-page=summon] .astral-summon .chapter-top>span{display:none}
+  body.royal[data-page=summon] .astral-summon .chapter-top{justify-content:flex-end;margin-bottom:-6px}
+  body.royal[data-page=summon] .astral-summon .pity-jewel{font-size:10px}
+  body.royal[data-page=summon] .astral-summon .pity-jewel strong{font-size:17px}
+  body.royal[data-page=summon] .astral-summon .summon-description{top:204px}
+  body.royal[data-page=summon] .astral-summon .pickup-label{font-size:12px}
+  body.royal[data-page=summon] .astral-summon .summon-description h2{font-size:42px}
+  body.royal[data-page=summon] .astral-summon.is-standard .summon-description h2{font-size:33px}
+  body.royal[data-page=summon] .astral-summon .summon-signature{font-size:15px;margin-left:60px}
+  body.royal[data-page=summon] .astral-summon .hero-rarity b{font-size:24px}
+  body.royal[data-page=summon] .astral-summon .summon-description p{font-size:12px}
+  body.royal[data-page=summon] .astral-summon .summon-dock .pull-options button{min-height:44px;padding:3px 2px}
+  body.royal[data-page=summon] .astral-summon .pull-options button b,body.royal[data-page=summon] .astral-summon .pull-options button[data-count="10000"] b{font-size:13px}
+  body.royal[data-page=summon] .astral-summon .pull-options button em{font-size:8px}
+  body.royal[data-page=summon] .astral-summon .summon-dock>.summon-confirm{width:min(100%,250px);padding:21px 24px 12px}
+  body.royal[data-page=summon] .astral-summon .summon-dock>.summon-confirm>span{font-size:21px}
+  body.royal[data-page=summon] .astral-summon .summon-dock>.summon-confirm>small{font-size:11px}
+  body.royal[data-page=summon] .astral-summon .summon-footnotes button{font-size:10px;padding:4px 9px;min-height:34px}
+}
+
+
+@media(min-width:651px) and (max-width:1000px){
+  body.royal[data-page=summon] #main,body.royal[data-page=summon] .astral-summon{min-height:720px}
+  body.royal[data-page=summon] .wallet strong{font-size:clamp(13px,2.1vw,17px)}
+  body.royal[data-page=summon] .astral-summon .summon-banners{top:74px}
+  body.royal[data-page=summon] .astral-summon .pickup-banner .banner-art{width:110%;left:-25%;top:-37%}
+  body.royal[data-page=summon] .astral-summon .chapter{top:157px}
+  body.royal[data-page=summon] .astral-summon .chapter h1{font-size:30px}
+  body.royal[data-page=summon] .astral-summon .summon-description{top:228px}
+  body.royal[data-page=summon] .astral-summon .summon-description h2,
+  body.royal[data-page=summon] .astral-summon.is-standard .summon-description h2{font-size:34px}
+  body.royal[data-page=summon] .astral-summon .summon-signature{margin:0 0 2px;font-size:14px}
+  body.royal[data-page=summon] .astral-summon .summon-description p{font-size:12px;margin:2px 0 0}
+  body.royal[data-page=summon] .astral-summon .summon-dock{width:min(380px,92%);left:auto;bottom:120px}
+}
+
+/* UI 03/12 Collection — reference composition: gold title plaque, four tall formation portraits with 前衛/後衛 plaques,
+   an ivory roster panel of element-painted portrait cards, and a large character showcase on the right.
+   Scoped to .astral-collection; names, levels, counts and buttons stay live HTML. */
+body.royal[data-page=collection] #main .astral-collection{position:relative;color:#f6ecd6;font-size:14px;line-height:1.5}
+body.royal[data-page=collection] #main .astral-collection *{box-sizing:border-box}
+/* Title plaque. */
+body.royal[data-page=collection] #main .astral-collection .collection-title{position:relative;display:flex;align-items:center;gap:14px;width:max-content;max-width:100%;margin:0 0 16px;padding:10px 26px 10px 12px;background:linear-gradient(100deg,#13244af2,#1b3160e6 70%,#1b316000);border:0;border-left:3px solid #ecd08f;border-radius:44px 6px 6px 44px;box-shadow:inset 0 1px #ffe6ad55,inset 0 -1px #ffe6ad33,0 6px 16px #050b2299}
+body.royal[data-page=collection] #main .astral-collection .title-crest{flex:0 0 auto;width:54px;height:54px;display:grid;place-items:center;border-radius:50%;background:radial-gradient(circle at 45% 35%,#3f63a6,#172a5a 62%,#0c1736);border:2px solid #f0d390;box-shadow:0 0 0 2px #6f4f22,0 0 12px #ffe1a055,inset 0 0 10px #8ec5ff55;font:30px/1 Georgia,serif;color:#ffe2a3;text-shadow:0 0 8px #ffe2a3aa}
+body.royal[data-page=collection] #main .astral-collection .collection-title .eyebrow{margin:0;font:10px/1.2 Georgia,serif;letter-spacing:.3em;color:#d9c08a}
+body.royal[data-page=collection] #main .astral-collection .collection-title h1{margin:2px 0 0;font:700 34px/1.1 var(--serif);letter-spacing:.14em;color:transparent;background:linear-gradient(180deg,#fffdf4 15%,#f4d892 60%,#c08c40 95%);-webkit-background-clip:text;background-clip:text;filter:drop-shadow(0 2px 0 #2e1f14) drop-shadow(0 0 8px #0b1634)}
+body.royal[data-page=collection] #main .astral-collection .collection-title .tag{align-self:flex-end;margin:0 0 4px;padding:4px 10px;font-size:12px;letter-spacing:.04em;white-space:nowrap;background:#0f1d3be6;color:#ffe8b4;border:1px solid #d8bb7c;border-radius:14px}
+/* Layout: main column + sticky showcase. */
+body.royal[data-page=collection] #main .astral-collection .collection-layout{display:grid;grid-template-columns:minmax(0,1fr) clamp(330px,31%,440px);gap:20px;align-items:start}
+body.royal[data-page=collection] #main .astral-collection .collection-main{min-width:0;display:flex;flex-direction:column;gap:16px}
+/* Shared portrait card face. */
+body.royal[data-page=collection] #main .astral-collection .card-frame{--rim:#e9cd8a;--rim-dark:#6f4f22;position:relative;display:block;width:100%;aspect-ratio:5/6;overflow:hidden;border-radius:7px;isolation:isolate;background:radial-gradient(circle at 50% 28%,#7aa6e6cc,#24427ecc 52%,#0e1b3ff2),url('../assets/redesign/observatory.webp') 50% 30%/320%;box-shadow:0 0 0 1px var(--rim-dark),0 5px 12px #050b2299;transition:transform .15s,box-shadow .15s,filter .15s}
+body.royal[data-page=collection] #main .astral-collection .card-frame::after{content:"";position:absolute;inset:0;z-index:4;pointer-events:none;border-radius:inherit;box-shadow:inset 0 0 0 2px var(--rim),inset 0 0 0 3px var(--rim-dark),inset 0 0 0 5px #ffffff1f,inset 0 -40px 30px -20px #050b2266}
+body.royal[data-page=collection] #main .astral-collection .card-frame::before{content:"";position:absolute;z-index:4;top:3px;left:50%;width:10px;height:10px;margin-left:-5px;transform:rotate(45deg);background:linear-gradient(135deg,#fff5d0,var(--rim));box-shadow:0 0 0 1px var(--rim-dark);pointer-events:none}
+body.royal[data-page=collection] #main .astral-collection .element-fire.card-frame,body.royal[data-page=collection] #main .astral-collection .collection-showcase.element-fire{background:radial-gradient(circle at 50% 28%,#f0956ccc,#8a2e2ccc 52%,#2c0f18f2),url('../assets/redesign/observatory.webp') 50% 30%/320%}
+body.royal[data-page=collection] #main .astral-collection .element-forest.card-frame,body.royal[data-page=collection] #main .astral-collection .collection-showcase.element-forest{background:radial-gradient(circle at 50% 28%,#a6dc93cc,#2f6b48cc 52%,#0f2a1df2),url('../assets/redesign/observatory.webp') 50% 30%/320%}
+body.royal[data-page=collection] #main .astral-collection .rarity-ssr{--rim:#f7d98a}
+body.royal[data-page=collection] #main .astral-collection .rarity-sr{--rim:#c9a6ff;--rim-dark:#4b3270}
+body.royal[data-page=collection] #main .astral-collection .rarity-r{--rim:#a9cdf2;--rim-dark:#2f4d70}
+body.royal[data-page=collection] #main .astral-collection .rarity-uc{--rim:#9ee0c0;--rim-dark:#2a5a48}
+body.royal[data-page=collection] #main .astral-collection .rarity-c{--rim:#cfd3dc;--rim-dark:#4b5262}
+body.royal[data-page=collection] #main .astral-collection .card-frame .crest{position:absolute;inset:0;z-index:1;width:100%;height:100%;margin:0;padding:0;background:none;filter:none;opacity:1;display:block}
+body.royal[data-page=collection] #main .astral-collection .card-frame .mini-portrait{position:absolute;inset:0;width:100%;height:100%;margin:0;background-size:auto 150%;background-position-y:0}
+/* Chibi art is cropped to the upper body so faces read at card size. */
+body.royal[data-page=collection] #main .astral-collection .card-frame .mini-portrait>img[data-hero-art]{position:absolute;left:-30%;top:2%;width:160%;height:160%;max-width:none;object-fit:contain;object-position:50% 0;filter:drop-shadow(0 3px 4px #050b2288)}
+body.royal[data-page=collection] #main .astral-collection .card-rarity{position:absolute;z-index:5;top:5px;left:8px;font:italic 800 20px/1 Georgia,serif;letter-spacing:-.02em;color:var(--rarity,#ffd98b);text-shadow:0 0 1px #2a1a08,0 1px 0 #2a1a08,1px 0 0 #2a1a08,-1px 0 0 #2a1a08,0 -1px 0 #2a1a08,0 0 8px #000a}
+body.royal[data-page=collection] #main .astral-collection .rarity-ssr>.card-rarity{color:transparent;background:linear-gradient(180deg,#fffbe6 10%,#ffd77a 55%,#c38a2e 90%);-webkit-background-clip:text;background-clip:text;text-shadow:none;filter:drop-shadow(0 1px 0 #2a1a08) drop-shadow(0 0 1px #2a1a08) drop-shadow(0 0 4px #000a)}
+body.royal[data-page=collection] #main .astral-collection .card-flag{position:absolute;z-index:5;right:5px;top:6px;padding:1px 8px 2px;border-radius:10px;font:700 10px/1.5 var(--serif);letter-spacing:.04em;white-space:nowrap;color:#fff;box-shadow:0 1px 3px #050b22aa}
+body.royal[data-page=collection] #main .astral-collection .team-flag{background:linear-gradient(#2a9ea4,#156068);border:1px solid #bdf4ee}
+body.royal[data-page=collection] #main .astral-collection .grow-flag{background:linear-gradient(#e0574f,#9b2335);border:1px solid #ffd4c4}
+body.royal[data-page=collection] #main .astral-collection .grow-flag::after{content:"";position:absolute;top:-3px;right:-3px;width:8px;height:8px;border-radius:50%;background:#ff4a3d;border:1px solid #fff2e6}
+body.royal[data-page=collection] #main .astral-collection .team-flag+.grow-flag{top:28px}
+body.royal[data-page=collection] #main .astral-collection .card-name{position:absolute;z-index:3;left:0;right:0;bottom:0;display:grid;grid-template-columns:auto minmax(0,1fr);grid-template-rows:auto auto;column-gap:6px;align-items:center;padding:26px 9px 8px;background:linear-gradient(0deg,#070d22f2,#070d22c4 55%,transparent);text-align:left}
+body.royal[data-page=collection] #main .astral-collection .element-mark{grid-row:1/3;width:26px;height:26px;display:grid;place-items:center;border-radius:50%;font:700 12px/1 var(--serif);font-style:normal;color:#fff;background:radial-gradient(circle at 40% 35%,#7fb6ff,#2251a2);border:2px solid var(--rim);box-shadow:0 0 0 1px var(--rim-dark)}
+body.royal[data-page=collection] #main .astral-collection .element-fire .element-mark{background:radial-gradient(circle at 40% 35%,#ff9b74,#a1302a)}
+body.royal[data-page=collection] #main .astral-collection .element-forest .element-mark{background:radial-gradient(circle at 40% 35%,#9ee28b,#2c7442)}
+body.royal[data-page=collection] #main .astral-collection .card-name b{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font:700 15px/1.25 var(--serif);letter-spacing:.04em;color:#fff8e8;text-shadow:0 1px 2px #000}
+body.royal[data-page=collection] #main .astral-collection .card-name small{font:13px/1.2 Georgia,serif;color:#f3dfae;text-shadow:0 1px 2px #000;white-space:nowrap}
+body.royal[data-page=collection] #main .astral-collection .unowned .card-frame .crest{filter:grayscale(.9) brightness(.55)}
+body.royal[data-page=collection] #main .astral-collection .unowned .card-frame{filter:saturate(.45)}
+body.royal[data-page=collection] #main .astral-collection .unowned .card-name small{color:#cfd3dc}
+/* Card buttons: art only, no generic plate. */
+body.royal[data-page=collection] #main .astral-collection button:is(.roster-art,.party-card),body.royal[data-page=collection] #main .astral-collection button:is(.roster-art,.party-card):hover:not(:disabled),body.royal[data-page=collection] #main .astral-collection button:is(.roster-art,.party-card):active:not(:disabled){display:block;width:100%;min-width:0;min-height:0;margin:0;padding:0;border:0;border-radius:7px;background:none;box-shadow:none;color:inherit;transform:none;text-align:left}
+body.royal[data-page=collection] #main .astral-collection button:is(.roster-art,.party-card):hover .card-frame{transform:translateY(-3px);filter:brightness(1.1);box-shadow:0 0 0 1px var(--rim-dark),0 0 14px #ffe2a088,0 8px 14px #050b2299}
+body.royal[data-page=collection] #main .astral-collection .unowned button.roster-art:hover .card-frame{filter:saturate(.6) brightness(1.1)}
+body.royal[data-page=collection] #main .astral-collection button:is(.roster-art,.party-card):active .card-frame{transform:translateY(1px) scale(.98)}
+body.royal[data-page=collection] #main .astral-collection .selected-card .card-frame,body.royal[data-page=collection] #main .astral-collection button.selected-card .card-frame{box-shadow:0 0 0 3px #62e6dc,0 0 18px #62e6dccc,0 6px 12px #050b2299}
+body.royal[data-page=collection] #main .astral-collection button:is(.roster-art,.party-card):focus-visible{outline:3px solid #ffe08a;outline-offset:4px}
+/* Formation rail. */
+body.royal[data-page=collection] #main .astral-collection .formation{margin:0;padding:0;background:none;border:0;box-shadow:none}
+body.royal[data-page=collection] #main .astral-collection .section-title{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:4px 12px;margin:0 0 8px}
+body.royal[data-page=collection] #main .astral-collection .section-title h2{margin:0;font:700 18px/1.3 var(--serif);letter-spacing:.12em;color:#fff1cf;text-shadow:0 1px 3px #050b22}
+body.royal[data-page=collection] #main .astral-collection .section-title h2 small{font:15px Georgia,serif;color:#ffe2a3;margin-left:6px}
+body.royal[data-page=collection] #main .astral-collection .section-title>span{font-size:12px;color:#e2e6ee;text-shadow:0 1px 3px #050b22}
+body.royal[data-page=collection] #main .astral-collection .party{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;max-width:840px}
+body.royal[data-page=collection] #main .astral-collection .party-slot{display:flex;flex-direction:column;gap:6px;min-width:0}
+body.royal[data-page=collection] #main .astral-collection .slot-label{align-self:center;min-width:72%;padding:2px 14px;text-align:center;font:700 14px/1.5 var(--serif);letter-spacing:.2em;color:#3a2c1a;background:linear-gradient(#fff9e8,#ead6a6);border:1px solid #c9a75f;border-radius:3px;box-shadow:0 0 0 1px #6f4f22,0 2px 4px #050b2266}
+body.royal[data-page=collection] #main .astral-collection .party .card-frame{aspect-ratio:3/4}
+body.royal[data-page=collection] #main .astral-collection .party .card-frame .mini-portrait>img[data-hero-art]{left:-34%;width:168%;height:168%;top:1%}
+body.royal[data-page=collection] #main .astral-collection .party .team-flag{display:none}
+body.royal[data-page=collection] #main .astral-collection .party .team-flag+.grow-flag{top:6px}
+body.royal[data-page=collection] #main .astral-collection .party .card-rarity{font-size:24px}
+body.royal[data-page=collection] #main .astral-collection .party .card-name b{font-size:18px}
+body.royal[data-page=collection] #main .astral-collection .party .card-name small{font-size:15px}
+body.royal[data-page=collection] #main .astral-collection button.party-empty,body.royal[data-page=collection] #main .astral-collection button.party-empty:hover:not(:disabled){width:100%;aspect-ratio:3/4;height:auto;min-height:0;margin:0;padding:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;border:2px dashed #e2c88c;border-radius:7px;background:radial-gradient(circle,#1d3566cc,#0c1736e6);box-shadow:inset 0 0 18px #8ec5ff33;color:#ffe9b8;font:300 36px/1 Georgia,serif}
+body.royal[data-page=collection] #main .astral-collection button.party-empty:hover:not(:disabled){border-style:solid;filter:brightness(1.2)}
+body.royal[data-page=collection] #main .astral-collection button.party-empty small{font:600 12px/1.4 var(--serif);color:#fff1d4}
+body.royal[data-page=collection] #main .astral-collection>.collection-layout .collection-main>.primary{margin:0}
+/* Roster panel. */
+body.royal[data-page=collection] #main .astral-collection .roster{position:relative;padding:14px 16px 18px;background:linear-gradient(#fbf6eaf5,#efe6d2f5);border:1px solid #c9a96a;border-radius:8px;outline:1px solid #e8d4a3aa;outline-offset:-6px;box-shadow:0 0 0 2px #6f4f2255,0 12px 30px #050b2277;color:#2b3448}
+body.royal[data-page=collection] #main .astral-collection .roster-bar{display:flex;align-items:center;justify-content:space-between;gap:8px 14px;flex-wrap:wrap;margin:0 0 12px;padding-bottom:10px;border-bottom:1px solid #c9a96a77}
+body.royal[data-page=collection] #main .astral-collection .roster .tabs{display:flex;flex-wrap:wrap;gap:6px;margin:0;padding:0;background:none;border:0}
+body.royal[data-page=collection] #main .astral-collection .roster .tabs button{min-height:38px;padding:5px 14px;border-radius:19px;font:600 13px/1.2 var(--serif);border:1px solid #c6aa70;background:linear-gradient(#fffdf6,#efe2c4);color:#3a3426;box-shadow:inset 0 1px #fff,0 2px 0 #6f4f2233}
+body.royal[data-page=collection] #main .astral-collection .roster .tabs button:hover:not(:disabled):not(.selected){background:linear-gradient(#fffaf0,#f5e0b4);border-color:#d9b062;color:#2b2416}
+body.royal[data-page=collection] #main .astral-collection .roster .tabs button.selected{background:linear-gradient(#1e8590,#11555e)!important;color:#fff8e6!important;border-color:#e6cb91!important}
+body.royal[data-page=collection] #main .astral-collection .roster-count{font:14px var(--serif);color:#4b4434;white-space:nowrap}
+body.royal[data-page=collection] #main .astral-collection .roster-count b{font:20px Georgia,serif;color:#1d5d63;margin:0 2px}
+body.royal[data-page=collection] #main .astral-collection .roster-empty{padding:12px 0}
+body.royal[data-page=collection] #main .astral-collection .roster-empty p{color:#3d4656;margin:0 0 10px}
+body.royal[data-page=collection] #main .astral-collection .character-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
+body.royal[data-page=collection] #main .astral-collection .roster-card{display:flex;flex-direction:column;gap:6px;min-width:0;margin:0;padding:0;background:none;border:0;box-shadow:none}
+body.royal[data-page=collection] #main .astral-collection button.roster-train{min-height:36px;width:100%;margin:0;padding:3px 6px;border-radius:5px;border:1px solid #c9a96a;background:linear-gradient(#22375c,#13213e);color:#ffefca;font:600 13px/1.2 var(--serif);letter-spacing:.08em;box-shadow:inset 0 1px #8ec5ff33,0 2px 0 #6f4f2255}
+body.royal[data-page=collection] #main .astral-collection button.roster-train:hover:not(:disabled){background:linear-gradient(#2f4a78,#1a2d52);color:#fff8e6;border-color:#f0d08e}
+body.royal[data-page=collection] #main .astral-collection button.roster-train.ready:not(:disabled){background:linear-gradient(120deg,#fbe8b6,#ddb66b 52%,#f3d99b);color:#33291f;border-color:#a9843b}
+body.royal[data-page=collection] #main .astral-collection button.roster-train.ready:hover:not(:disabled){background:linear-gradient(120deg,#fff3d2,#ecc985,#ffe8b6)}
+body.royal[data-page=collection] #main .astral-collection button.roster-train:disabled{background:#d8d4c8;color:#4f5661;border-color:#a7a596;box-shadow:none}
+/* Showcase. */
+body.royal[data-page=collection] #main .astral-collection .collection-showcase{--rim:#f0d38f;--rim-dark:#6f4f22;position:sticky;top:84px;height:calc(100vh - 196px);min-height:470px;overflow:hidden;isolation:isolate;border-radius:10px;background:radial-gradient(circle at 50% 28%,#7aa6e6cc,#24427ecc 52%,#0e1b3ff2),url('../assets/redesign/observatory.webp') 50% 30%/cover;box-shadow:0 0 0 2px var(--rim),0 0 0 3px var(--rim-dark),0 0 0 6px #e9cd8a33,0 14px 32px #050b22aa}
+body.royal[data-page=collection] #main .astral-collection .collection-showcase:focus-visible{outline:3px solid #ffe08a;outline-offset:6px}
+body.royal[data-page=collection] #main .astral-collection .collection-showcase::after{content:"";position:absolute;inset:8px;z-index:3;pointer-events:none;border:1px solid #f0d38f88;border-radius:6px}
+body.royal[data-page=collection] #main .astral-collection .showcase-art{position:absolute;inset:0;z-index:0}
+body.royal[data-page=collection] #main .astral-collection .showcase-art::before{content:"";position:absolute;left:50%;top:30%;width:120%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;border:2px solid #ffe2a044;box-shadow:0 0 0 14px #ffe2a00d,0 0 0 30px #ffe2a01a,inset 0 0 50px #ffe9b833;pointer-events:none}
+body.royal[data-page=collection] #main .astral-collection .showcase-art>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:62% 0}
+body.royal[data-page=collection] #main .astral-collection .showcase-art .crest{position:absolute;left:0;right:0;top:4%;height:66%;width:100%;margin:0;background:none;filter:none;opacity:1}
+body.royal[data-page=collection] #main .astral-collection .showcase-art .mini-portrait{width:100%;height:100%;margin:0}
+body.royal[data-page=collection] #main .astral-collection .showcase-art .mini-portrait>img[data-hero-art]{object-fit:contain;object-position:50% 50%;filter:drop-shadow(0 0 16px #ffe9b866) drop-shadow(0 6px 8px #050b22aa)}
+body.royal[data-page=collection] #main .astral-collection .collection-showcase.unowned .showcase-art{filter:grayscale(.85) brightness(.6)}
+body.royal[data-page=collection] #main .astral-collection .showcase-info{position:absolute;left:0;right:0;bottom:0;z-index:2;display:flex;flex-direction:column;gap:8px;padding:70px 24px 22px;background:linear-gradient(0deg,#0a1530f7,#0a1530ee 62%,#0a153000)}
+body.royal[data-page=collection] #main .astral-collection .showcase-name{display:flex;align-items:center;gap:12px;min-width:0}
+body.royal[data-page=collection] #main .astral-collection .showcase-name .card-rarity{position:static;flex:0 0 auto;padding:3px 10px;font-size:30px;border:2px solid var(--rim);border-radius:22px 6px;background-color:#0a1530;box-shadow:0 0 0 1px var(--rim-dark),0 0 10px #ffe2a055}
+body.royal[data-page=collection] #main .astral-collection .rarity-ssr .showcase-name .card-rarity{color:#ffd77a;background:#0a1530;-webkit-background-clip:border-box;background-clip:border-box;filter:none;text-shadow:0 0 8px #ffd77a99,0 1px 0 #2a1a08}
+body.royal[data-page=collection] #main .astral-collection .showcase-name>div{min-width:0}
+body.royal[data-page=collection] #main .astral-collection .showcase-name small{display:block;font:12px/1.3 var(--serif);color:#e8dcc0;letter-spacing:.06em}
+body.royal[data-page=collection] #main .astral-collection .showcase-name h2{margin:0;font:700 34px/1.15 var(--serif);letter-spacing:.08em;color:#fff8e8;text-shadow:0 0 10px #ffe2a066,0 2px 3px #000;overflow-wrap:anywhere}
+body.royal[data-page=collection] #main .astral-collection .showcase-level{display:flex;align-items:baseline;gap:14px;margin:0;color:#e8dcc0;font:14px var(--serif)}
+body.royal[data-page=collection] #main .astral-collection .showcase-level b{font:400 30px/1.1 Georgia,serif;color:#fff1cf}
+body.royal[data-page=collection] #main .astral-collection .showcase-stats{margin:0;display:grid;gap:0}
+body.royal[data-page=collection] #main .astral-collection .showcase-stats>div{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:4px 2px;border-bottom:1px solid #f0d38f40}
+body.royal[data-page=collection] #main .astral-collection .showcase-stats dt{font:14px var(--serif);color:#e8dcc0}
+body.royal[data-page=collection] #main .astral-collection .showcase-stats dd{margin:0;font:19px Georgia,serif;color:#fff8e8;text-align:right}
+body.royal[data-page=collection] #main .astral-collection .showcase-note{margin:0;font-size:12px;line-height:1.5;color:#d9dfe8}
+body.royal[data-page=collection] #main .astral-collection .showcase-train{min-height:56px;margin:2px 0 0;border-radius:30px;font:700 22px/1.2 var(--serif);letter-spacing:.2em}
+body.royal[data-page=collection] #main .astral-collection .showcase-train:not(:disabled){background:linear-gradient(#3aa0a8,#15606b);color:#fff8e6;border:2px solid #f0d08e;box-shadow:0 0 0 2px #6f4f22,inset 0 1px #c9fff6aa,inset 0 0 14px #00000044,0 4px 10px #050b22aa;text-shadow:0 1px 2px #062a30}
+body.royal[data-page=collection] #main .astral-collection .showcase-train:hover:not(:disabled){background:linear-gradient(#4cb7be,#1e7682);color:#fff;border-color:#ffe2a0}
+body.royal[data-page=collection] #main .astral-collection .showcase-train:disabled{background:#4b5466;color:#e1e4ea;border:2px solid #8b8f99;box-shadow:none}
+body.royal[data-page=collection] #main .astral-collection .showcase-team{display:flex;flex-wrap:wrap;gap:8px}
+body.royal[data-page=collection] #main .astral-collection .showcase-team button{flex:1 1 auto;min-height:44px;padding:5px 12px;border-radius:22px;font:600 14px/1.2 var(--serif);letter-spacing:.06em}
+body.royal[data-page=collection] #main .astral-collection .showcase-team button:not(.equipped):not(:disabled){background:linear-gradient(#fffaf0,#ecdcb6);color:#2b2416;border:1px solid #d6b56c}
+body.royal[data-page=collection] #main .astral-collection .showcase-team button:not(.equipped):hover:not(:disabled){background:linear-gradient(#fffdf6,#f6e2b2);color:#1f1a10}
+body.royal[data-page=collection] #main .astral-collection .showcase-team .forward{flex:0 0 auto}
+body.royal[data-page=collection] #main .astral-collection .showcase-team button:disabled{background:#4b5466;color:#e1e4ea;border:1px solid #8b8f99;box-shadow:none}
+body.soft[data-page=collection] #main .astral-collection .card-frame,body.quick[data-page=collection] #main .astral-collection .card-frame{transition:none;transform:none!important}
+@media(prefers-reduced-motion:reduce){body.royal[data-page=collection] #main .astral-collection .card-frame{transition:none;transform:none!important}}
+/* Wide desktop: the title plaque sits in the free strip left of the HUD, as in the reference. */
+@media(min-width:1101px){
+  body.royal[data-page=collection] #main{padding-top:96px}
+  body.royal[data-page=collection] #main .astral-collection .collection-title{margin-top:-88px;max-width:calc(31vw - 50px)}
+}
+@media(min-width:1101px) and (max-height:800px){
+  body.royal[data-page=collection] #main .astral-collection .collection-showcase{top:78px;height:calc(100vh - 178px);min-height:440px}
+  body.royal[data-page=collection] #main .astral-collection .showcase-info{gap:6px;padding:56px 20px 16px}
+  body.royal[data-page=collection] #main .astral-collection .showcase-name h2{font-size:28px}
+  body.royal[data-page=collection] #main .astral-collection .showcase-name .card-rarity{font-size:24px}
+  body.royal[data-page=collection] #main .astral-collection .showcase-level b{font-size:24px}
+  body.royal[data-page=collection] #main .astral-collection .showcase-stats dd{font-size:17px}
+  body.royal[data-page=collection] #main .astral-collection .showcase-train{min-height:48px;font-size:19px}
+  body.royal[data-page=collection] #main .astral-collection .party{max-width:720px}
+}
+/* Tablet and phone: one column — formation, showcase, then roster. */
+@media(max-width:1100px){
+  body.royal[data-page=collection] #main .astral-collection .collection-layout{display:flex;flex-direction:column;gap:16px}
+  body.royal[data-page=collection] #main .astral-collection .collection-main{display:contents}
+  body.royal[data-page=collection] #main .astral-collection .formation{order:1}
+  body.royal[data-page=collection] #main .astral-collection .collection-main>.primary{order:2}
+  body.royal[data-page=collection] #main .astral-collection .collection-showcase{order:3;position:relative;top:auto;height:auto;min-height:330px;scroll-margin:90px 0 110px}
+  body.royal[data-page=collection] #main .astral-collection .roster{order:4}
+  body.royal[data-page=collection] #main .astral-collection .party{max-width:none}
+  body.royal[data-page=collection] #main .astral-collection .showcase-art{right:52%}
+  body.royal[data-page=collection] #main .astral-collection .showcase-art::before{top:45%;width:110%}
+  body.royal[data-page=collection] #main .astral-collection .showcase-art .crest{top:4%;height:92%}
+  body.royal[data-page=collection] #main .astral-collection .showcase-art>img{object-position:58% 0}
+  body.royal[data-page=collection] #main .astral-collection .showcase-info{position:relative;margin-left:48%;min-height:330px;justify-content:center;padding:20px 20px 20px 16px;background:linear-gradient(90deg,#0a153000,#0a1530e6 14%,#0a1530f5)}
+  body.royal[data-page=collection] #main .astral-collection .character-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+@media(max-width:650px){
+  body.royal[data-page=collection] #main .astral-collection .collection-title{gap:10px;padding:7px 18px 7px 8px;margin-bottom:12px}
+  body.royal[data-page=collection] #main .astral-collection .title-crest{width:40px;height:40px;font-size:22px}
+  body.royal[data-page=collection] #main .astral-collection .collection-title .eyebrow{font-size:8px;letter-spacing:.2em}
+  body.royal[data-page=collection] #main .astral-collection .collection-title h1{font-size:24px;letter-spacing:.1em}
+  body.royal[data-page=collection] #main .astral-collection .collection-title .tag{font-size:10px;padding:3px 8px}
+  body.royal[data-page=collection] #main .astral-collection .section-title h2{font-size:15px}
+  body.royal[data-page=collection] #main .astral-collection .section-title>span{font-size:10px}
+  body.royal[data-page=collection] #main .astral-collection .party{gap:6px}
+  body.royal[data-page=collection] #main .astral-collection .slot-label{min-width:0;width:100%;padding:1px 2px;font-size:11px;letter-spacing:.08em}
+  body.royal[data-page=collection] #main .astral-collection .party .card-rarity{font-size:14px;top:4px;left:5px}
+  body.royal[data-page=collection] #main .astral-collection .card-name{padding:18px 5px 5px;column-gap:4px}
+  body.royal[data-page=collection] #main .astral-collection .element-mark{width:17px;height:17px;font-size:9px;border-width:1px}
+  body.royal[data-page=collection] #main .astral-collection .party .card-name b,body.royal[data-page=collection] #main .astral-collection .card-name b{font-size:12px;letter-spacing:0}
+  body.royal[data-page=collection] #main .astral-collection .party .card-name small,body.royal[data-page=collection] #main .astral-collection .card-name small{font-size:10px}
+  body.royal[data-page=collection] #main .astral-collection .card-rarity{font-size:15px;top:4px;left:5px}
+  body.royal[data-page=collection] #main .astral-collection .card-flag{right:3px;top:4px;padding:0 5px 1px;font-size:9px}
+  body.royal[data-page=collection] #main .astral-collection .team-flag+.grow-flag{top:23px}
+  body.royal[data-page=collection] #main .astral-collection .party .team-flag+.grow-flag{top:4px}
+  body.royal[data-page=collection] #main .astral-collection button.party-empty{font-size:24px;padding:4px}
+  body.royal[data-page=collection] #main .astral-collection button.party-empty small{font-size:10px}
+  body.royal[data-page=collection] #main .astral-collection .collection-showcase{min-height:0}
+  body.royal[data-page=collection] #main .astral-collection .showcase-art{right:50%}
+  body.royal[data-page=collection] #main .astral-collection .showcase-info{margin-left:44%;min-height:300px;gap:6px;padding:16px 14px 16px 10px}
+  body.royal[data-page=collection] #main .astral-collection .showcase-name{flex-direction:column;align-items:flex-start;gap:4px}
+  body.royal[data-page=collection] #main .astral-collection .showcase-name .card-rarity{font-size:18px;padding:1px 8px}
+  body.royal[data-page=collection] #main .astral-collection .showcase-name small{font-size:10px}
+  body.royal[data-page=collection] #main .astral-collection .showcase-name h2{font-size:22px;letter-spacing:.04em}
+  body.royal[data-page=collection] #main .astral-collection .showcase-level{font-size:12px;gap:8px}
+  body.royal[data-page=collection] #main .astral-collection .showcase-level b{font-size:21px}
+  body.royal[data-page=collection] #main .astral-collection .showcase-stats>div{padding:2px 1px}
+  body.royal[data-page=collection] #main .astral-collection .showcase-stats dt{font-size:11px;white-space:nowrap}
+  body.royal[data-page=collection] #main .astral-collection .showcase-stats dd{font-size:13px}
+  body.royal[data-page=collection] #main .astral-collection .showcase-note{font-size:10px}
+  body.royal[data-page=collection] #main .astral-collection .showcase-train{min-height:46px;font-size:17px;letter-spacing:.1em}
+  body.royal[data-page=collection] #main .astral-collection .showcase-team{gap:6px}
+  body.royal[data-page=collection] #main .astral-collection .showcase-team button{min-height:44px;padding:4px 8px;font-size:12px;letter-spacing:0}
+  body.royal[data-page=collection] #main .astral-collection .roster{padding:10px 10px 14px}
+  body.royal[data-page=collection] #main .astral-collection .roster .tabs{gap:5px}
+  body.royal[data-page=collection] #main .astral-collection .roster .tabs button{min-height:44px;padding:4px 10px;font-size:12px}
+  body.royal[data-page=collection] #main .astral-collection .roster-count{font-size:12px}
+  body.royal[data-page=collection] #main .astral-collection .roster-count b{font-size:16px}
+  body.royal[data-page=collection] #main .astral-collection .character-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+  body.royal[data-page=collection] #main .astral-collection button.roster-train{min-height:44px;font-size:12px;letter-spacing:.02em;padding:2px 3px}
+}
+@media(max-width:360px){
+  body.royal[data-page=collection] #main .astral-collection .collection-title h1{font-size:21px}
+  body.royal[data-page=collection] #main .astral-collection .collection-title .eyebrow{display:none}
+  body.royal[data-page=collection] #main .astral-collection .collection-title{flex-wrap:wrap;row-gap:4px}
+  body.royal[data-page=collection] #main .astral-collection .collection-title .tag{font-size:9px}
+  body.royal[data-page=collection] #main .astral-collection .party .card-name b,body.royal[data-page=collection] #main .astral-collection .card-name b{font-size:11px}
+  body.royal[data-page=collection] #main .astral-collection .card-name small{font-size:9px}
+  body.royal[data-page=collection] #main .astral-collection .element-mark{display:none}
+  body.royal[data-page=collection] #main .astral-collection .card-name{grid-template-columns:minmax(0,1fr)}
+  body.royal[data-page=collection] #main .astral-collection .card-flag{font-size:8px;padding:0 4px}
+  body.royal[data-page=collection] #main .astral-collection .team-flag+.grow-flag{top:21px}
+  body.royal[data-page=collection] #main .astral-collection .showcase-info{margin-left:40%;padding:14px 10px 14px 8px}
+  body.royal[data-page=collection] #main .astral-collection .showcase-art{right:54%}
+  body.royal[data-page=collection] #main .astral-collection .showcase-name h2{font-size:19px}
+  body.royal[data-page=collection] #main .astral-collection .showcase-train{font-size:15px}
+  body.royal[data-page=collection] #main .astral-collection .roster .tabs button{padding:4px 8px;font-size:11px}
+  body.royal[data-page=collection] #main .astral-collection .character-grid{gap:6px}
+}
+
+body.royal[data-page=collection] #main .astral-collection{padding-bottom:112px}
+body.royal[data-page=collection] #main .astral-collection .collection-title h1{white-space:nowrap}
+body.royal[data-page=collection] #main .astral-collection .card-name b{white-space:normal;overflow-wrap:anywhere}
+@media(max-width:1100px){
+  body.royal[data-page=collection] #main .astral-collection .collection-showcase{order:5;width:100%}
+  body.royal[data-page=collection] #main .astral-collection .showcase-team{flex-wrap:wrap}
+}
+@media(max-width:650px){
+  body.royal[data-page=collection] #main .astral-collection .showcase-level{flex-wrap:wrap}
+  body.royal[data-page=collection] #main .astral-collection .party .grow-flag{top:24px}
+  body.royal[data-page=collection] #main .astral-collection .showcase-train{letter-spacing:0;font-size:14px}
+}
+
+body.royal[data-page=collection] #main .astral-collection .collection-portrait{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 30%}
+body.royal[data-page=collection] #main .astral-collection .unowned .collection-portrait{filter:grayscale(.85) brightness(.6)}
+body.royal[data-page=collection] #main .astral-collection .showcase-art .collection-portrait{height:72%}
+@media(max-width:1100px){
+  body.royal[data-page=collection] #main .astral-collection .showcase-art .collection-portrait{height:100%}
+}
+
+@media(max-width:650px){
+  body.royal[data-page=collection] #main .astral-collection .party .team-flag+.grow-flag{top:23px}
+}
+@media(min-width:1101px) and (max-height:800px){
+  body.royal[data-page=collection] #main .astral-collection .party .card-frame{max-height:162px}
+  body.royal[data-page=collection] #main .astral-collection .roster .card-frame{max-height:152px}
+}
+
+body.royal[data-page=collection] #main{height:calc(100dvh - 112px);overflow:auto;scroll-padding:90px 0 16px;padding-bottom:24px}
+body.royal[data-page=collection] #main .astral-collection{padding-bottom:0}
+body.royal[data-page=collection] #main .astral-collection .collection-showcase{scroll-margin:0}
+@media(min-width:1101px) and (max-height:800px){
+  body.royal[data-page=collection] #main .astral-collection .party-slot.empty button{height:162px;min-height:0;aspect-ratio:auto}
+  body.royal[data-page=collection] #main .astral-collection .collection-showcase{top:0;min-height:0;height:calc(100dvh - 128px)}
+}
+@media(max-width:650px){
+  body.royal[data-page=collection] #main{height:calc(100dvh - 90px);scroll-padding-top:55px}
+  body.royal[data-page=collection] #main .astral-collection .party .card-name{grid-template-columns:minmax(0,1fr)}
+  body.royal[data-page=collection] #main .astral-collection .party .card-name b{white-space:nowrap;font-size:10px}
+  body.royal[data-page=collection] #main .astral-collection .card-name .element-mark{display:grid;position:absolute;left:5px;bottom:39px}
+}
+
+@media(min-width:1101px){
+  body.royal[data-page=collection] #main .astral-collection .collection-showcase{position:relative;top:auto;height:auto;min-height:min(620px,calc(100dvh - 230px));display:flex;align-items:end}
+  body.royal[data-page=collection] #main .astral-collection .showcase-info{position:relative;width:100%;padding-top:42px}
+}
+
+@media(max-width:650px){
+  body.royal[data-page=collection] #main{height:calc(100dvh - 112px);margin-top:58px;padding-top:0;scroll-padding-top:8px}
+  body.royal[data-page=collection] #main{height:calc(100dvh - 170px)}
+}
+
+@media(max-width:650px){
+  body.royal[data-page=collection] #main{position:fixed;inset:58px 0 112px;height:auto;min-height:0;margin:0;padding:0 4% 24px;width:100%;box-sizing:border-box}
+}
+
+@media(max-width:650px){
+  body.royal[data-page=collection] #main .astral-collection .party .card-name .element-mark{bottom:24px;left:auto;right:5px}
+}
+
+body.royal[data-page=collection] #main .astral-collection button:is(.selected-card,.roster-art[aria-pressed=true]):hover .card-frame{box-shadow:0 0 0 3px #62e6dc,0 0 18px #62e6dccc,0 6px 12px #050b2299}
+@media(min-width:651px){
+  body.royal[data-page=collection] #main{position:fixed;inset:84px 0 112px;margin:0 auto;width:100%;height:auto;min-height:0;padding:0 4% 24px;scroll-padding-top:8px}
+  body.royal[data-page=collection] #main .astral-collection .collection-title{margin-bottom:10px}
+}
+
+@media(min-width:651px){
+  body.royal[data-page=collection] #main .astral-collection .collection-title{margin-top:0}
+}
+@media(min-width:1101px){
+  body.royal[data-page=collection] #main .astral-collection .party .card-frame{max-height:clamp(128px,18vh,170px)}
+  body.royal[data-page=collection] #main .astral-collection .roster .card-frame{max-height:clamp(92px,13vh,124px)}
+  body.royal[data-page=collection] #main .astral-collection .party-slot.empty button{height:clamp(128px,18vh,170px);min-height:0;aspect-ratio:auto}
+}
+@media(max-width:650px){
+  body.royal[data-page=collection] #main .astral-collection .roster .card-name{grid-template-columns:minmax(0,1fr)}
+  body.royal[data-page=collection] #main .astral-collection .roster .card-name small{font-size:10px;white-space:nowrap}
+}
+
+@media(min-width:1101px) and (max-height:800px){
+  body.royal[data-page=collection] #main .astral-collection .collection-showcase{min-height:calc(100dvh - 295px)}
+  body.royal[data-page=collection] #main .astral-collection .showcase-info{padding-top:28px}
+}
+@media(max-width:650px){
+  body.royal[data-page=collection] #main .astral-collection .showcase-info{background:#0a1530f2}
+}
+
+body.royal[data-page=collection] #main .astral-collection .party .collection-portrait{object-position:center top}
+body.royal[data-page=collection] #main .astral-collection .showcase-name small{display:inline-block;padding:2px 5px;background:#09142bef;border-radius:3px;color:#f6ecd6}
+
+body.royal[data-page=collection] #main .astral-collection .roster .collection-portrait{object-position:center top}
+@media(min-width:1101px) and (max-height:800px){
+  body.royal[data-page=collection] #main .astral-collection .showcase-art .collection-portrait{height:55%}
+  body.royal[data-page=collection] #main .astral-collection .showcase-info{padding-top:22px;background:linear-gradient(0deg,#0a1530 75%,#0a1530d9)}
+}
+@media(max-width:650px){
+  body.royal[data-page=collection] #main .astral-collection .party .team-flag+.grow-flag{top:auto;bottom:4px;right:3px}
+  body.royal[data-page=collection] #main .astral-collection .party .card-name{padding-bottom:17px}
+}
+
+@media(min-width:1101px) and (max-height:800px){
+  body.royal[data-page=collection] #main .astral-collection .collection-showcase{display:grid;grid-template-columns:42% minmax(0,1fr);align-items:stretch}
+  body.royal[data-page=collection] #main .astral-collection .showcase-art{position:relative;inset:auto;grid-column:1;min-height:100%}
+  body.royal[data-page=collection] #main .astral-collection .showcase-art .collection-portrait{height:100%;object-position:58% top}
+  body.royal[data-page=collection] #main .astral-collection .showcase-info{grid-column:2;justify-content:center;padding:12px 10px;background:#0a1530}
+  body.royal[data-page=collection] #main .astral-collection .showcase-team{flex-wrap:wrap}
+  body.royal[data-page=collection] #main .astral-collection .showcase-train{font-size:15px;letter-spacing:0}
+}
+
+body.royal[data-page=collection] #main .astral-collection .card-frame:is(.tier-2,.tier-3,.tier-4,.tier-5)::after{border:2px solid #eed18e;box-shadow:inset 0 0 9px #eac77e,inset 0 -30px 24px -18px #050b2266}
+body.royal[data-page=collection] #main .astral-collection .card-frame:is(.tier-4,.tier-5)::after{border-color:#fff0ae;box-shadow:inset 0 0 18px #ffd980,inset 0 -30px 24px -18px #050b2266}
+
+@media(max-width:360px){
+  body.royal[data-page=collection] #main .astral-collection .roster .card-name .element-mark{display:grid}
+}
+
+@media(min-width:1101px) and (max-height:800px){
+  body.royal[data-page=collection] #main .astral-collection .collection-title{padding-block:4px;margin-bottom:6px}
+  body.royal[data-page=collection] #main .astral-collection .title-crest{width:35px;height:35px;font-size:22px}
+  body.royal[data-page=collection] #main .astral-collection .party .card-frame{max-height:108px}
+  body.royal[data-page=collection] #main .astral-collection .party-slot.empty button{height:108px}
+  body.royal[data-page=collection] #main .astral-collection .roster .card-frame{max-height:80px}
+  body.royal[data-page=collection] #main .astral-collection .collection-main{gap:8px}
+  body.royal[data-page=collection] #main .astral-collection .roster-train{min-height:28px;padding:3px}
+}
+
+
+/* ===== Shop: exchange-counter art direction (scoped to .exchange-shop only) ===== */
+body.royal[data-page=shop]:has(.exchange-shop)::before{background:radial-gradient(ellipse 55% 45% at 58% 22%,#ffe4a838,transparent 70%),linear-gradient(180deg,#0b1430a6 0%,#0d173070 38%,#0b1224d9 78%,#0a1020f2 100%),url('../assets/redesign/observatory.webp') center 28%/cover}
+body.royal[data-page=shop] #main:has(.exchange-shop){max-width:1440px;padding:84px 3% 128px}
+body.royal[data-page=shop] .exchange-shop{position:relative;display:grid;grid-template-columns:minmax(0,31%) minmax(0,1fr);grid-template-rows:auto 1fr;column-gap:26px;color:#f6ead0}
+/* Title plaque */
+body.royal[data-page=shop] .exchange-title{grid-column:2;grid-row:1;position:relative;display:flex;justify-content:center;align-items:center;margin:0 0 12px}
+body.royal[data-page=shop] .exchange-title::before{content:'';position:absolute;left:4%;right:4%;top:50%;height:2px;background:linear-gradient(90deg,transparent,#d9b86f 22%,#fff0c0 50%,#d9b86f 78%,transparent);box-shadow:0 0 8px #f5d68a88;pointer-events:none}
+body.royal[data-page=shop] .exchange-title h1{position:relative;margin:0;min-width:min(520px,100%);height:76px;padding:0 64px;display:flex;align-items:center;justify-content:center;gap:16px;background:url('../assets/redesign/hud-plate.png') center/100% 205% no-repeat;font:600 38px/1 var(--serif);letter-spacing:.14em;color:#fff1cc;text-shadow:0 2px 0 #6b4b18,0 0 14px #ffd98a66,0 3px 10px #000a;white-space:nowrap}
+body.royal[data-page=shop] .exchange-title h1::before,body.royal[data-page=shop] .exchange-title h1::after{font:24px Georgia,serif;color:#f3cf7a;text-shadow:0 0 8px #ffd98a99;letter-spacing:0}
+body.royal[data-page=shop] .exchange-title h1::before{content:'✦'}
+body.royal[data-page=shop] .exchange-title h1::after{content:'☾'}
+/* Host: Lune presents the counter */
+body.royal[data-page=shop] .exchange-host{grid-column:1;grid-row:1/3;position:relative;min-height:540px;pointer-events:none}
+body.royal[data-page=shop] .exchange-host-art{position:absolute;left:44%;top:-6px;height:calc(100% + 30px);width:auto;max-width:none;transform:translateX(-50%);filter:drop-shadow(0 10px 26px #050c22aa)}
+body.royal[data-page=shop] .exchange-bubble{position:absolute;z-index:4;top:27%;right:-22px;width:min(232px,64%);margin:0;padding:14px 16px 13px;text-align:center;background:linear-gradient(#fffaf0,#f1e3c2);border:1px solid #c9a65d;border-radius:6px;box-shadow:inset 0 0 0 3px #fffaf0,inset 0 0 0 4px #d8bd82,0 8px 20px #050c22aa;color:#33281a}
+body.royal[data-page=shop] .exchange-bubble::before{content:'✦';position:absolute;top:-13px;left:50%;transform:translateX(-50%);font:18px Georgia,serif;color:#5fc7d6;text-shadow:0 0 6px #9ff3ff,0 1px 0 #2a5c66}
+body.royal[data-page=shop] .exchange-bubble::after{content:'';position:absolute;left:58%;bottom:-13px;width:20px;height:14px;background:#f1e3c2;clip-path:polygon(0 0,100% 0,15% 100%);filter:drop-shadow(0 1px 0 #c9a65d)}
+body.royal[data-page=shop] .exchange-bubble b{display:block;font:700 16px/1.4 var(--serif);color:#2d2416}
+body.royal[data-page=shop] .exchange-bubble small{display:block;margin-top:5px;font-size:11px;line-height:1.5;color:#5a4a32}
+/* Counter column */
+body.royal[data-page=shop] .exchange-counter{grid-column:2;grid-row:2;min-width:0;display:flex;flex-direction:column}
+body.royal[data-page=shop] .exchange-quantity{display:flex;align-items:center;justify-content:center;gap:14px;margin:0 0 16px}
+body.royal[data-page=shop] .exchange-quantity-label{font:600 13px var(--serif);letter-spacing:.1em;color:#f3dfae;text-shadow:0 2px 4px #000c;white-space:nowrap}
+body.royal[data-page=shop] .exchange-quantity-bar{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));width:min(560px,100%);padding:4px;border-radius:999px;background:linear-gradient(#2b3654,#121a2f);border:1px solid #e2c27c;box-shadow:0 0 0 2px #6a4f23,0 0 0 3px #e9cf8f66,0 8px 18px #050b1fa8}
+body.royal[data-page=shop] .exchange-quantity-bar button{min-height:46px;margin:0;padding:4px 6px;border:0;border-left:1px solid #b79e70;border-radius:0;background:linear-gradient(#fffaf0,#e4d8c1);color:#2a3245;font:22px/1 Georgia,serif;box-shadow:inset 0 1px #fff,inset 0 -2px 4px #b49b7140}
+body.royal[data-page=shop] .exchange-quantity-bar button:first-child{border-left:0;border-radius:999px 0 0 999px}
+body.royal[data-page=shop] .exchange-quantity-bar button:last-child{border-radius:0 999px 999px 0}
+body.royal[data-page=shop] .exchange-quantity-bar button.selected{color:#f6fff8!important;text-shadow:0 1px 3px #052a2e;box-shadow:inset 0 0 0 2px #e6cb91,inset 0 0 14px #6fe6ee55,0 0 14px #5fdde866!important}
+body.royal[data-page=shop] .exchange-quantity-bar button:focus-visible{position:relative;z-index:2;outline:3px solid #ffe08a;outline-offset:2px}
+/* Display shelf: pedestals standing on a shop counter */
+body.royal[data-page=shop] .exchange-shelf{position:relative;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;align-items:end;padding:0 6px 14px}
+body.royal[data-page=shop] .exchange-shelf::after{content:'';position:absolute;z-index:0;left:-14px;right:-14px;bottom:0;height:44px;border-radius:4px;background:linear-gradient(#e9d7ae 0,#b48f55 3px,#5b3f24 5px,#3a2817 60%,#24180f);box-shadow:0 -1px 0 #fff3cf88,0 10px 24px #000b;pointer-events:none}
+body.royal[data-page=shop] .exchange-item{position:relative;z-index:1;min-width:0;display:flex;flex-direction:column;align-items:stretch}
+body.royal[data-page=shop] .exchange-display{position:relative;z-index:2;height:196px;display:flex;align-items:flex-end;justify-content:center;margin-bottom:-34px;pointer-events:none}
+body.royal[data-page=shop] .exchange-display::before{content:'';position:absolute;left:4%;right:4%;top:6%;bottom:6%;border-radius:50%;background:radial-gradient(closest-side,#9feeff66,#5ac8ff22 55%,transparent);z-index:-1}
+body.royal[data-page=shop] .is-premium .exchange-display::before{background:radial-gradient(closest-side,#ffe7a08c,#ffd37a2e 55%,transparent)}
+body.royal[data-page=shop] .exchange-art{display:block;width:auto;max-width:86%;height:100%;object-fit:contain;filter:drop-shadow(0 12px 10px #060a1ccc) drop-shadow(0 0 16px #8fe3ff55)}
+body.royal[data-page=shop] .is-premium .exchange-art{filter:drop-shadow(0 12px 10px #060a1ccc) drop-shadow(0 0 18px #ffd77a77)}
+body.royal[data-page=shop] .exchange-pedestal{position:relative;z-index:1;padding:40px 16px 14px;text-align:center;border-top:2px solid #f2d899;border-bottom:4px solid #8c6a33;border-radius:4px 4px 10px 10px;background:linear-gradient(90deg,#7c5a2a 0,#f1d896 4px,#8a6630 8px,transparent 9px,transparent calc(100% - 9px),#8a6630 calc(100% - 8px),#f1d896 calc(100% - 4px),#7c5a2a 100%),radial-gradient(ellipse at 50% 0,#5a4632aa,transparent 70%),linear-gradient(180deg,#3d2f27,#241b1f 55%,#1a1522);box-shadow:inset 0 0 0 1px #f4dc9f44,inset 0 -18px 24px #0007,0 16px 26px #000a}
+body.royal[data-page=shop] .exchange-pedestal::before{content:'';position:absolute;left:-10px;right:-10px;top:-17px;height:30px;border-radius:50%;background:radial-gradient(ellipse at 50% 38%,#fffaf0,#e9dbbd 50%,#b5996a 100%);box-shadow:0 3px 0 #8d6c35,0 4px 0 #f2d89955,0 8px 12px #0007;pointer-events:none}
+body.royal[data-page=shop] .is-premium .exchange-pedestal{border-top-color:#ffe6a6;box-shadow:inset 0 0 0 1px #ffe6a677,inset 0 -18px 24px #0007,0 0 22px #ffd36a44,0 16px 26px #000a}
+body.royal[data-page=shop] .exchange-name{position:relative;margin:0 auto 8px;max-width:100%;width:fit-content;padding:6px 24px;background:linear-gradient(#fdf6e3,#e5d0a0);clip-path:polygon(0 50%,12px 0,calc(100% - 12px) 0,100% 50%,calc(100% - 12px) 100%,12px 100%);font:700 16px/1.35 var(--serif);color:#33261a;letter-spacing:.04em}
+body.royal[data-page=shop] .exchange-gems{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:2px 8px;font:400 clamp(22px,2.15vw,32px)/1.15 Georgia,serif;color:#fff6dc;text-shadow:0 2px 5px #000c,0 0 10px #8fe3ff44;overflow-wrap:anywhere}
+body.royal[data-page=shop] .exchange-gems small{font:600 15px var(--serif);color:#f2dfb4}
+body.royal[data-page=shop] .exchange-gem{flex:0 0 auto;width:30px;height:30px;background:url('../assets/redesign/nav-icons.png') 40% 50%/600% 190% no-repeat;filter:drop-shadow(0 0 4px #8fe3ff99)}
+body.royal[data-page=shop] .exchange-note{margin:4px 0 10px;font-size:11px;line-height:1.5;color:#dccfb2}
+body.royal[data-page=shop] .exchange-shop button.exchange-buy{position:relative;width:100%;min-height:72px;margin:0;padding:16px 22px 8px;display:flex;align-items:center;justify-content:center;gap:10px;border:0;border-radius:0;background:url('../assets/redesign/nav-active.png') center/100% 100% no-repeat;box-shadow:none;color:#fff6df;text-shadow:0 2px 3px #04262c;transition:filter .15s,transform .15s}
+body.royal[data-page=shop] .exchange-shop button.exchange-buy>span{display:flex;flex-direction:column;align-items:center;min-width:0;font:clamp(18px,1.7vw,25px)/1.1 Georgia,serif;overflow-wrap:anywhere}
+body.royal[data-page=shop] .exchange-shop button.exchange-buy small{display:block;margin-top:4px;font:600 10px "Yu Gothic UI","Yu Gothic",sans-serif;letter-spacing:.12em;color:#d9fbf6}
+body.royal[data-page=shop] .exchange-coin{flex:0 0 auto;width:26px;height:26px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff6c8,#f2c955 45%,#a5741d 100%);box-shadow:inset 0 0 0 2px #c99a3a,inset 0 0 0 3px #ffe9a6,0 2px 3px #0008}
+body.royal[data-page=shop] .exchange-coin::before{content:'★';display:block;text-align:center;font:13px/26px Georgia,serif;color:#9a6a17;text-shadow:0 1px #fff4c4}
+body.royal[data-page=shop] .exchange-shop button.exchange-buy:hover:not(:disabled){background:url('../assets/redesign/nav-active.png') center/100% 100% no-repeat;color:#fffaf0;filter:brightness(1.14) saturate(1.1) drop-shadow(0 0 8px #5fe6e888);transform:translateY(-1px)}
+body.royal[data-page=shop] .exchange-shop button.exchange-buy:active:not(:disabled){transform:translateY(1px);filter:brightness(.95)}
+body.royal[data-page=shop] .exchange-shop button.exchange-buy:focus-visible{outline:3px solid #ffe08a;outline-offset:3px}
+body.royal[data-page=shop] .exchange-unit{display:block;margin-top:6px;font-size:10px;line-height:1.5;color:#c9bc9f}
+/* Supporter crest panel (lives over the host's skirt on desktop) */
+body.royal[data-page=shop] .exchange-supporter{grid-column:1;grid-row:1/3;align-self:end;position:relative;z-index:3;margin:0 7% 4px 2%;padding:30px 22px 10px;border-radius:6px;background:radial-gradient(ellipse at 50% 0,#5b4a9a55,transparent 70%),linear-gradient(#2a2358f2,#16133cf5);box-shadow:0 14px 30px #000a,inset 0 0 0 1px #e2c27c55;color:#f6ead0}
+body.royal[data-page=shop] .exchange-supporter::after{content:'';position:absolute;inset:-9px -12px;background:url('../assets/redesign/banner-frame.png') center/100% 100% no-repeat;pointer-events:none;z-index:2}
+body.royal[data-page=shop] .exchange-plaque{position:absolute;z-index:3;top:-15px;left:50%;transform:translateX(-50%);padding:5px 26px;white-space:nowrap;background:linear-gradient(#fdf6e3,#e3cd9c);clip-path:polygon(0 50%,12px 0,calc(100% - 12px) 0,100% 50%,calc(100% - 12px) 100%,12px 100%);font:700 14px/1.4 var(--serif);letter-spacing:.08em;color:#33261a}
+body.royal[data-page=shop] .exchange-spent{display:flex;align-items:center;gap:14px}
+body.royal[data-page=shop] .exchange-medal{flex:0 0 auto;width:52px;height:52px;display:grid;place-items:center;border-radius:50%;background:radial-gradient(circle at 50% 40%,#2e3a7a,#141a44 70%);box-shadow:inset 0 0 0 3px #e6c574,inset 0 0 0 5px #8a6326,0 0 0 2px #f4dc9f55,0 4px 8px #000a;color:#f5d98e}
+body.royal[data-page=shop] .exchange-medal .ui-icon{width:28px;height:28px}
+body.royal[data-page=shop] .exchange-spent>span:last-child{font-size:11px;color:#e3d4b0;letter-spacing:.06em}
+body.royal[data-page=shop] .exchange-spent strong{display:block;margin-top:3px;font:400 26px/1.1 Georgia,serif;color:#ffeab8;overflow-wrap:anywhere}
+body.royal[data-page=shop] .exchange-shop button.exchange-earn{position:relative;z-index:3;width:100%;min-height:44px;margin:12px 0 2px;font-size:13px;display:flex;align-items:center;justify-content:center;gap:8px}
+body.royal[data-page=shop] .exchange-earn .ui-icon{width:18px;height:18px}
+body.royal[data-page=shop] .exchange-titles{position:relative;z-index:3;margin:2px 0 0;font-size:12px;color:#ecdcb4}
+body.royal[data-page=shop] .exchange-titles summary{min-height:40px;justify-content:center;color:#f2deae}
+body.royal[data-page=shop] .exchange-titles[open]>.spending-titles{max-height:200px;overflow:auto;margin-bottom:8px}
+/* Short desktop windows (1280x720 etc.) */
+@media(min-width:1101px) and (max-height:820px){
+  body.royal[data-page=shop] #main:has(.exchange-shop){padding-top:76px}
+  body.royal[data-page=shop] .exchange-title{margin-bottom:8px}
+  body.royal[data-page=shop] .exchange-title h1{height:60px;font-size:30px}
+  body.royal[data-page=shop] .exchange-quantity{margin-bottom:10px}
+  body.royal[data-page=shop] .exchange-quantity-bar button{min-height:40px;font-size:19px}
+  body.royal[data-page=shop] .exchange-display{height:146px;margin-bottom:-28px}
+  body.royal[data-page=shop] .exchange-pedestal{padding:32px 14px 10px}
+  body.royal[data-page=shop] .exchange-name{font-size:15px;padding:4px 22px;margin-bottom:5px}
+  body.royal[data-page=shop] .exchange-gems{font-size:clamp(20px,2vw,28px)}
+  body.royal[data-page=shop] .exchange-note{margin:2px 0 6px}
+  body.royal[data-page=shop] .exchange-shop button.exchange-buy{min-height:62px;padding-top:13px}
+  body.royal[data-page=shop] .exchange-unit{margin-top:3px}
+  body.royal[data-page=shop] .exchange-host{min-height:470px}
+  body.royal[data-page=shop] .exchange-bubble{top:24%}
+  body.royal[data-page=shop] .exchange-supporter{padding:26px 18px 6px}
+  body.royal[data-page=shop] .exchange-medal{width:44px;height:44px}
+  body.royal[data-page=shop] .exchange-spent strong{font-size:22px}
+  body.royal[data-page=shop] .exchange-shop button.exchange-earn{min-height:40px;margin-top:8px}
+  body.royal[data-page=shop] .exchange-titles summary{min-height:36px}
+}
+/* Tablet and phone: stacked counter with a cropped host banner */
+@media(max-width:1100px){
+  body.royal[data-page=shop] .exchange-shop{grid-template-columns:minmax(0,1fr);grid-template-rows:none;row-gap:0}
+  body.royal[data-page=shop] .exchange-title,body.royal[data-page=shop] .exchange-host,body.royal[data-page=shop] .exchange-counter,body.royal[data-page=shop] .exchange-supporter{grid-column:1;grid-row:auto}
+  body.royal[data-page=shop] .exchange-host{min-height:0;height:250px;margin:0 0 14px;overflow:hidden;border-radius:8px;border:1px solid #d9b86f99;background:radial-gradient(ellipse at 28% 30%,#fff1c833,transparent 60%),linear-gradient(90deg,#16224099,#0d1630cc);box-shadow:0 10px 24px #050b1f99}
+  body.royal[data-page=shop] .exchange-host-art{left:calc(30% - 190px);top:-14px;height:620px;transform:none}
+  body.royal[data-page=shop] .exchange-bubble{top:50%;right:4%;transform:translateY(-50%);width:min(300px,52%)}
+  body.royal[data-page=shop] .exchange-bubble::after{left:-12px;bottom:auto;top:50%;width:14px;height:20px;transform:translateY(-50%);clip-path:polygon(100% 0,100% 100%,0 70%)}
+  body.royal[data-page=shop] .exchange-supporter{align-self:auto;margin:30px 10px 0}
+}
+@media(max-width:650px){
+  body.royal[data-page=shop] #main:has(.exchange-shop){padding:60px 12px 104px}
+  body.royal[data-page=shop] .exchange-title{margin:0 0 10px}
+  body.royal[data-page=shop] .exchange-title::before{left:0;right:0}
+  body.royal[data-page=shop] .exchange-title h1{min-width:0;width:min(330px,100%);height:56px;padding:0 30px;gap:9px;font-size:23px;letter-spacing:.06em}
+  body.royal[data-page=shop] .exchange-title h1::before,body.royal[data-page=shop] .exchange-title h1::after{font-size:16px}
+  body.royal[data-page=shop] .exchange-host{height:200px;margin-bottom:12px}
+  body.royal[data-page=shop] .exchange-host-art{left:calc(27% - 150px);top:-10px;height:500px}
+  body.royal[data-page=shop] .exchange-bubble{right:3%;width:56%;padding:11px 10px 10px}
+  body.royal[data-page=shop] .exchange-bubble b{font-size:14px}
+  body.royal[data-page=shop] .exchange-bubble small{font-size:10px}
+  body.royal[data-page=shop] .exchange-quantity{flex-direction:column;gap:6px;margin-bottom:14px}
+  body.royal[data-page=shop] .exchange-quantity-bar{width:100%}
+  body.royal[data-page=shop] .exchange-quantity-bar button{min-height:44px;font-size:17px;padding:4px 2px}
+  body.royal[data-page=shop] .exchange-shelf{grid-template-columns:minmax(0,1fr);gap:16px;padding:0;align-items:stretch}
+  body.royal[data-page=shop] .exchange-shelf::after{display:none}
+  body.royal[data-page=shop] .exchange-item{display:grid;grid-template-columns:minmax(0,38%) minmax(0,1fr);align-items:stretch;border-radius:8px;background:linear-gradient(90deg,#1c2442e8,#131a33e8 40%,transparent 41%);box-shadow:0 10px 22px #050b1f99}
+  body.royal[data-page=shop] .exchange-display{height:auto;min-height:150px;margin:0;align-items:center;border-radius:8px 0 0 8px;border:1px solid #d9b86f66;border-right:0}
+  body.royal[data-page=shop] .exchange-art{height:auto;width:92%;max-width:none;max-height:150px}
+  body.royal[data-page=shop] .exchange-pedestal{padding:12px 12px 10px;border-radius:0 8px 8px 0;border-top-width:1px;border-bottom-width:3px}
+  body.royal[data-page=shop] .exchange-pedestal::before{display:none}
+  body.royal[data-page=shop] .exchange-name{font-size:14px;padding:4px 18px;margin-bottom:6px}
+  body.royal[data-page=shop] .exchange-gems{font-size:clamp(19px,6vw,26px)}
+  body.royal[data-page=shop] .exchange-gems small{font-size:13px}
+  body.royal[data-page=shop] .exchange-gem{width:22px;height:22px}
+  body.royal[data-page=shop] .exchange-note{margin:2px 0 6px;font-size:10px}
+  body.royal[data-page=shop] .exchange-shop button.exchange-buy{min-height:58px;padding:12px 12px 6px;gap:6px}
+  body.royal[data-page=shop] .exchange-shop button.exchange-buy>span{font-size:clamp(16px,5vw,21px)}
+  body.royal[data-page=shop] .exchange-coin{width:20px;height:20px}
+  body.royal[data-page=shop] .exchange-coin::before{font-size:10px;line-height:20px}
+  body.royal[data-page=shop] .exchange-unit{font-size:9px;margin-top:4px}
+  body.royal[data-page=shop] .exchange-supporter{margin:30px 6px 0;padding:28px 16px 8px}
+  body.royal[data-page=shop] .exchange-spent strong{font-size:24px}
+}
+@media(max-width:360px){
+  body.royal[data-page=shop] .exchange-host{height:180px}
+  body.royal[data-page=shop] .exchange-host-art{left:calc(22% - 140px);height:460px}
+  body.royal[data-page=shop] .exchange-title h1{padding:0 24px;font-size:21px;letter-spacing:.05em}
+  body.royal[data-page=shop] .exchange-bubble{width:60%;padding:9px 8px}
+  body.royal[data-page=shop] .exchange-bubble b{font-size:13px}
+  body.royal[data-page=shop] .exchange-quantity-bar button{font-size:15px}
+  body.royal[data-page=shop] .exchange-name{font-size:13px;padding:4px 14px}
+}
+@media(prefers-reduced-motion:reduce){body.royal[data-page=shop] .exchange-shop button.exchange-buy{transition:none}body.royal[data-page=shop] .exchange-shop button.exchange-buy:is(:hover,:active):not(:disabled){transform:none}}
+
+body.royal[data-page=shop] .exchange-shop button.exchange-buy{min-height:70px;padding-block:10px 14px}
+body.royal[data-page=shop] .exchange-shop button.exchange-buy small{margin-top:2px}
+@media(max-width:650px){
+  body.royal[data-page=shop] #main:has(.exchange-shop){position:fixed;inset:58px 0 104px;margin:0;width:100%;height:auto;min-height:0;overflow:auto;padding:0 12px 20px}
+}
+
+body.royal[data-page=shop] .exchange-shop button.exchange-buy{min-height:80px;padding-block:19px 13px}
+
+@media(min-width:1101px) and (min-height:801px){
+  body.royal[data-page=shop] .exchange-display{height:252px}
+  body.royal[data-page=shop] .exchange-art{max-width:96%}
+  body.royal[data-page=shop] .exchange-shelf{padding-bottom:28px}
+}
+
+@media(min-width:1101px) and (max-height:800px){
+  body.royal[data-page=shop] .exchange-display{height:186px}
+  body.royal[data-page=shop] .exchange-art{max-width:96%}
+  body.royal[data-page=shop] .exchange-small .exchange-art{height:86%}
+  body.royal[data-page=shop] .exchange-medium .exchange-art{height:94%}
+  body.royal[data-page=shop] .exchange-large .exchange-art{height:100%}
+}

@@ -69,11 +69,23 @@ function createPhaserStage(parent, onError) {
     awaitingLive=null;
     queued=[mode,state,reduced];if(failed||!current||finish)return;
     clear();const {s,w,h}=backdrop(mode),mobile=w<650;
-    if(mode==='home'||mode==='summon'){
+    if(mode==='summon'&&state.summonBanner==='standard'){
+      const compact=w<=1000;
+      const narrow=w<=360;
+      const partyY=narrow?Math.min(h*.47,338):mobile?330:h*(compact?.34:.35);
+      const party=s.add.image(w*(narrow?.50:mobile?.76:compact?.68:.78),partyY,'party','__BASE');
+      party.setScale(Math.min(w*(narrow?.60:mobile?.43:compact?.52:.42)/party.width,h*.28/party.height));
+    }else if(mode==='home'||mode==='summon'){
       const hero=s.add.image(w*(mobile?.60:(mode==='home'?.52:.56)),h*(mobile?.82:.94),mode==='summon'?'lune-summon':'court').setOrigin(.5,1);
       const scale=h*(mode==='home'?(mobile?.89:1.08):(mobile?.76:.84))/hero.height;hero.setScale(scale);
-      if(mode==='summon'){hero.setScale(mobile?h*.73/hero.height:Math.min(h*.99/hero.height,w*.75/hero.width));hero.setPosition(w*(mobile?.66:.64),h*(mobile?.88:1.02));}
-      if(mode==='home')hero.setPosition(w*(mobile?.58:.55),h*(mobile?.92:1.12));
+      if(mode==='summon'){
+        const compact=w<=1000;
+        const scale=compact?Math.min(h*.40/hero.height,w*1.22/hero.width):Math.min(h/hero.height,w*.76/hero.width);
+        hero.setScale(scale).setPosition(w*(mobile?.65:compact?.70:.64),h*(mobile?.59:compact?.55:.99));
+      }
+      // Home: a large, waist-up Lune like the reference composition. On phones she sits
+      // between the medallion column and the banner column so her face stays clear.
+      if(mode==='home'){hero.setScale(h*(mobile?.9:1.3)/hero.height);hero.setPosition(w*(mobile?.31:.5),h*(mobile?.93:1.33));}
       if(!reduced)s.tweens.add({targets:hero,y:hero.y-7,duration:2600,yoyo:true,repeat:-1,ease:'Sine.easeInOut'});
       if(mode==='summon')s.add.rectangle(w/2,h/2,w,h,0x182447,.09);
       if(!reduced)for(let i=0;i<15;i++){
