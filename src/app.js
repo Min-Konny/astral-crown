@@ -258,14 +258,15 @@ function settings(){
 function rates(){
   modal(`<span class="eyebrow">SUMMON DETAILS</span><h2>提供割合と天井</h2><div class="receipt">${Object.entries(G.RARITIES).map(([r,d])=>`<div><span style="color:${d.color}">${r}</span><strong>${Number((d.rate*100).toFixed(4))}%</strong></div>`).join('')}</div><p>ピックアップではSSR抽選時、リュネ50%、レオニス25%、フィオレ25%。常設は各SSR均等です。他レアは同レア内で均等です。</p><p>100連以内にSSR確定。SSRが出るとカウンターをリセット。天井はバナー共通です。10連SR保証はありません。1,000連・10,000連も1回ずつ同じ確率と天井で抽選します。</p><p>天井分を除く基本排出率です。キャラは自動で重なり、上限後も枚数と育成素材は獲得します。</p>`);
 }
-function missionsDialog(afterClaim=false){
+function missionsDialog(reward){
   const items=G.missionProgress(state).map(m=>{
     const reward=m.reward.gems?`星晶石 ${fmt(m.reward.gems)}個`:`育成素材 ${fmt(m.reward.dust)}個`;
     return `<li><div><h3>${m.title}</h3><p>${fmt(m.current)} / ${fmt(m.target)} · ${reward}</p></div><button class="${m.claimable?'primary':''}" data-claim-mission="${m.id}" aria-label="${m.title}の報酬：${m.claimed?'受取済み':m.claimable?'受け取る':'未達成'}" ${m.claimable?'':'disabled'}>${m.claimed?'受取済み':m.claimable?'受け取る':'未達成'}</button></li>`;
   }).join('');
-  modal(`<h2 id="missions-title" tabindex="-1">ミッション</h2><p>報酬は各1回。達成と受け取り状況は転生後も引き継ぎます。</p><ul class="mission-rewards">${items}</ul>`,'missions-modal');
+  const received=reward?(reward.gems?`星晶石 +${fmt(reward.gems)}`:`育成素材 +${fmt(reward.dust)}`):'';
+  modal(`<h2 id="missions-title" tabindex="-1">ミッション</h2><p>報酬は各1回。達成と受け取り状況は転生後も引き継ぎます。</p><ul class="mission-rewards">${items}</ul><p class="mission-received" role="status">${received}</p>`,'missions-modal');
   $('#modal').setAttribute('aria-labelledby','missions-title');
-  const target=afterClaim?$('#modal [data-claim-mission]:not(:disabled)'):null;
+  const target=reward?$('#modal [data-claim-mission]:not(:disabled)'):null;
   (target||$('#missions-title')).focus({preventScroll:true});
 }
 function confirmAscend(){modal(ascensionView(state),'ascension-modal');}
@@ -280,8 +281,7 @@ document.addEventListener('click',e=>{
     if(b.dataset.skillMode){state=changeBattleMode(storage,state,b.dataset.skillMode);render();return;}
     if(b.dataset.claimMission){
       const reward=commitResources(s=>G.claimMission(s,b.dataset.claimMission));
-      render();missionsDialog(true);
-      toast(reward.gems?`星晶石 +${fmt(reward.gems)}`:`育成素材 +${fmt(reward.dust)}`);sound('purchase');return;
+      render();missionsDialog(reward);sound('purchase');return;
     }
     if(b.dataset.continueRank){state=continueRanking(storage,state,b.dataset.continueRank);resumeBattle();return;}
     if(b.dataset.page){if(!['home','earn','shop','summon','collection','arena'].includes(b.dataset.page))return;closeModal();page=b.dataset.page;render();$('#main').scrollTop=0;window.scrollTo({top:0});return;}

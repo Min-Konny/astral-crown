@@ -1043,3 +1043,5 @@ body.royal .mission-rewards button{min-height:44px;margin:0;padding:6px 10px;fon
  body.royal[data-page=home] .festival-home .home-tools .home-medal{width:53px;height:53px;font-size:10px}
  body.royal .missions-modal{padding:19px 12px}
 }
+body.royal .missions-modal .mission-received{margin:10px 0 0;padding:7px 10px;border-left:3px solid #377462;background:#e3efe4;color:#235446}
+.mission-received:empty{display:none}
