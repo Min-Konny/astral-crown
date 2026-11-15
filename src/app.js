@@ -261,7 +261,8 @@ function rates(){
 function missionRows(){
   return G.missionProgress(state).map(m=>{
     const reward=m.reward.gems?`星晶石 ${fmt(m.reward.gems)}個`:`育成素材 ${fmt(m.reward.dust)}個`;
-    return `<li><div><h3>${m.title}</h3><p>${fmt(m.current)} / ${fmt(m.target)} · ${reward}</p></div><button class="${m.claimable?'primary':''}" data-claim-mission="${m.id}" aria-label="${m.title}の報酬：${m.claimed?'受取済み':m.claimable?'受け取る':'未達成'}" ${m.claimable?'':'disabled'}>${m.claimed?'受取済み':m.claimable?'受け取る':'未達成'}</button></li>`;
+    const status=m.claimed?'受取済み':m.capacityBlocked?'達成済み・所持上限':m.claimable?'受け取る':'未達成';
+    return `<li><div><h3>${m.title}</h3><p>${fmt(m.current)} / ${fmt(m.target)} · ${reward}</p>${m.capacityBlocked?'<p>所持数を減らすと受け取れます。</p>':''}</div><button class="${m.claimable?'primary':''}" data-claim-mission="${m.id}" aria-label="${m.title}の報酬：${status}" ${m.claimable?'':'disabled'}>${status}</button></li>`;
   }).join('');
 }
 function missionsDialog(){

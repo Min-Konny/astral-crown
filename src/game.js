@@ -322,15 +322,18 @@ const lifetimeMissions=[
 export function missionProgress(s){
   return lifetimeMissions.map(({progress,...mission})=>{
     const current=Math.min(mission.target,progress(s));
-    return {...mission,current,claimable:current>=mission.target&&!s.claimedMissions?.includes(mission.id),claimed:!!s.claimedMissions?.includes(mission.id)};
+    const claimed=!!s.claimedMissions?.includes(mission.id);
+    const {gems,dust}=mission.reward;
+    const full=(gems&&s.gems>1e16-gems)||(dust&&s.dust>1e16-dust);
+    const capacityBlocked=current===mission.target&&!claimed&&!!full;
+    return {...mission,current,claimed,capacityBlocked,claimable:current===mission.target&&!claimed&&!capacityBlocked};
   });
 }
 export function claimMission(s,id){
   const mission=missionProgress(s).find(m=>m.id===id);
+  if(mission?.capacityBlocked)throw Error('所持上限を超えます。報酬のアイテムを使用してから受け取れます');
   if(!mission?.claimable)throw Error('受け取れるミッション報酬がありません');
   const {gems,dust}=mission.reward;
-  if(gems&&s.gems>1e16-gems)throw Error('星晶石の所持上限を超えます。使用してから受け取れます');
-  if(dust&&s.dust>1e16-dust)throw Error('育成素材の所持上限を超えます。使用してから受け取れます');
   if(gems)s.gems+=gems;
   if(dust)s.dust+=dust;
   (s.claimedMissions??=[]).push(id);

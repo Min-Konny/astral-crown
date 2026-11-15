@@ -41,6 +41,8 @@ test('equipment and mission rewards persist only after successful saves',()=>{
 test('a reward above the save limit stays available until the full amount fits',()=>{
   const state=initialState();
   Object.assign(state,{pulls:1000,facility:10,gems:1e16,dust:1e16});
+  assert.equal(missionProgress(state).filter(m=>m.claimable).length,0);
+  assert.equal(missionProgress(state).filter(m=>m.capacityBlocked).length,2);
   assert.throws(()=>claimMission(state,'pulls-1000'),/所持上限/);
   assert.throws(()=>claimMission(state,'facility-10'),/所持上限/);
   assert.deepEqual(state.claimedMissions,[]);
