@@ -34,7 +34,9 @@
     "title": "育成・庭園探索・バトル",
     "capture": "training",
     "extraCaptures": [
-      "battle-result"
+      "battle-result",
+      "garden",
+      "garden-result"
     ],
     "focus": "育成から出撃へ連続する画面の装飾統一。能力比較、編成所属、出撃・帰還、戦闘結果を読みやすくする。庭園の実画面も追加撮影して確認する。"
   },
@@ -68,8 +70,12 @@
   {
     "key": "inheritance",
     "title": "低レアの継承強化",
-    "capture": null,
-    "focus": "低レアの枚数、次の段階、現在と強化後の貢献を描く。手動昇格でのみ強化を確定する。専用の隔離データと実キャプチャを先に追加する。"
+    "capture": "inheritance",
+    "focus": "低レアの枚数、次の段階、現在と強化後の貢献を描く。手動昇格でのみ強化を確定する。",
+    "extraCaptures": [
+      "inheritance-promoted",
+      "inheritance-disabled"
+    ]
   },
   {
     "key": "ascension",
