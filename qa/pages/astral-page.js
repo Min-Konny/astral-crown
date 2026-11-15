@@ -54,5 +54,12 @@ export class AstralPage {
       });
     }
     await this.page.screenshot({path:path.join(root,'artifacts',`royal-${name}-${project}.png`),fullPage:!name.startsWith('collection')&&!name.startsWith('shop')});
+    if(project==='desktop'&&process.env.ASTRAL_CAPTURE_SHORT==='1'){
+      const desktop=this.page.viewportSize();
+      await this.page.setViewportSize({width:375,height:667});
+      await this.page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
+      await this.page.screenshot({path:path.join(root,'artifacts',`royal-${name}-short.png`)});
+      await this.page.setViewportSize(desktop);
+    }
   }
 }

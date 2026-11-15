@@ -137,7 +137,8 @@ try{
     await run(process.execPath,['scripts/prepare.mjs'],{cwd:work});
     const reference=path.join(work,'docs/design-references',`${screen.key}.png`);
     const schema=path.join(root,'scripts/factory/review.schema.json');
-    const captures=[screen.capture,...screen.extraCaptures||[]].flatMap(c=>['desktop','laptop','mobile','narrow'].map(size=>path.join(work,'artifacts',`royal-${c}-${size}.png`)));
+    const captures=[screen.capture,...screen.extraCaptures||[]].flatMap(c=>['desktop','laptop','mobile','narrow','short'].map(size=>path.join(work,'artifacts',`royal-${c}-${size}.png`)));
+    process.env.ASTRAL_CAPTURE_SHORT='1';
     console.log('Capturing baseline before implementation');
     await run(process.execPath,[playwrightCli,'test','--config=qa/playwright.config.js'],{cwd:work,log:path.join(runDir,'baseline-browser.log')});
     const before=path.join(runDir,'before');await fs.mkdir(before);
@@ -190,12 +191,12 @@ try{
       const snapshot=await statusHash();
       console.log(`Round ${round}: Codex visual review`);
       const output=path.join(runDir,`round-${round}-review.json`);
-      const reviewPrompt=`ASTRAL CROWN の独立レビュー担当。コードは変更禁止。Issue: ${task.title}\n${task.body}\n重点: ${screen.focus}\n添付1枚目は参考画像、残りはこのラウンドの実画面PC/スマホです。必ず目視比較する。単体・ビルド・4サイズのブラウザ回帰は親が成功を確認済み。テスト成功だけを根拠に見た目を合格にしない。git diff を読んで操作と保存互換性も確認。図や文字の重なり、引き伸ばし、クリック妨害、可読性、構図と絵の密度を具体的に判定。大きな不足があればrevise、画像を確認できない/素材生成や仕様判断が必要ならblocked。passは受入条件を実際に確認できた場合のみ。コード修正、コミット、外部通信、他エージェントは禁止。結果は指定JSON形式の日本語。`;
+      const reviewPrompt=`ASTRAL CROWN の独立レビュー担当。コードは変更禁止。Issue: ${task.title}\n${task.body}\n重点: ${screen.focus}\n添付1枚目は参考画像、残りはこのラウンドの実画面PC/スマホです。必ず目視比較する。単体・ビルド・4サイズのブラウザ回帰と375×667の追加キャプチャは親が成功を確認済み。テスト成功だけを根拠に見た目を合格にしない。git diff を読んで操作と保存互換性も確認。図や文字の重なり、引き伸ばし、クリック妨害、可読性、構図と絵の密度を具体的に判定。大きな不足があればrevise、画像を確認できない/素材生成や仕様判断が必要ならblocked。passは受入条件を実際に確認できた場合のみ。コード修正、コミット、外部通信、他エージェントは禁止。結果は指定JSON形式の日本語。`;
       const imageArgs=[reference,...captures,...beforeImages].flatMap(f=>['--image',f]);
       const diff=await git(['diff',startingHead,'--no-ext-diff','--no-color','--',':(exclude)docs/visual-verification']);
       const changed=(await git(['diff','--name-only',startingHead])).split('\n').filter(f=>/\.(js|css|html)$/.test(f));
       const source=await Promise.all(changed.map(async f=>`\n--- ${f} (current) ---\n${await fs.readFile(path.join(work,f),'utf8')}`));
-      const reviewInput=reviewPrompt+`\n重要: ツール・シェルは使わず、以下の親プロセスが収集した差分・コード・検証結果と添付画像だけで判定してください。git diffを自分で実行する必要はありません。未確認の操作を確認したと主張しないこと。\n添付順: 参考画像1枚、変更後${captures.length}枚、同条件の変更前${beforeImages.length}枚。各グループはdesktop/laptop/mobile/narrow順。\n基点コミット: ${startingHead}\nレビュー対象SHA: ${sha??"ローカル作業コピー"}\n差分ハッシュ: ${snapshot}\n検証: node --test、build、Playwrightがこの差分で終了コード0。親がQA・テスト・保存経済モデルの無変更を検証。\n実装担当報告:\n${claudeResult.result||''}\n差分:\n${diff}\n現在の変更ファイル全文:\n${source.join('\n')}`;
+      const reviewInput=reviewPrompt+`\n重要: ツール・シェルは使わず、以下の親プロセスが収集した差分・コード・検証結果と添付画像だけで判定してください。git diffを自分で実行する必要はありません。未確認の操作を確認したと主張しないこと。\n添付順: 参考画像1枚、変更後${captures.length}枚、同条件の変更前${beforeImages.length}枚。各グループはdesktop/laptop/mobile/narrow/short（375×667）順。\n基点コミット: ${startingHead}\nレビュー対象SHA: ${sha??"ローカル作業コピー"}\n差分ハッシュ: ${snapshot}\n検証: node --test、build、Playwrightがこの差分で終了コード0。親がQA・テスト・保存経済モデルの無変更を検証。\n実装担当報告:\n${claudeResult.result||''}\n差分:\n${diff}\n現在の変更ファイル全文:\n${source.join('\n')}`;
       await run('codex',['exec','--sandbox','read-only','--ephemeral','--output-schema',schema,'--output-last-message',output,...imageArgs,'-'],{cwd:work,input:reviewInput,log:path.join(runDir,`round-${round}-codex.log`)});
       if(snapshot!==await statusHash())throw Error('Reviewer changed the work copy.');
       const review=reviewDecision(JSON.parse(await fs.readFile(output,'utf8')));
