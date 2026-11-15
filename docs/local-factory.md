@@ -1,10 +1,10 @@
 # ASTRAL CROWN のローカル相互レビュー
 
-PCにログイン済みのClaude Codeが画面を実装し、Codexが参考画像・実キャプチャ・差分をレビューする。指摘は次のClaude実行へ渡す。画面ごとに最大3回で停止し、合格した変更だけを任意で下書きPRにする。PCの起動とログイン状態が必要。常駐監視や定期実行ではなく、下記コマンドで1件を開始する。
+PCにログイン済みのClaude Codeが画面を実装し、Codexが参考画像・実キャプチャ・差分をレビューする。指摘は次のClaude実行へ渡す。画面ごとに最大3回で停止し、公開モードでは変更を下書きPRに記録してからレビューする。PCの起動とログイン状態が必要。常駐監視や定期実行ではなく、下記コマンドで1件を開始する。
 
 ## 共有基点
 
-- UIと参考画像: [PR #2](https://github.com/Min-Konny/astral-crown/pull/2)、ブランチ `codex/visual-redesign-baseline`
+- 基点はGitHubの `master`。参考画像の初期版は [PR #2](https://github.com/Min-Konny/astral-crown/pull/2)。
 - 参考画像: [一覧](design-references/README.md)。画面の完成イメージであり、実キャプチャや確定した経済仕様ではない。
 - 画面別Issue: #3 拠点、#4 召喚、#5 仲間、#6 闘技場、#7 交換所案、#8 育成・探索・戦闘、#9 疑似決済、#10 購入パック、#11 稼ぐ、#12 大量召喚結果、#13 継承強化、#14 転生。
 
@@ -13,13 +13,13 @@ PCにログイン済みのClaude Codeが画面を実装し、Codexが参考画�
 PowerShellでプロジェクトから実行する。初回は接続先・対象を確認するdry-runを使う。
 
 ```powershell
-./scripts/factory/run.ps1 -Issue 3 -Screen home -DryRun
-./scripts/factory/run.ps1 -Issue 3 -Screen home -MaxRounds 3 -Publish
+./scripts/factory/run.ps1 -Issue 8 -Screen training-exploration-battle -DryRun
+./scripts/factory/run.ps1 -Issue 8 -Screen training-exploration-battle -MaxRounds 3 -Publish
 # 保持した変更を引き継ぎ、再検証とレビューから再開する
-./scripts/factory/run.ps1 -Issue 3 -Screen home -ResumeFrom '.factory/issue-3-実行日時' -Publish
+./scripts/factory/run.ps1 -Issue 8 -Screen training-exploration-battle -ResumeFrom '.factory/issue-8-実行日時' -Publish
 ```
 
-`-Publish` がなければローカル結果のみ。付けた場合も視覚レビュー合格時だけ専用ブランチをpushし、基点ブランチ向けの下書きPRを作る。masterへのマージやPages公開はしない。次の画面は前の変更を取り込んだブランチを `-Base` に指定する。共通CSSを変更するので並列実行しない。
+`-Publish` を付けると、最新の `master` を起点に `claude/*` の下書きPRを作る。変更前後の実キャプチャをコミットし、push済みのSHAを確認してからCodexがレビューする。投稿直前にも同じSHAを確認して `[レビュー] pass` または `[レビュー] revise` のコメントを付ける。途中で基点が進んだ場合は新しい基点で検証し直す。ローカルのみの実行ではGitHubへ書き込まない。
 
 CLIの `claude auth status`、`codex login status`、`gh auth status` が成功すること。認証情報のファイルをコピーしたり、GitHub Secretsに保存したりしない。
 
@@ -34,7 +34,7 @@ Playwrightはプロジェクトに導入済みのもの、またはCodexの同�
 5. Codexが参考画像と変更前後の4サイズの実キャプチャ、親が収集した差分・変更ファイル全文・検証結果を見て `pass` / `revise` / `blocked` を返す。レビュー側でシェルを起動する必要はない。画像未確認・不正な判定・レビュー中のファイル変更は合格にしない。
 6. `revise` なら次ラウンド、`pass` または `blocked` なら終了する。上限到達でも合格にはしない。
 
-ログ、レビューJSON、変更前と各ラウンドの画像は `.factory/` に保持し、Gitから除外する。保存先は開始時に表示する。`result.json` に結果、`history.json` にレビュー経過を記録する。異常終了時は最後のログを確認する。
+ログと各回の証跡は `.factory/` に保持する。公開モードのレビュー対象の画像はPRの `docs/visual-verification/` に残す。高さの低い375×667の検証は現在の自動ファイルに含まれないため、レイアウト変更時は別途実測してPRで記録する。保存先は開始時に表示する。`result.json` に結果、`history.json` にレビュー経過を記録する。異常終了時は最後のログを確認する。
 
 中止は実行中のターミナルでCtrl+C。次ラウンド開始前に止める場合は表示された実行フォルダに空の `STOP` ファイルを作る。同時起動は `.factory/loop.lock` で拒否する。PC終了などでロックが残った場合は、記録されたPIDが終了したことを確認してからそのロックだけを削除する。
 

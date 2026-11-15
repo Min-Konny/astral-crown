@@ -1,8 +1,8 @@
 param(
     [Parameter(Mandatory=$true)][int]$Issue,
     [Parameter(Mandatory=$true)][string]$Screen,
-    [ValidateRange(1,5)][int]$MaxRounds = 3,
-    [string]$Base = 'codex/visual-redesign-baseline',
+    [ValidateRange(1,3)][int]$MaxRounds = 3,
+    [string]$Base = 'master',
     [string]$ResumeFrom,
     [switch]$DryRun,
     [switch]$Publish
