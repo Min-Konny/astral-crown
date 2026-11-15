@@ -37,3 +37,14 @@ test('equipment and mission rewards persist only after successful saves',()=>{
   assert.equal(tx.state.dust,900);
   assert.deepEqual(tx.state.claimedMissions,['facility-10']);
 });
+
+test('a reward above the save limit stays available until the full amount fits',()=>{
+  const state=initialState();
+  Object.assign(state,{pulls:1000,facility:10,gems:1e16,dust:1e16});
+  assert.throws(()=>claimMission(state,'pulls-1000'),/所持上限/);
+  assert.throws(()=>claimMission(state,'facility-10'),/所持上限/);
+  assert.deepEqual(state.claimedMissions,[]);
+  state.gems-=3000;
+  assert.deepEqual(claimMission(state,'pulls-1000'),{gems:3000});
+  assert.equal(state.gems,1e16);
+});

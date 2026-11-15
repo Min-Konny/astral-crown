@@ -329,8 +329,10 @@ export function claimMission(s,id){
   const mission=missionProgress(s).find(m=>m.id===id);
   if(!mission?.claimable)throw Error('受け取れるミッション報酬がありません');
   const {gems,dust}=mission.reward;
-  if(gems)s.gems=Math.min(1e16,s.gems+gems);
-  if(dust)s.dust=Math.min(1e16,s.dust+dust);
+  if(gems&&s.gems>1e16-gems)throw Error('星晶石の所持上限を超えます。使用してから受け取れます');
+  if(dust&&s.dust>1e16-dust)throw Error('育成素材の所持上限を超えます。使用してから受け取れます');
+  if(gems)s.gems+=gems;
+  if(dust)s.dust+=dust;
   (s.claimedMissions??=[]).push(id);
   return mission.reward;
 }
