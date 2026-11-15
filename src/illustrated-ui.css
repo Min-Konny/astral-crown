@@ -1044,4 +1044,4 @@ body.royal .mission-rewards button{min-height:44px;margin:0;padding:6px 10px;fon
  body.royal .missions-modal{padding:19px 12px}
 }
 body.royal .missions-modal .mission-received{margin:10px 0 0;padding:7px 10px;border-left:3px solid #377462;background:#e3efe4;color:#235446}
-.mission-received:empty{display:none}
+body.royal .missions-modal .mission-received:empty{position:absolute;width:1px;height:1px;margin:0;padding:0;border:0;clip-path:inset(50%);overflow:hidden}

@@ -78,6 +78,7 @@ test('拠点でミッションを確認し、達成報酬を一度だけ受け�
   await expect(modal.getByRole('button',{name:'収入設備Lv.10到達の報酬：未達成'})).toBeDisabled();
   const before=await game.savedState();
   const claim=modal.getByRole('button',{name:'累計1,000連の報酬：受け取る'});
+  const liveRegion=await modal.locator('.mission-received').elementHandle();
   await page.evaluate(()=>{window.failSave=true;});
   await claim.click();
   expect((await game.savedState()).gems).toBe(before.gems);
@@ -85,6 +86,8 @@ test('拠点でミッションを確認し、達成報酬を一度だけ受け�
   await page.evaluate(()=>{window.failSave=false;});
   await claim.click();
   expect((await game.savedState()).gems).toBe(before.gems+3000);
+  expect(await liveRegion.evaluate(el=>el.isConnected)).toBe(true);
+  await expect(modal.getByRole('status')).toContainText('星晶石 +3,000');
   await expect(modal.getByRole('button',{name:'累計1,000連の報酬：受取済み'})).toBeDisabled();
   await game.screenshot('missions',info.project.name);
   await page.keyboard.press('Escape');
