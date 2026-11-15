@@ -27,7 +27,7 @@ export function homeView(s){
  <div class="chapter"><div class="royal-emblem" aria-hidden="true">${icon('crown')}<span>✦</span></div><div class="home-logo"><span>ASTRAL<i aria-hidden="true">✦</i>CROWN</span><h1>星冠の継承者</h1></div></div>
  <div class="home-tools">
  <button class="home-medal" data-action="mail" aria-label="${s.mail?'メール・受取済み':'メール・星晶石3000個を受け取る'}" ${s.mail?'disabled':''}><span class="medal-face">${icon('mail')}</span><span class="medal-label">メール</span>${s.mail?'':'<i class="home-badge" aria-hidden="true">!</i>'}</button>
- <button class="home-medal" data-action="missions" aria-label="ミッション${ready?`・受取可能 ${ready}件`:''}"><span class="medal-face">${icon('check')}</span><span class="medal-label">ミッション</span>${ready?`<i class="home-badge" aria-hidden="true">${ready}</i>`:''}</button>
+ <button class="home-medal" data-action="missions" aria-label="ミッション${ready?`・受取可能 ${ready}件`:''}"><span class="medal-face">${icon('check')}</span><span class="medal-label" aria-hidden="true">ミッ<br>ション</span>${ready?`<i class="home-badge" aria-hidden="true">${ready}</i>`:''}</button>
  <button class="home-medal" data-page="collection"><span class="medal-face">${icon('collection')}</span><span class="medal-label">図鑑</span></button>
  <button class="home-medal" data-page="earn"><span class="medal-face">${icon('up')}</span><span class="medal-label">設備強化</span><small>Lv.${s.facility}</small></button>
  </div>
