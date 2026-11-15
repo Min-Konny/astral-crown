@@ -90,9 +90,19 @@ async function publishRound(beforeImages=[],afterImages=[]){
   }
   return expectedHead;
 }
-async function confirmRemoteHead(sha){
-  const remote=await run('gh',['pr','view',pr,'--repo',repo,'--json','headRefOid','-q','.headRefOid'],{cwd:work});
-  if(remote.stdout.trim()!==sha)throw Error('PR head changed during review; the result was not posted.');
+async function confirmRemoteHead(sha,waitForCheck=false){
+  for(let retry=0;retry<120;retry++){
+    const remote=JSON.parse((await run('gh',['pr','view',pr,'--repo',repo,'--json','headRefOid,statusCheckRollup'],{cwd:work})).stdout);
+    if(remote.headRefOid!==sha)throw Error('PR head changed during review; the result was not posted.');
+    if(!waitForCheck)return;
+    const check=remote.statusCheckRollup.find(c=>c.workflowName==='PR check'&&c.name==='check');
+    if(check?.status==='COMPLETED'){
+      if(check.conclusion==='SUCCESS')return;
+      throw Error(`PR check concluded ${check.conclusion}; review was not started.`);
+    }
+    await new Promise(resolve=>setTimeout(resolve,5000));
+  }
+  throw Error('PR check has not completed after 10 minutes.');
 }
 async function postReview(review,sha,round){
   if(!sha)return;
@@ -176,7 +186,7 @@ try{
       const beforeImages=captures.map(f=>path.join(before,path.basename(f)));
       const sha=await publishRound(beforeImages,captures);
       if(publish&&!sha)throw Error('No implementation changes to review.');
-      if(sha)await confirmRemoteHead(sha);
+      if(sha)await confirmRemoteHead(sha,true);
       const snapshot=await statusHash();
       console.log(`Round ${round}: Codex visual review`);
       const output=path.join(runDir,`round-${round}-review.json`);
@@ -196,6 +206,7 @@ try{
     }
     await validateScope();
     await fs.writeFile(path.join(runDir,'result.json'),JSON.stringify({issue,screen:screen.key,base,startingHead,branch,outcome,history},null,2));
+    if(publish&&['blocked','round-limit'].includes(outcome))await run('gh',['issue','edit',String(issue),'--repo',repo,'--add-label','社長判断'],{cwd:work});
     console.log(`Finished: ${outcome}. Evidence: ${runDir}`);
     if(outcome!=='pass')process.exitCode=2;
   }
