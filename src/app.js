@@ -285,7 +285,7 @@ document.addEventListener('click',e=>{
       render();
       $('#modal .mission-rewards').innerHTML=missionRows();
       $('#dialog-notice')?.remove();
-      ($('#modal [data-claim-mission]:not(:disabled)')||$('#missions-title')).focus({preventScroll:true});
+      ($('#modal [data-claim-mission]:not(:disabled)')||$('#missions-title')).focus();
       $('.mission-received').textContent=reward.gems?`星晶石 +${fmt(reward.gems)}`:`育成素材 +${fmt(reward.dust)}`;
       sound('purchase');return;
     }

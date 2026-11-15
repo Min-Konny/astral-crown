@@ -72,6 +72,7 @@ test('拠点でミッションを確認し、達成報酬を一度だけ受け�
   const game=new AstralPage(page);await game.moveToPage(data,{pulls:1000});
   const entry=page.getByRole('button',{name:'ミッション・受取可能 1件'});
   await expect(entry).toBeVisible();
+  await game.screenshot('missions-entry',info.project.name);
   await entry.click();
   const modal=page.getByRole('dialog',{name:'ミッション'});
   await expect(modal.getByRole('heading',{name:'ミッション',exact:true})).toBeFocused();
