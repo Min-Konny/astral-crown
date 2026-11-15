@@ -67,3 +67,31 @@ test('長い戦闘記録復元エラーも画面内に折り返し操作群を�
   await expect(page.locator('.home-greeting')).toBeVisible();
   expect(game.errors).toEqual([]);
 });
+
+test('拠点でミッションを確認し、達成報酬を一度だけ受け取る',async({page},info)=>{
+  const game=new AstralPage(page);await game.moveToPage(data,{pulls:1000});
+  const entry=page.getByRole('button',{name:'ミッション・受取可能 1件'});
+  await expect(entry).toBeVisible();
+  await entry.click();
+  const modal=page.getByRole('dialog',{name:'ミッション'});
+  await expect(modal.getByRole('heading',{name:'ミッション',exact:true})).toBeFocused();
+  await expect(modal.getByRole('button',{name:'収入設備Lv.10到達の報酬：未達成'})).toBeDisabled();
+  const before=await game.savedState();
+  const claim=modal.getByRole('button',{name:'累計1,000連の報酬：受け取る'});
+  await page.evaluate(()=>{window.failSave=true;});
+  await claim.click();
+  expect((await game.savedState()).gems).toBe(before.gems);
+  await expect(claim).toBeEnabled();
+  await page.evaluate(()=>{window.failSave=false;});
+  await claim.click();
+  expect((await game.savedState()).gems).toBe(before.gems+3000);
+  await expect(modal.getByRole('button',{name:'累計1,000連の報酬：受取済み'})).toBeDisabled();
+  await game.screenshot('missions',info.project.name);
+  await page.keyboard.press('Escape');
+  await expect(page.getByRole('button',{name:'ミッション',exact:true})).toBeFocused();
+  await page.reload();
+  await page.getByRole('button',{name:'ミッション',exact:true}).click();
+  await expect(modal.getByRole('button',{name:'累計1,000連の報酬：受取済み'})).toBeDisabled();
+  expect(game.errors).toEqual([]);
+  expect(await game.hasOverflow()).toBe(false);
+});

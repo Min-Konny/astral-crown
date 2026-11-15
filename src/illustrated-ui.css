@@ -1030,3 +1030,16 @@ body.royal[data-page=shop] .exchange-shop button.exchange-buy{min-height:80px;pa
   body.royal[data-page=shop] .exchange-medium .exchange-art{height:94%}
   body.royal[data-page=shop] .exchange-large .exchange-art{height:100%}
 }
+body.royal .missions-modal{width:min(590px,94vw);max-height:90dvh}
+body.royal .missions-modal h2{margin:0 32px 5px 0;padding:0}
+body.royal .missions-modal>div>p{margin:0 0 12px;color:#374764}
+.mission-rewards{list-style:none;display:grid;gap:7px;margin:0;padding:0}
+.mission-rewards>li{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:6px;padding:8px;border:1px solid #c4aa70;border-radius:6px;background:#fff8e9}
+body.royal .mission-rewards h3{margin:0;font-size:15px;line-height:1.4}
+body.royal .mission-rewards p{margin:3px 0 0;color:#374764;font-size:12px}
+body.royal .mission-rewards button{min-height:44px;margin:0;padding:6px 10px;font-size:13px;white-space:nowrap}
+@media(max-width:650px){
+ body.royal[data-page=home] .festival-home .home-tools{gap:8px}
+ body.royal[data-page=home] .festival-home .home-tools .home-medal{width:53px;height:53px;font-size:10px}
+ body.royal .missions-modal{padding:19px 12px}
+}
